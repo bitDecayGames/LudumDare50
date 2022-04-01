@@ -9,10 +9,10 @@ class Player extends FlxSprite {
 	var speed:Float = 30;
 	var playerNum = 0;
 
-	public function new() {
+	public function new(color:FlxColor = FlxColor.BLUE) {
 		super();
 		makeGraphic(20, 20, FlxColor.WHITE);
-		color = FlxColor.BLUE;
+		this.color = color;
 	}
 
 	override public function update(delta:Float) {
