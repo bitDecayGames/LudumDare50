@@ -1,5 +1,6 @@
 package states.dev;
 
+import nape.phys.BodyType;
 import entities.PhysicsThing;
 import entities.PickingHand;
 import flixel.util.FlxColor;
@@ -22,6 +23,9 @@ class MikesPlayState extends FlxTransitionableState {
 		add(bowlSprite);
 
 		add(new PickingHand());
+
+		var platter = new PhysicsThing(100, 500, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC);
+		add(platter);
 	}
 
 	override public function update(elapsed:Float) {

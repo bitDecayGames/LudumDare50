@@ -16,6 +16,8 @@ using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
 	public static function InitState() {
+		FlxG.mouse.visible = false;
+
 		Lifecycle.startup.dispatch();
 
 		// Units: Pixels/sec/sec
