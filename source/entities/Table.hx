@@ -55,7 +55,7 @@ class Table extends PhysicsThing {
 			removeTable();
 		} else {
 			if (body.position.x >= removePosition.x - deleteBuffer) {
-				this.destroy();
+				destroy();
 			}
 		}
 	}
