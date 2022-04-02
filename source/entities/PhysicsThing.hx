@@ -1,5 +1,6 @@
 package entities;
 
+import nape.phys.Material;
 import flixel.FlxG;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.addons.nape.FlxNapeSprite;
@@ -24,48 +25,48 @@ class PhysicsThing extends FlxNapeSprite {
 
 	var calcWidth:Int;
 	var calcHeight:Int;
-	// var cells:Array<Body>;
 
 	var isoBounds:AABB;
 
 	public var isoGranularity:Vec2;
 	public var isoQuality:Int = 8;
 
-    public function new(setX:Float, setY:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset) {
-	// public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
-    // public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
-        super(asset);
-		// this.bitmap = bitmap;
-		// this.visuals = visuals;
+	public var type:BodyType;
+
+	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, ?type:BodyType) {
+		super(x, y, asset);
+		if (type == null) {
+			type = BodyType.DYNAMIC;
+		}
+
+		this.type = type;
+
 		this.cellSize = 10;
 		this.subSize = 2;
-        
-        
-        FlxG.bitmap.add(bodyAsset, true, bodyAsset);
+
+		FlxG.bitmap.add(bodyAsset, true, bodyAsset);
 		bitmap = FlxG.bitmap.get(bodyAsset).bitmap;
-        
-		// cells = [];
+
 		calcWidth = Math.ceil(bitmap.width / cellSize);
 		calcHeight = Math.ceil(bitmap.height / cellSize);
-		// for (i in 0...width * height)
-		// 	cells.push(null);
 
-        // offset.x = calcWidth / 2;
-        // for (shape in body.shapes) {
-        //     shape.
-        // }
-        
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
+		setup();
+	}
 
-		body = new Body(BodyType.DYNAMIC);
-        // invalidate(new AABB(x, y, bitmap.width, bitmap.height), FlxNapeSpace.space);
-        invalidate(new AABB(0, 0, bitmap.width, bitmap.height), FlxNapeSpace.space);
-        body.space = FlxNapeSpace.space;
-        body.userData.data = this;
+	override public function update(delta:Float) {
+		super.update(delta);
+	}
 
-        x = setX;
-        y = setY;
+	private function setup() {
+		body.type = type;
+		body.shapes.clear();
+		invalidate(new AABB(0, 0, bitmap.width, bitmap.height), FlxNapeSpace.space);
+		body.space = FlxNapeSpace.space;
+		body.userData.data = this;
+
+		body.setShapeMaterials(Material.rubber());
 	}
 
 	private function invalidate(region:AABB, space:Space) {
@@ -85,34 +86,22 @@ class PhysicsThing extends FlxNapeSprite {
 
 		for (y in y0...(y1 + 1)) {
 			for (x in x0...(x1 + 1)) {
-				// var b = cells[y * width + x];
-				// if (b != null) {
-				// 	// If body exists, we'll simply re-use it.
-				// 	b.space = null;
-				// 	b.shapes.clear();
-				// }
-
 				isoBounds.x = x * cellSize;
 				isoBounds.y = y * cellSize;
 				var polys = MarchingSquares.run(this.iso, isoBounds, isoGranularity, isoQuality);
 				if (polys.empty())
 					continue;
 
-				// if (b == null) {
-				// 	cells[y * width + x] = b = new Body(BodyType.STATIC);
-				// 	b.userData.data = this;
-				// }
-
 				for (p in polys) {
 					var qolys = p.convexDecomposition(true);
 					for (q in qolys) {
 						var bodyPoly = new Polygon(q);
 
-                        // TODO: does this work?
-                        for (vert in bodyPoly.localVerts) {
-                            vert.x -= width/2;
-                            vert.y -= height/2;
-                        }
+						// NOTE: This is to try to align the body with the sprite better
+						for (vert in bodyPoly.localVerts) {
+							vert.x -= width / 2;
+							vert.y -= height / 2;
+						}
 
 						// trace(bodyPolyelocalVerts);
 						body.shapes.add(bodyPoly);
@@ -130,8 +119,6 @@ class PhysicsThing extends FlxNapeSprite {
 
 				// Recycle list nodes
 				polys.clear();
-
-				// b.space = space;
 			}
 		}
 
