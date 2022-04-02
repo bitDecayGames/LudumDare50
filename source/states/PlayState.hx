@@ -13,22 +13,28 @@ import nape.geom.Vec2;
 using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
-
-	// Units: Pixels/sec/sec
-	var gravity:Vec2 = Vec2.get().setxy(0, 50);
-
-	var player:FlxSprite;
-
-	override public function create() {
-		super.create();
+	public static function InitState() {
 		Lifecycle.startup.dispatch();
+
+		// Units: Pixels/sec/sec
+		var gravity:Vec2 = Vec2.get().setxy(0, 50);
 
 		FlxG.camera.pixelPerfectRender = true;
 
 		CbTypes.initTypes();
 		FlxNapeSpace.init();
+		#if debug
 		FlxNapeSpace.drawDebug = true;
+		#end
 		FlxNapeSpace.space.gravity.set(gravity);
+	}
+
+	var player:FlxSprite;
+
+	override public function create() {
+		super.create();
+
+		InitState();
 
 		var bowlSprite = new PhysicsThing(0, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
 		add(bowlSprite);

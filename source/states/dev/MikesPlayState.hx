@@ -1,5 +1,7 @@
 package states.dev;
 
+import entities.PhysicsThing;
+import entities.PickingHand;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
@@ -14,12 +16,12 @@ class MikesPlayState extends FlxTransitionableState {
 
 	override public function create() {
 		super.create();
-		Lifecycle.startup.dispatch();
+		PlayState.InitState();
 
-		FlxG.camera.pixelPerfectRender = true;
+		var bowlSprite = new PhysicsThing(0, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
+		add(bowlSprite);
 
-		player = new Player(FlxColor.CYAN);
-		add(player);
+		add(new PickingHand());
 	}
 
 	override public function update(elapsed:Float) {
