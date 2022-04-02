@@ -1,16 +1,11 @@
 package states;
 
-import nape.phys.BodyType;
-import flixel.addons.nape.FlxNapeSprite;
-import nape.geom.AABB;
-import entities.PhysicsThing;
-import flixel.addons.transition.FlxTransitionableState;
-import signals.Lifecycle;
-import flixel.FlxSprite;
 import constants.CbTypes;
 import flixel.FlxG;
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.addons.transition.FlxTransitionableState;
 import nape.geom.Vec2;
+import signals.Lifecycle;
 
 using extensions.FlxStateExt;
 
@@ -33,24 +28,10 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.space.gravity.set(gravity);
 	}
 
-	var player:FlxSprite;
-
-	var bowl:PhysicsThing;
-	var platter:PhysicsThing;
-
 	override public function create() {
 		super.create();
 
 		InitState();
-
-		bowl = new PhysicsThing(100, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
-		add(bowl);
-
-		var smallBowl = new PhysicsThing(150, 50, AssetPaths.SBowl__png, AssetPaths.SBowlBody__png);
-		add(smallBowl);
-
-		platter = new PhysicsThing(100, 500, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC);
-		add(platter);
 	}
 
 	override public function update(elapsed:Float) {

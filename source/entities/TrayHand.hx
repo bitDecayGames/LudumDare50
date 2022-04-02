@@ -15,7 +15,7 @@ class TrayHand extends PhysicsThing {
 	var initPosition:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
-		super(x, y, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC, false, jakeTanium());
+		super(x, y, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, 20, 5, BodyType.KINEMATIC, false, jakeTanium());
 
 		initPosition = body.position.x;
 	}

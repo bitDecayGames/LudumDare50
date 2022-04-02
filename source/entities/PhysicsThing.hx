@@ -24,8 +24,8 @@ class PhysicsThing extends FlxNapeSprite {
 	public var visuals:FlxSprite;
 
 	// MW: we could maybe set these for each type of asset to account for small forks and whatnot
-	private static var cellSize:Float = 20;
-	private static var subSize:Float = 5;
+	var cellSize:Float;
+	var subSize:Float;
 
 	var calcWidth:Int;
 	var calcHeight:Int;
@@ -39,12 +39,15 @@ class PhysicsThing extends FlxNapeSprite {
 
 	private var includeAssetBodyPhysicsShape:Bool = false;
 
-	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, ?type:BodyType, includeAssetBodyPhysicsShape:Bool = false,
-			?material:Material) {
+	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, cellSize:Float = 20, subSize:Float = 5, ?type:BodyType,
+			includeAssetBodyPhysicsShape:Bool = false, ?material:Material) {
 		super(x, y, asset);
 		if (type == null) {
 			type = BodyType.DYNAMIC;
 		}
+
+		this.cellSize = cellSize;
+		this.subSize = subSize;
 
 		this.type = type;
 

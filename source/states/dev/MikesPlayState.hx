@@ -19,14 +19,14 @@ class MikesPlayState extends FlxTransitionableState {
 		super.create();
 		PlayState.InitState();
 
-		add(new PhysicsThing(300, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, BodyType.DYNAMIC, true));
-		add(new PhysicsThing(150, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, BodyType.DYNAMIC, true));
-		add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, BodyType.DYNAMIC, true));
-		add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, BodyType.DYNAMIC, true));
+		add(new PhysicsThing(300, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		add(new PhysicsThing(150, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
 
 		add(new PickingHand());
 
-		var platter = new PhysicsThing(200, 500, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC);
+		var platter = new PhysicsThing(200, 500, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, 20, 5, BodyType.KINEMATIC);
 		add(platter);
 	}
 

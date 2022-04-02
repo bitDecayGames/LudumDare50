@@ -1,5 +1,6 @@
 package entities;
 
+import nape.phys.Material;
 import nape.geom.AABB;
 import nape.phys.BodyType;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -9,22 +10,22 @@ class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
 
 	private var picklist = [
-		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png),
-		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png),
-		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png),
-		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png),
-		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png),
-		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png),
-		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png),
-		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png),
-		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png),
-		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png),
-		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png),
-		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png),
-		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png),
-		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png),
-		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png),
-		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png)
+		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, 20, 5, false),
+		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, 20, 5, true),
+		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, 20, 5, true)
 	];
 
 	public function new(thingCount:Int) {
@@ -36,7 +37,7 @@ class Table extends PhysicsThing {
 			// trace('spawning a ${assets.img}');
 			var iX = FlxG.random.float(x - width / 2, x + width / 2);
 			var iY = FlxG.random.float(y - height / 2 - 100, y - height / 2 - 50);
-			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions);
+			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions, assets.cellSize, assets.subSize);
 			var aabb = thing.body.bounds;
 
 			// Would rather use Int.max sort of thing here
@@ -92,9 +93,18 @@ class Table extends PhysicsThing {
 class ThingDef {
 	public var img:FlxGraphicAsset;
 	public var collisions:FlxGraphicAsset;
+	public var cellSize:Float;
+	public var subSize:Float;
+	public var includeAssetBodyPhysicsShape:Bool;
+	public var material:Null<Material>;
 
-	public function new(img:FlxGraphicAsset, collisions:FlxGraphicAsset) {
+	public function new(img:FlxGraphicAsset, collisions:FlxGraphicAsset, cellSize:Float, subSize:Float, includeAssetBodyPhysicsShape:Bool,
+			?material:Material) {
 		this.img = img;
 		this.collisions = collisions;
+		this.cellSize = cellSize;
+		this.subSize = subSize;
+		this.includeAssetBodyPhysicsShape = includeAssetBodyPhysicsShape;
+		this.material = material;
 	}
 }
