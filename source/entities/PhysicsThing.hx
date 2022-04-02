@@ -76,9 +76,9 @@ class PhysicsThing extends FlxNapeSprite {
 		body.shapes.clear();
 		if (includeAssetBodyPhysicsShape) {
 			// TODO: MW this interaction filter is most likely wrong, ugh
-			buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER));
+			buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)));
 		}
-		buildBody(bitmapShell, new InteractionFilter());
+		buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)));
 		body.setShapeMaterials(material != null ? material : Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
