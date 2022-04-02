@@ -13,3 +13,4 @@ textpop git https://github.com/bitDecayGames/text-pop.git
 # misc deps
 dialog-manager git https://github.com/Tanz0rz/haxe-dialog-manager.git
 haxefmod git https://github.com/Tanz0rz/haxe-fmod.git
+nape-haxe4 2.0.22 
