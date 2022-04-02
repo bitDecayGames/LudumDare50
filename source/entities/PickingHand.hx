@@ -1,5 +1,6 @@
 package entities;
 
+import openfl.ui.Mouse;
 import nape.geom.Vec2;
 import nape.constraint.PivotJoint;
 import flixel.addons.nape.FlxNapeSpace;
@@ -27,9 +28,6 @@ class PickingHand extends FlxSprite {
 
 		endGrab();
 		offset.set(HAND_OFFSET_X, HAND_OFFSET_Y);
-
-		FlxG.mouse.useSystemCursor = true;
-		FlxG.mouse.visible = false;
 	}
 
 	override public function update(delta:Float) {

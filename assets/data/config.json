@@ -12,8 +12,8 @@
 		"allowClickToSkip": true
 	},
 	"mouse": {
-		"cursorVisible": true,
-		"useSystemCursor": true
+		"cursorVisible": false,
+		"useSystemCursor": false
 	},
 	"menus": {
 		"mouseNavigation": true,
