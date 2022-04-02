@@ -3,7 +3,7 @@ package states.dev;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
-import entities.Player;
+import entities.Table;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
@@ -16,10 +16,16 @@ class LogansPlayState extends FlxTransitionableState {
 		super.create();
 		Lifecycle.startup.dispatch();
 
+		PlayState.InitState();
+
 		FlxG.camera.pixelPerfectRender = true;
 
-		player = new Player(FlxColor.MAGENTA);
-		add(player);
+		var table = new Table(4);
+		add(table);
+
+		for (thing in table.items) {
+			add(thing);
+		}
 	}
 
 	override public function update(elapsed:Float) {

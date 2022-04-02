@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.addons.nape.FlxNapeSprite;
 import openfl.ui.Mouse;
 import nape.geom.Vec2;
 import nape.constraint.PivotJoint;
@@ -53,24 +54,38 @@ class PickingHand extends FlxSprite {
 		loadGraphic(AssetPaths.handClosed__png);
 		isGrabbing = true;
 
+		// the flx-way of trying to click an object
+		// var pnt = FlxPoint.get(x, y);
+		// for (member in FlxG.state.members) {
+		// 	if (Std.isOfType(member, FlxNapeSprite)) {
+		// 		var spr = cast(member, FlxNapeSprite); // MW: safe cast will throw exceptions...
+		// 		spr.updateHitbox();
+		// 		if (spr != null && spr.body != null && spr.overlapsPoint(pnt)) {
+		// 			var body = spr.body;
+		// 			if (!body.isDynamic()) {
+		// 				continue;
+		// 			}
+		// 			joint.anchor1.set(pos);
+		// 			joint.anchor2.set(body.worldPointToLocal(pos, true));
+		// 			joint.body2 = body;
+		// 			joint.active = true;
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
+		// the Nap way of trying to click an object
 		var pos = Vec2.get(x, y);
 		for (body in FlxNapeSpace.space.bodiesUnderPoint(pos)) {
 			if (!body.isDynamic()) {
 				continue;
 			}
 
-			// Configure hand joint to drag this body.
-			//   We initialise the anchor point on this body so that
-			//   constraint is satisfied.
-			//
-			//   The second argument of worldPointToLocal means we get back
-			//   a 'weak' Vec2 which will be automatically sent back to object
-			//   pool when setting the handJoint's anchor2 property.
-			joint.body2 = body;
+			joint.anchor1.set(pos);
 			joint.anchor2.set(body.worldPointToLocal(pos, true));
-
-			// Enable hand joint!
+			joint.body2 = body;
 			joint.active = true;
+			break;
 		}
 		pos.dispose();
 	}
