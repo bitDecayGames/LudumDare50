@@ -63,10 +63,9 @@ class PhysicsThing extends FlxNapeSprite {
 		body.type = type;
 		body.shapes.clear();
 		invalidate(new AABB(0, 0, bitmap.width, bitmap.height), FlxNapeSpace.space);
+		body.setShapeMaterials(Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
-
-		body.setShapeMaterials(Material.rubber());
 	}
 
 	private function invalidate(region:AABB, space:Space) {
