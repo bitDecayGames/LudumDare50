@@ -78,10 +78,9 @@ class PhysicsThing extends FlxNapeSprite {
 			buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER));
 		}
 		buildBody(bitmapShell, new InteractionFilter());
+		body.setShapeMaterials(Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
-
-		body.setShapeMaterials(Material.rubber());
 	}
 
 	/**

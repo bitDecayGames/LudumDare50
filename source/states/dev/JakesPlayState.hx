@@ -3,23 +3,24 @@ package states.dev;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
-import entities.Player;
+import entities.TrayHand;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
 using extensions.FlxStateExt;
 
 class JakesPlayState extends FlxTransitionableState {
-	var player:FlxSprite;
+	var trayHand:FlxSprite;
 
 	override public function create() {
 		super.create();
-		Lifecycle.startup.dispatch();
+		PlayState.InitState();
+		// Lifecycle.startup.dispatch();
 
-		FlxG.camera.pixelPerfectRender = true;
+		// FlxG.camera.pixelPerfectRender = true;
 
-		player = new Player(FlxColor.RED);
-		add(player);
+		trayHand = new TrayHand(250, 200);
+		add(trayHand);
 	}
 
 	override public function update(elapsed:Float) {
