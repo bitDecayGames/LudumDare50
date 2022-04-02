@@ -30,9 +30,9 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.drawDebug = true;
 		FlxNapeSpace.space.gravity.set(gravity);
 
-		var bg = new FlxSprite(0, 0, AssetPaths.HaxeFlixelLogo__png);
+		var bg = new FlxSprite(0, 0, AssetPaths.trayHand__png);
 		add(bg);
-		FlxG.bitmap.add(AssetPaths.HaxeFlixelLogo__png, true, "terrainTest");
+		FlxG.bitmap.add(AssetPaths.trayHand__png, true, "terrainTest");
 		var gfx = FlxG.bitmap.get("terrainTest");
 
 		var terrain = new PhysicsThing(gfx.bitmap, bg, 30, 5);
