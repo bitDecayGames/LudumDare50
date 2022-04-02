@@ -1,19 +1,20 @@
 package states;
 
-import flixel.input.keyboard.FlxKey;
+import config.Configure;
+import constants.CbTypes;
 import entities.PhysicsThing;
-import nape.phys.BodyType;
-import flixel.addons.nape.FlxNapeSprite;
-import flixel.util.FlxColor;
-import flixel.FlxSprite;
 import entities.PickingHand;
 import entities.Table;
 import entities.TrayHand;
-import constants.CbTypes;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxColor;
 import nape.geom.Vec2;
+import nape.phys.BodyType;
 import signals.Lifecycle;
 
 using extensions.FlxStateExt;
@@ -37,6 +38,10 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.drawDebug = true;
 		#end
 		FlxNapeSpace.space.gravity.set(gravity);
+
+		// this also gets updated on focus (but even this doesn't really work)
+		FlxG.mouse.visible = Configure.config.mouse.cursorVisible;
+		FlxG.mouse.useSystemCursor = Configure.config.mouse.useSystemCursor;
 	}
 
 	private var allThings:Array<PhysicsThing> = [];

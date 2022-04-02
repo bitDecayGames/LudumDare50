@@ -13,8 +13,8 @@ import flixel.FlxSprite;
 
 class PickingHand extends FlxSprite {
 	// the offset of the hand to the point at which the object is picked up
-	private static var HAND_OFFSET_X = 90.0;
-	private static var HAND_OFFSET_Y = 115.0;
+	private static var HAND_OFFSET_X = 75.0;
+	private static var HAND_OFFSET_Y = 85.0;
 
 	private var joint:PivotJoint;
 	private var isGrabbing = false;
@@ -43,10 +43,21 @@ class PickingHand extends FlxSprite {
 
 	private function snapToMouse() {
 		var pos = FlxG.mouse.getWorldPosition();
-		x = pos.x;
-		y = pos.y;
 		if (joint.active) {
-			joint.anchor1.setxy(x, y);
+			joint.anchor1.setxy(pos.x, pos.y);
+			snapHandToJoint();
+		} else {
+			x = pos.x;
+			y = pos.y;
+		}
+	}
+
+	private function snapHandToJoint() {
+		if (joint.active) {
+			var anchor = joint.anchor2;
+			var pos = joint.body2.localPointToWorld(anchor);
+			x = pos.x;
+			y = pos.y;
 		}
 	}
 
