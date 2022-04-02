@@ -15,7 +15,7 @@ using extensions.FlxStateExt;
 class PlayState extends FlxTransitionableState {
 
 	// Units: Pixels/sec/sec
-	var gravity:Vec2 = Vec2.get().setxy(0, 10);
+	var gravity:Vec2 = Vec2.get().setxy(0, 50);
 
 	var player:FlxSprite;
 
@@ -30,13 +30,13 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.drawDebug = true;
 		FlxNapeSpace.space.gravity.set(gravity);
 
-		var bg = new FlxSprite(0, 0, AssetPaths.trayHand__png);
-		add(bg);
-		FlxG.bitmap.add(AssetPaths.trayHand__png, true, "terrainTest");
-		var gfx = FlxG.bitmap.get("terrainTest");
+		var bowlSprite = new PhysicsThing(0, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
+		add(bowlSprite);
+		// FlxG.bitmap.add(AssetPaths.LBowlBody__png, true, "LBowl");
+		// var gfx = FlxG.bitmap.get("LBowl");
 
-		var terrain = new PhysicsThing(gfx.bitmap, bg, 30, 5);
-		terrain.invalidate(new AABB(0, 0, gfx.width, gfx.height), FlxNapeSpace.space);
+		// var bowl = new PhysicsThing(gfx.bitmap, bowlSprite, 5, 2);
+		// bowl.invalidate(new AABB(0, 0, gfx.width, gfx.height), FlxNapeSpace.space);
 	}
 
 	override public function update(elapsed:Float) {

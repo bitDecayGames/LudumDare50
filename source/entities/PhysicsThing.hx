@@ -1,5 +1,9 @@
 package entities;
 
+import flixel.FlxG;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.addons.nape.FlxNapeSprite;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxSprite;
 import nape.geom.AABB;
 import nape.geom.IsoFunction.IsoFunctionDef;
@@ -11,39 +15,55 @@ import nape.shape.Polygon;
 import nape.space.Space;
 import openfl.display.BitmapData;
 
-class PhysicsThing {
+class PhysicsThing extends FlxNapeSprite {
 	public var bitmap:BitmapData;
 	public var visuals:FlxSprite;
 
 	var cellSize:Float;
 	var subSize:Float;
 
-	var width:Int;
-	var height:Int;
-	var cells:Array<Body>;
+	var calcWidth:Int;
+	var calcHeight:Int;
+	// var cells:Array<Body>;
 
 	var isoBounds:AABB;
 
 	public var isoGranularity:Vec2;
 	public var isoQuality:Int = 8;
 
-	public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
-		this.bitmap = bitmap;
-		this.visuals = visuals;
-		this.cellSize = cellSize;
-		this.subSize = subSize;
+    public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset) {
+	// public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
+    // public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
+        super(asset);
+		// this.bitmap = bitmap;
+		// this.visuals = visuals;
+		this.cellSize = 10;
+		this.subSize = 2;
+        
+        
+        FlxG.bitmap.add(bodyAsset, true, bodyAsset);
+		bitmap = FlxG.bitmap.get(bodyAsset).bitmap;
+        
+		// cells = [];
+		calcWidth = Math.ceil(bitmap.width / cellSize);
+		calcHeight = Math.ceil(bitmap.height / cellSize);
+		// for (i in 0...width * height)
+		// 	cells.push(null);
 
-		cells = [];
-		width = Math.ceil(bitmap.width / cellSize);
-		height = Math.ceil(bitmap.height / cellSize);
-		for (i in 0...width * height)
-			cells.push(null);
-
+        // offset.x = calcWidth / 2;
+        // for (shape in body.shapes) {
+        //     shape.
+        // }
+        
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
+
+		body = new Body(BodyType.DYNAMIC);
+        invalidate(new AABB(0, 0, bitmap.width, bitmap.height), FlxNapeSpace.space);
+        body.space = FlxNapeSpace.space;
 	}
 
-	public function invalidate(region:AABB, space:Space) {
+	private function invalidate(region:AABB, space:Space) {
 		// compute effected cells.
 		var x0 = Std.int(region.min.x / cellSize);
 		if (x0 < 0)
@@ -52,20 +72,20 @@ class PhysicsThing {
 		if (y0 < 0)
 			y0 = 0;
 		var x1 = Std.int(region.max.x / cellSize);
-		if (x1 >= width)
-			x1 = width - 1;
+		if (x1 >= calcWidth)
+			x1 = calcWidth - 1;
 		var y1 = Std.int(region.max.y / cellSize);
-		if (y1 >= height)
-			y1 = height - 1;
+		if (y1 >= calcHeight)
+			y1 = calcHeight - 1;
 
 		for (y in y0...(y1 + 1)) {
 			for (x in x0...(x1 + 1)) {
-				var b = cells[y * width + x];
-				if (b != null) {
-					// If body exists, we'll simply re-use it.
-					b.space = null;
-					b.shapes.clear();
-				}
+				// var b = cells[y * width + x];
+				// if (b != null) {
+				// 	// If body exists, we'll simply re-use it.
+				// 	b.space = null;
+				// 	b.shapes.clear();
+				// }
 
 				isoBounds.x = x * cellSize;
 				isoBounds.y = y * cellSize;
@@ -73,17 +93,22 @@ class PhysicsThing {
 				if (polys.empty())
 					continue;
 
-				if (b == null) {
-					cells[y * width + x] = b = new Body(BodyType.STATIC);
-					b.userData.data = this;
-				}
+				// if (b == null) {
+				// 	cells[y * width + x] = b = new Body(BodyType.STATIC);
+				// 	b.userData.data = this;
+				// }
 
 				for (p in polys) {
 					var qolys = p.convexDecomposition(true);
 					for (q in qolys) {
 						var bodyPoly = new Polygon(q);
+
+                        // TODO: does this work?
+                        for (vert in bodyPoly.localVerts) {
+                            vert.x -= calcWidth / 2;
+                        }
 						// trace(bodyPolyelocalVerts);
-						b.shapes.add(bodyPoly);
+						body.shapes.add(bodyPoly);
 
 						// Recycle GeomPoly and its vertices
 						q.dispose();
@@ -99,7 +124,7 @@ class PhysicsThing {
 				// Recycle list nodes
 				polys.clear();
 
-				b.space = space;
+				// b.space = space;
 			}
 		}
 
