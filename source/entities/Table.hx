@@ -1,5 +1,6 @@
 package entities;
 
+import nape.geom.AABB;
 import nape.phys.BodyType;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.FlxG;
@@ -29,16 +30,62 @@ class Table extends PhysicsThing {
 	public function new(thingCount:Int) {
 		super(500, 500, AssetPaths.table__png, AssetPaths.tableBody__png, BodyType.KINEMATIC);
 
+		var boundingBoxes:Array<AABB> = [];
 		for (i in 0...thingCount) {
 			var assets = getRandomThing();
+			// trace('spawning a ${assets.img}');
 			var iX = FlxG.random.float(x - width / 2, x + width / 2);
 			var iY = FlxG.random.float(y - height / 2 - 100, y - height / 2 - 50);
-			items.push(new PhysicsThing(iX, iY, assets.img, assets.collisions));
+			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions);
+			var aabb = thing.body.bounds;
+
+			// Would rather use Int.max sort of thing here
+			var minY = 100000.0;
+			var minX = 100000.0;
+			for (box in boundingBoxes) {
+				// trace('checking our aabb (${aabb}) against other box (${box})');
+				if (aabbsOverlap(aabb, box)) {
+					// trace('overlap detected');
+					minY = Math.min(minY, aabb.y);
+					minX = Math.min(minX, aabb.x);
+
+					// trace('new minX: ${minX}, new minY: ${minY}');
+				}
+			}
+
+			// add our aabb for the other items
+			boundingBoxes.push(aabb);
+
+			if (minY != 100000.0 || minX != 100000.0) {
+				if (aabb.y - minY < aabb.x - minX) {
+					// trace('moving ${assets.img} up ${thing.y - (minY - aabb.height)}');
+					thing.body.position.y = minY - aabb.height;
+				} else {
+					// trace('moving ${assets.img} left ${thing.x - (minX - aabb.width)}');
+					thing.body.position.x = minX - aabb.width;
+				}
+			}
+
+			items.push(thing);
 		}
 	}
 
 	private function getRandomThing():ThingDef {
 		return picklist[FlxG.random.int(0, picklist.length - 1)];
+	}
+
+	private function aabbsOverlap(a:AABB, b:AABB):Bool {
+		// If one rectangle is on left side of other
+		if (a.x >= b.x + b.width || b.x >= a.x + a.width) {
+			return false;
+		}
+
+		// If one rectangle is above other
+		if (a.y >= b.y + b.height || b.y >= a.y + a.height) {
+			return false;
+		}
+
+		return true;
 	}
 }
 
