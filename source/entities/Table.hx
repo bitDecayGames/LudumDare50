@@ -2,12 +2,14 @@ package entities;
 
 import nape.phys.Material;
 import nape.geom.AABB;
+import nape.geom.Vec2;
 import nape.phys.BodyType;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.FlxG;
 
 class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
+	public var numItems:Int = 0;
 
 	private var picklist = [
 		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, true),
@@ -28,10 +30,38 @@ class Table extends PhysicsThing {
 		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, true)
 	];
 
+	private var removed:Bool = false;
+	private var removePosition = new Vec2(1500, 0);
+	private var deleteBuffer:Float = 10;
+
 	public function new(x:Float, y:Float, thingCount:Int) {
 		super(x, y, AssetPaths.table__png, AssetPaths.tableBody__png, BodyType.KINEMATIC);
-
+		removePosition.y = y;
 		spawnThings(thingCount);
+	}
+
+	override public function update(delta:Float) {
+		super.update(delta);
+
+		if (numItems > 0) {
+			numItems = 0;
+			for (i in items) {
+				if (i.x >= body.position.x - (body.bounds.width / 2) && i.x <= body.position.x + (body.bounds.width / 2)) {
+					numItems++;
+				}
+			}
+		} else if (!removed) {
+			removed = true;
+			removeTable();
+		} else {
+			if (body.position.x >= removePosition.x - deleteBuffer) {
+				this.destroy();
+			}
+		}
+	}
+
+	function removeTable() {
+		body.setVelocityFromTarget(removePosition, 0, 0.5);
 	}
 
 	public function spawnThings(thingCount:Int):Array<PhysicsThing> {
@@ -75,6 +105,7 @@ class Table extends PhysicsThing {
 
 			items.push(thing);
 			madeThings.push(thing);
+			numItems++;
 		}
 		return madeThings;
 	}
