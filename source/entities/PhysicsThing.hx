@@ -23,8 +23,9 @@ class PhysicsThing extends FlxNapeSprite {
 	public var bitmapFiller:BitmapData;
 	public var visuals:FlxSprite;
 
-	var cellSize:Float;
-	var subSize:Float;
+	// MW: we could maybe set these for each type of asset to account for small forks and whatnot
+	private static var cellSize:Float = 20;
+	private static var subSize:Float = 5;
 
 	var calcWidth:Int;
 	var calcHeight:Int;
@@ -46,9 +47,6 @@ class PhysicsThing extends FlxNapeSprite {
 		}
 
 		this.type = type;
-
-		this.cellSize = 10;
-		this.subSize = 2;
 
 		this.includeAssetBodyPhysicsShape = includeAssetBodyPhysicsShape;
 		if (includeAssetBodyPhysicsShape) {
