@@ -38,7 +38,8 @@ class PhysicsThing extends FlxNapeSprite {
 
 	private var includeAssetBodyPhysicsShape:Bool = false;
 
-	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, ?type:BodyType, includeAssetBodyPhysicsShape:Bool = false) {
+	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, ?type:BodyType, includeAssetBodyPhysicsShape:Bool = false,
+			?material:Material) {
 		super(x, y, asset);
 		if (type == null) {
 			type = BodyType.DYNAMIC;
@@ -63,14 +64,14 @@ class PhysicsThing extends FlxNapeSprite {
 
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
-		setup();
+		setup(material);
 	}
 
 	override public function update(delta:Float) {
 		super.update(delta);
 	}
 
-	private function setup() {
+	private function setup(?material:Material) {
 		body.type = type;
 		body.shapes.clear();
 		if (includeAssetBodyPhysicsShape) {
@@ -78,7 +79,7 @@ class PhysicsThing extends FlxNapeSprite {
 			buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)));
 		}
 		buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)));
-		body.setShapeMaterials(Material.glass());
+		body.setShapeMaterials(material != null ? material : Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
 	}

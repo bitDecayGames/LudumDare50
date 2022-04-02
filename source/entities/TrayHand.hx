@@ -4,17 +4,18 @@ import js.html.Console;
 import flixel.FlxG;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
+import helpers.Materials;
 
 class TrayHand extends PhysicsThing {
 	// +/- max position tray hand can move from start
-	var MAX_POSITION:Float = 25;
-	var MOVE_DISTANCE:Float = 10;
+	var MAX_POSITION:Float = 10;
+	var MOVE_DISTANCE:Float = 1;
 	var MOVE_TIME:Float = 0.0625;
 
 	var initPosition:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
-		super(x, y, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC);
+		super(x, y, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, BodyType.KINEMATIC, false, jakeTanium());
 
 		initPosition = body.position.x;
 	}
