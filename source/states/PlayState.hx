@@ -30,7 +30,7 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.drawDebug = true;
 		FlxNapeSpace.space.gravity.set(gravity);
 
-		var bowlSprite = new PhysicsThing(0, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
+		var bowlSprite = new PhysicsThing(100, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
 		add(bowlSprite);
 		// FlxG.bitmap.add(AssetPaths.LBowlBody__png, true, "LBowl");
 		// var gfx = FlxG.bitmap.get("LBowl");

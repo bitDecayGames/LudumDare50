@@ -31,7 +31,7 @@ class PhysicsThing extends FlxNapeSprite {
 	public var isoGranularity:Vec2;
 	public var isoQuality:Int = 8;
 
-    public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset) {
+    public function new(setX:Float, setY:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset) {
 	// public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
     // public function new(bitmap:BitmapData, visuals:FlxSprite, cellSize:Float, subSize:Float) {
         super(asset);
@@ -59,8 +59,13 @@ class PhysicsThing extends FlxNapeSprite {
 		isoGranularity = Vec2.get(subSize, subSize);
 
 		body = new Body(BodyType.DYNAMIC);
+        // invalidate(new AABB(x, y, bitmap.width, bitmap.height), FlxNapeSpace.space);
         invalidate(new AABB(0, 0, bitmap.width, bitmap.height), FlxNapeSpace.space);
         body.space = FlxNapeSpace.space;
+        body.userData.data = this;
+
+        x = setX;
+        y = setY;
 	}
 
 	private function invalidate(region:AABB, space:Space) {
@@ -105,8 +110,10 @@ class PhysicsThing extends FlxNapeSprite {
 
                         // TODO: does this work?
                         for (vert in bodyPoly.localVerts) {
-                            vert.x -= calcWidth / 2;
+                            vert.x -= width/2;
+                            vert.y -= height/2;
                         }
+
 						// trace(bodyPolyelocalVerts);
 						body.shapes.add(bodyPoly);
 
