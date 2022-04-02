@@ -83,6 +83,7 @@ class PhysicsThing extends FlxNapeSprite {
 		body.setShapeMaterials(material != null ? material : Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
+		body.isBullet = true;
 	}
 
 	/**

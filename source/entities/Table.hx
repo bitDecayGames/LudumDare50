@@ -10,34 +10,40 @@ class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
 
 	private var picklist = [
-		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, 20, 5, false),
-		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, 20, 5, true),
-		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, 20, 5, true)
+		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, true),
+		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, true),
+		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, true),
+		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, false),
+		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, false),
+		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, false),
+		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, false),
+		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, false),
+		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, false),
+		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, true),
+		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, true),
+		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, true),
+		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, true),
+		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, true),
+		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, true),
+		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, true)
 	];
 
-	public function new(thingCount:Int) {
-		super(500, 500, AssetPaths.table__png, AssetPaths.tableBody__png, BodyType.KINEMATIC);
+	public function new(x:Float, y:Float, thingCount:Int) {
+		super(x, y, AssetPaths.table__png, AssetPaths.tableBody__png, BodyType.KINEMATIC);
 
+		spawnThings(thingCount);
+	}
+
+	public function spawnThings(thingCount:Int):Array<PhysicsThing> {
+		var madeThings:Array<PhysicsThing> = [];
 		var boundingBoxes:Array<AABB> = [];
 		for (i in 0...thingCount) {
 			var assets = getRandomThing();
 			// trace('spawning a ${assets.img}');
 			var iX = FlxG.random.float(x - width / 2, x + width / 2);
 			var iY = FlxG.random.float(y - height / 2 - 100, y - height / 2 - 50);
-			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions, assets.cellSize, assets.subSize);
+			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions, assets.cellSize, assets.subSize, BodyType.DYNAMIC,
+				assets.includeAssetBodyPhysicsShape, assets.material);
 			var aabb = thing.body.bounds;
 
 			// Would rather use Int.max sort of thing here
@@ -68,7 +74,9 @@ class Table extends PhysicsThing {
 			}
 
 			items.push(thing);
+			madeThings.push(thing);
 		}
+		return madeThings;
 	}
 
 	private function getRandomThing():ThingDef {
@@ -98,7 +106,7 @@ class ThingDef {
 	public var includeAssetBodyPhysicsShape:Bool;
 	public var material:Null<Material>;
 
-	public function new(img:FlxGraphicAsset, collisions:FlxGraphicAsset, cellSize:Float, subSize:Float, includeAssetBodyPhysicsShape:Bool,
+	public function new(img:FlxGraphicAsset, collisions:FlxGraphicAsset, cellSize:Float = 10, subSize:Float = 2, includeAssetBodyPhysicsShape:Bool,
 			?material:Material) {
 		this.img = img;
 		this.collisions = collisions;
