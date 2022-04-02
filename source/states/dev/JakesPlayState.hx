@@ -1,5 +1,7 @@
 package states.dev;
 
+import nape.phys.Material;
+import entities.PhysicsThing;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
@@ -10,8 +12,6 @@ import flixel.FlxG;
 using extensions.FlxStateExt;
 
 class JakesPlayState extends FlxTransitionableState {
-	var trayHand:FlxSprite;
-
 	override public function create() {
 		super.create();
 		PlayState.InitState();
@@ -19,8 +19,14 @@ class JakesPlayState extends FlxTransitionableState {
 
 		// FlxG.camera.pixelPerfectRender = true;
 
-		trayHand = new TrayHand(250, 200);
+		var trayHand = new TrayHand(250, 200);
 		add(trayHand);
+
+		var bowl = new PhysicsThing(175, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png);
+		add(bowl);
+
+		var smallBowl = new PhysicsThing(325, 100, AssetPaths.SBowl__png, AssetPaths.SBowlBody__png);
+		add(smallBowl);
 	}
 
 	override public function update(elapsed:Float) {
