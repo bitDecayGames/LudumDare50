@@ -27,7 +27,6 @@ import signals.Lifecycle;
 using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
-	// private var table:Table;
 	private var tableSpawner:TableSpawner;
 	private var heightometer:Heightometer;
 
@@ -46,7 +45,7 @@ class PlayState extends FlxTransitionableState {
 		#if debug
 		FlxNapeSpace.drawDebug = true;
 		#end
-		FlxNapeSpace.space.gravity.set(gravity);
+		// FlxNapeSpace.space.gravity.set(gravity);
 
 		// this also gets updated on focus (but even this doesn't really work)
 		FlxG.mouse.visible = Configure.config.mouse.cursorVisible;

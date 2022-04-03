@@ -17,7 +17,7 @@ class TableSpawner extends FlxObject {
 		super(x, y);
 		add = _add.bind(_);
 		addToAllThings = _addToAllThings.bind(_);
-		spawnLocation = new Vec2(x + 1000, y);
+		spawnLocation = new Vec2(x + 1500, y);
 		spawnTable();
 	}
 
@@ -38,7 +38,7 @@ class TableSpawner extends FlxObject {
 	}
 
 	private function spawnTable() {
-		table = new Table(spawnLocation.x, spawnLocation.y, 4);
+		table = new Table(spawnLocation.x, spawnLocation.y);
 		add(table);
 		for (thing in table.items) {
 			add(thing);
