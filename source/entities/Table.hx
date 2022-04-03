@@ -17,9 +17,9 @@ class Table extends PhysicsThing {
 		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 24, 8, true),
 		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 24, 8, true),
 		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, false),
-		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, false),
-		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, false),
+		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, true),
+		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, true),
+		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, true),
 		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, true),
 		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, true),
 		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, true),
@@ -45,10 +45,14 @@ class Table extends PhysicsThing {
 	override public function update(delta:Float) {
 		super.update(delta);
 
+		FlxG.watch.addQuick("num items", numItems);
+
 		if (numItems > 0) {
 			numItems = 0;
 			for (i in items) {
-				if (i.x >= body.position.x - (body.bounds.width / 2) && i.x <= body.position.x + (body.bounds.width / 2)) {
+				if (i.x >= body.position.x - (body.bounds.width / 2)
+					&& i.x <= body.position.x + (body.bounds.width / 2)
+					&& i.y <= body.position.y - (body.bounds.height / 2)) {
 					numItems++;
 				}
 			}
@@ -57,7 +61,8 @@ class Table extends PhysicsThing {
 			removeTable();
 		} else {
 			if (body.position.x >= removePosition.x - deleteBuffer) {
-				destroy();
+				kill();
+				active = false;
 			}
 		}
 	}
@@ -106,6 +111,9 @@ class Table extends PhysicsThing {
 
 			items.push(thing);
 			madeThings.push(thing);
+
+			thing.body.allowMovement = false;
+			thing.body.allowRotation = false;
 			numItems++;
 		}
 		return madeThings;
@@ -127,6 +135,28 @@ class Table extends PhysicsThing {
 		}
 
 		return true;
+	}
+
+	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
+		for (pet in items) {
+			if (pet.body != null) {
+				var petTarget:Vec2 = new Vec2(targetPosition.x + (pet.body.position.x - body.position.x), pet.body.position.y);
+				pet.body.setVelocityFromTarget(petTarget, targetRotation, deltaTime);
+			}
+		}
+	}
+
+	public function reactivateMeAndMyPets() {
+		body.velocity.set(new Vec2());
+		for (pet in items) {
+			if (pet.body != null) {
+				pet.body.velocity.set(new Vec2());
+				pet.body.allowMovement = true;
+				pet.body.allowRotation = true;
+				pet.body.disableCCD = false;
+			}
+		}
 	}
 }
 
