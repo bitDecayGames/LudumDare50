@@ -1,6 +1,7 @@
 package states;
 
 import flixel.group.FlxGroup;
+import haxefmod.flixel.FmodFlxUtilities;
 import flixel.system.FlxSound;
 import nape.callbacks.InteractionType;
 import nape.callbacks.CbEvent;
@@ -147,6 +148,7 @@ class PlayState extends FlxTransitionableState {
 				// TODO: This is bad! Loser!
 				thing.kill();
 				thing.active = false;
+				FmodFlxUtilities.TransitionToState(new LoseState());
 			}
 		}
 	}
