@@ -1,5 +1,6 @@
 package states.dev;
 
+import entities.TrayHand;
 import nape.phys.BodyType;
 import entities.PhysicsThing;
 import entities.PickingHand;
@@ -19,15 +20,14 @@ class MikesPlayState extends FlxTransitionableState {
 		super.create();
 		PlayState.InitState();
 
-		add(new PhysicsThing(300, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.KINEMATIC, true));
-		add(new PhysicsThing(150, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.KINEMATIC, true));
-		add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.KINEMATIC, true));
-		add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.KINEMATIC, true));
+		add(new PhysicsThing(300, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		add(new PhysicsThing(150, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		// add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
+		// add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
 
 		add(new PickingHand());
 
-		var platter = new PhysicsThing(200, 500, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, 20, 5, BodyType.KINEMATIC);
-		add(platter);
+		add(new TrayHand(200, 200));
 	}
 
 	override public function update(elapsed:Float) {
