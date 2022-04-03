@@ -128,38 +128,37 @@ class Table extends PhysicsThing {
 			if (pet.body != null) {
 				pet.body.velocity.set(new Vec2());
 				pet.body.allowMovement = true;
-				// pet.body.allowRotation = true;
+				pet.body.allowRotation = true;
 				pet.body.disableCCD = false;
 			}
 		}
 	}
 
 	private var tableConfigurations = [
-		// new TableConfiguration([
-		// 	new ThingDef(-140, 0, AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 24, 8),
-		// 	new ThingDef(-10, 0, AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 24, 8),
-		// 	new ThingDef(155, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 24, 8),
-		// 	new ThingDef(-85, -33, AssetPaths.Martini__png, AssetPaths.MartiniBody__png),
-		// 	new ThingDef(62, -33, AssetPaths.Martini__png, AssetPaths.MartiniBody__png),
-		// 	new ThingDef(-53, -105, AssetPaths.fork__png, AssetPaths.forkBody__png),
-		// 	new ThingDef(176, -33, AssetPaths.knife__png, AssetPaths.knifeBody__png),
-		// 	new ThingDef(107, -105, AssetPaths.spoon__png, AssetPaths.spoonBody__png),
-		// ]),
-		// new TableConfiguration([
-		// 	new ThingDef(148, 16, AssetPaths.MPlate__png, AssetPaths.MPlateBody__png),
-		// 	new ThingDef(-2, 16, AssetPaths.MPlate__png, AssetPaths.MPlateBody__png),
-		// 	new ThingDef(-137, 16, AssetPaths.MPlate__png, AssetPaths.MPlateBody__png),
-		// 	new ThingDef(-134, -26, AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png),
-		// 	new ThingDef(10, -25, AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png),
-		// 	new ThingDef(165, -57, AssetPaths.Stein__png, AssetPaths.SteinBody__png, 24, 8),
-		// 	new ThingDef(-65, -69, AssetPaths.LPlate__png, AssetPaths.LPlateBody__png),
-		// 	new ThingDef(-120, -97, AssetPaths.Shot__png, AssetPaths.ShotBody__png),
-		// 	new ThingDef(-66, -97, AssetPaths.Shot__png, AssetPaths.ShotBody__png),
-		// 	new ThingDef(-7, -96, AssetPaths.Shot__png, AssetPaths.ShotBody__png),
-		// 	new ThingDef(-65, -129, AssetPaths.fork__png, AssetPaths.forkBody__png),
-		// 	new ThingDef(133, -137, AssetPaths.fork__png, AssetPaths.forkBody__png)
-		// ]),
-		new TableConfiguration([])
+		new TableConfiguration([
+			new ThingDef(-140, 0, AssetPaths.SBowl__png),
+			new ThingDef(-10, 0, AssetPaths.MBowl__png),
+			new ThingDef(155, 0, AssetPaths.LBowl__png),
+			new ThingDef(-85, -33, AssetPaths.Martini__png),
+			new ThingDef(62, -33, AssetPaths.Martini__png),
+			new ThingDef(-53, -105, AssetPaths.fork__png),
+			new ThingDef(176, -33, AssetPaths.knife__png),
+			new ThingDef(107, -105, AssetPaths.spoon__png),
+		]),
+		new TableConfiguration([
+			new ThingDef(148, 16, AssetPaths.MPlate__png),
+			new ThingDef(-2, 16, AssetPaths.MPlate__png),
+			new ThingDef(-137, 16, AssetPaths.MPlate__png),
+			new ThingDef(-134, -26, AssetPaths.RoundMug__png),
+			new ThingDef(10, -25, AssetPaths.RoundMug__png),
+			new ThingDef(165, -57, AssetPaths.Stein__png),
+			new ThingDef(-65, -69, AssetPaths.LPlate__png),
+			new ThingDef(-120, -97, AssetPaths.Shot__png),
+			new ThingDef(-66, -97, AssetPaths.Shot__png),
+			new ThingDef(-7, -96, AssetPaths.Shot__png),
+			new ThingDef(-65, -129, AssetPaths.fork__png),
+			new ThingDef(133, -137, AssetPaths.fork__png)
+		]) // new TableConfiguration([])
 	];
 }
 
