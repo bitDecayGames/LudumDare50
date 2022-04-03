@@ -56,8 +56,7 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.space.gravity.set(gravity);
 
 		// this also gets updated on focus (but even this doesn't really work)
-		FlxG.mouse.visible = Configure.config.mouse.cursorVisible;
-		FlxG.mouse.useSystemCursor = Configure.config.mouse.useSystemCursor;
+		FlxG.mouse.visible = false;
 	}
 
 	private var allThings:Array<PhysicsThing> = [];
@@ -111,7 +110,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	var maxY = 10000.0;
-	var victoryY = 5;
+	var victoryY = 50;
 	var endStarted = false;
 
 	override public function update(elapsed:Float) {

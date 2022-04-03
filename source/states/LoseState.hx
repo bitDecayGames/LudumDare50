@@ -31,6 +31,8 @@ class LoseState extends FlxUIState {
 		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
 		_btnDone.updateHitbox();
 		add(_btnDone);
+		// restore mouse
+		FlxG.mouse.visible = true;
 	}
 
 	override public function update(elapsed:Float):Void {
