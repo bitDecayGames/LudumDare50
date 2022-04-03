@@ -1,5 +1,6 @@
 package states;
 
+import flixel.group.FlxGroup;
 import flixel.system.FlxSound;
 import nape.callbacks.InteractionType;
 import nape.callbacks.CbEvent;
@@ -30,6 +31,9 @@ class PlayState extends FlxTransitionableState {
 	private var tableSpawner:TableSpawner;
 	private var heightometer:Heightometer;
 	private var trayHand:TrayHand;
+
+	private var foregroundGroup:FlxGroup = new FlxGroup();
+	private var other:FlxGroup = new FlxGroup();
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -63,16 +67,19 @@ class PlayState extends FlxTransitionableState {
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
 
-		trayHand = new TrayHand(250, 700);
-		add(trayHand);
+		add(other);
+		add(foregroundGroup);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, add, allThings.push);
-		add(tableSpawner);
+		trayHand = new TrayHand(250, 700);
+		other.add(trayHand);
+
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, other.add, allThings.push);
+		other.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
-		add(heightometer);
+		foregroundGroup.add(heightometer);
 
-		add(new PickingHand());
+		foregroundGroup.add(new PickingHand());
 
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			itemCollideCallback));

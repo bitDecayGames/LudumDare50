@@ -21,6 +21,10 @@ class PickingHand extends FlxSprite {
 
 	public function new() {
 		super();
+		loadGraphic(AssetPaths.handAnimation__png, true, 148, 99);
+		animation.add('open', [2, 1, 0], false);
+		animation.add('close', [0, 1, 2], false);
+		animation.play('open');
 
 		joint = new PivotJoint(FlxNapeSpace.space.world, null, Vec2.weak(), Vec2.weak());
 		joint.space = FlxNapeSpace.space;
@@ -62,7 +66,7 @@ class PickingHand extends FlxSprite {
 	}
 
 	private function startGrab() {
-		loadGraphic(AssetPaths.handClosed__png);
+		animation.play('close');
 		isGrabbing = true;
 
 		// the flx-way of trying to click an object
@@ -103,7 +107,7 @@ class PickingHand extends FlxSprite {
 	}
 
 	private function endGrab() {
-		loadGraphic(AssetPaths.handOpen__png);
+		animation.play('open');
 		isGrabbing = false;
 		joint.active = false;
 		if (joint.body2 != null) {
