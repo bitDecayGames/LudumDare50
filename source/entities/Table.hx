@@ -14,9 +14,9 @@ class Table extends PhysicsThing {
 	public var numItems:Int = 0;
 
 	public static var picklist = [
-		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, true),
-		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, true),
-		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, true),
+		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 24, 8, true),
 		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, false),
 		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, false),
 		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, false),
@@ -24,12 +24,12 @@ class Table extends PhysicsThing {
 		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, false),
 		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, false),
 		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, true),
-		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, true),
+		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, 24, 8, true),
 		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, true),
 		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, true),
 		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, true),
-		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, true),
-		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, true)
+		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, 24, 8, true)
 	];
 
 	private var removed:Bool = false;
