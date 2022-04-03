@@ -4,6 +4,8 @@ import flixel.system.FlxSound;
 import nape.callbacks.InteractionType;
 import nape.callbacks.CbEvent;
 import nape.callbacks.InteractionListener;
+import entities.Heightometer;
+import flixel.FlxObject;
 import helpers.TableSpawner;
 import config.Configure;
 import constants.CbTypes;
@@ -27,6 +29,7 @@ using extensions.FlxStateExt;
 class PlayState extends FlxTransitionableState {
 	// private var table:Table;
 	private var tableSpawner:TableSpawner;
+	private var heightometer:Heightometer;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -63,6 +66,9 @@ class PlayState extends FlxTransitionableState {
 		tableSpawner = new TableSpawner(800, 400, 1600, 700, add, allThings.push);
 		add(tableSpawner);
 
+		heightometer = new Heightometer(trayHand);
+		add(heightometer);
+
 		add(new PickingHand());
 
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
@@ -86,14 +92,8 @@ class PlayState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		for (thing in allThings) {
-			// Not removing items from the right cause thats where the table comes from
-			if (thing.y > FlxG.height + 100 || thing.y < 0 || thing.x < 0) {
-				// TODO: This is bad! Loser!
-				thing.kill();
-				thing.active = false;
-			}
-		}
+		KillThingsOutsideBoundary(allThings);
+		heightometer.y = CalculateHeighestObject(allThings);
 
 		// if (FlxG.keys.justPressed.T) {
 		// 	for (thing in table.spawnThings(3)) {
@@ -110,5 +110,27 @@ class PlayState extends FlxTransitionableState {
 	override public function onFocus() {
 		super.onFocus();
 		this.handleFocus();
+	}
+
+	public static function KillThingsOutsideBoundary(things:Array<PhysicsThing>) {
+		for (thing in things) {
+			// Not removing items from the right cause thats where the table comes from
+			if (thing.y > FlxG.height + 100 || thing.y < -500 || thing.x < -500 || thing.x > FlxG.width + 2000) {
+				// TODO: This is bad! Loser!
+				thing.kill();
+				thing.active = false;
+			}
+		}
+	}
+
+	public static function CalculateHeighestObject(things:Array<PhysicsThing>):Float {
+		var heighest = 100000.0;
+		for (thing in things) {
+			var y = thing.y - 2;
+			if (thing.active && y < heighest) {
+				heighest = y;
+			}
+		}
+		return heighest;
 	}
 }
