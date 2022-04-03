@@ -1,5 +1,6 @@
 package entities;
 
+import js.html.Float32Array;
 import nape.phys.Material;
 import nape.geom.AABB;
 import nape.geom.Vec2;
@@ -146,5 +147,9 @@ class ThingDef {
 		this.subSize = subSize;
 		this.includeAssetBodyPhysicsShape = includeAssetBodyPhysicsShape;
 		this.material = material;
+	}
+
+	public function toPhysicsThing(x:Float, y:Float, bodyType:BodyType):PhysicsThing {
+		return new PhysicsThing(x, y, img, collisions, cellSize, subSize, bodyType, includeAssetBodyPhysicsShape, material);
 	}
 }

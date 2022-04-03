@@ -44,13 +44,9 @@ class AllShapesState extends FlxTransitionableState {
 		var things:Array<PhysicsThing> = [];
 		var i:Int = 0;
 		for (def in Table.picklist) {
-			things.push(spawnThing(x + ((i % columns) * spacing), y + (Math.floor(i / columns) * spacing), def));
+			things.push(def.toPhysicsThing(x + ((i % columns) * spacing), y + (Math.floor(i / columns) * spacing), BodyType.KINEMATIC));
 			i++;
 		}
 		return things;
-	}
-
-	private function spawnThing(x:Float, y:Float, def:ThingDef):PhysicsThing {
-		return new PhysicsThing(x, y, def.img, def.collisions, def.cellSize, def.subSize, BodyType.KINEMATIC, def.includeAssetBodyPhysicsShape, def.material);
 	}
 }
