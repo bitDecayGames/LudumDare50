@@ -1,5 +1,6 @@
 package states.dev;
 
+import entities.Heightometer;
 import entities.TrayHand;
 import nape.phys.BodyType;
 import entities.PhysicsThing;
@@ -14,8 +15,6 @@ import flixel.FlxG;
 using extensions.FlxStateExt;
 
 class MikesPlayState extends FlxTransitionableState {
-	var player:FlxSprite;
-
 	override public function create() {
 		super.create();
 		PlayState.InitState();
@@ -25,9 +24,9 @@ class MikesPlayState extends FlxTransitionableState {
 		// add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
 		// add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
 
+		var tray = new TrayHand(200, 600);
+		add(tray);
 		add(new PickingHand());
-
-		add(new TrayHand(200, 200));
 	}
 
 	override public function update(elapsed:Float) {
