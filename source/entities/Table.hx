@@ -13,71 +13,61 @@ class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
 	public var numItems:Int = 0;
 
-	// public static var picklist = [
-	// 	new ThingDef(AssetPaths.SBowl__png),
-	// 	new ThingDef(AssetPaths.MBowl__png),
-	// 	new ThingDef(AssetPaths.LBowl__png),
-	// 	new ThingDef(AssetPaths.SPlate__png),
-	// 	new ThingDef(AssetPaths.MPlate__png),
-	// 	new ThingDef(AssetPaths.LPlate__png),
-	// 	new ThingDef(AssetPaths.fork__png),
-	// 	new ThingDef(AssetPaths.knife__png),
-	// 	new ThingDef(AssetPaths.spoon__png),
-	// 	new ThingDef(AssetPaths.Martini__png),
-	// 	new ThingDef(AssetPaths.Pint__png),
-	// 	new ThingDef(AssetPaths.RoundMug__png),
-	// 	new ThingDef(AssetPaths.Shot__png),
-	// 	new ThingDef(AssetPaths.SquareMug__png),
-	// 	new ThingDef(AssetPaths.Stein__png),
-	// 	new ThingDef(AssetPaths.Tall__png)
-	// 	new ThingDef(AssetPaths.Wine__png),
-	// 	new ThingDef(AssetPaths.wineGlass__png)
-	// ];
+	private var reactivated:Bool = false;
 	private var removed:Bool = false;
-	private var removePosition = new Vec2(1500, 0);
+	private var spawnLocation:Vec2;
 	private var deleteBuffer:Float = 10;
 
 	public function new(x:Float, y:Float) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
-		removePosition.y = y;
+		spawnLocation = new Vec2(x, y);
 		spawnThings();
 	}
 
 	override public function update(delta:Float) {
 		super.update(delta);
 
-		// output item nums
-		for (i in 0...items.length) {
-			if (i >= 0) {
-				var absolutePos = new Vec2(items[i].body.position.x - body.position.x, items[i].body.position.y - (body.position.y - 85));
-				FlxG.watch.addQuick('item#${i}', absolutePos);
-			}
-		}
+		// // output item nums
+		// for (i in 0...items.length) {
+		// 	if (i >= 0) {
+		// 		var absolutePos = new Vec2(items[i].body.position.x - body.position.x, items[i].body.position.y - (body.position.y - 85));
+		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
+		// 	}
+		// }
 
-		if (numItems > 0) {
+		// FlxG.watch.addQuick('num items', numItems);
+		// FlxG.watch.addQuick('table position', body.position);
+		// FlxG.watch.addQuick('table bounds', body.bounds);
+
+		if (reactivated) {
 			numItems = 0;
-			for (i in items) {
-				if (i.x >= body.position.x - (body.bounds.width / 2)
-					&& i.x <= body.position.x + (body.bounds.width / 2)
-					&& i.y <= body.position.y - (body.bounds.height / 2)
-					&& i.active) {
+			for (i in 0...items.length) {
+				// FlxG.watch.addQuick('Item#${i}', items[i].body.position);
+				if (items[i].x >= body.position.x - (body.bounds.width / 2)
+					&& items[i].x <= body.position.x + (body.bounds.width / 2)
+					&& items[i].y <= body.position.y - (body.bounds.height / 2)
+					&& items[i].exists) {
 					numItems++;
 				}
 			}
-		} else if (!removed) {
-			removed = true;
-			removeTable();
-		} else {
-			if (body.position.x >= removePosition.x - deleteBuffer) {
-				kill();
-				destroy();
-				active = false;
+
+			if (numItems == 0) {
+				if (!removed) {
+					removed = true;
+					removeTable();
+				} else {
+					if (body.position.x >= spawnLocation.x - deleteBuffer) {
+						kill();
+						destroy();
+						active = false;
+					}
+				}
 			}
 		}
 	}
 
 	function removeTable() {
-		body.setVelocityFromTarget(removePosition, 0, 0.5);
+		body.setVelocityFromTarget(spawnLocation, 0, 0.5);
 	}
 
 	private function spawnThings() {
@@ -96,20 +86,6 @@ class Table extends PhysicsThing {
 
 	private function getRandomConfiguration():TableConfiguration {
 		return tableConfigurations[FlxG.random.int(0, tableConfigurations.length - 1)];
-	}
-
-	private function aabbsOverlap(a:AABB, b:AABB):Bool {
-		// If one rectangle is on left side of other
-		if (a.x >= b.x + b.width || b.x >= a.x + a.width) {
-			return false;
-		}
-
-		// If one rectangle is above other
-		if (a.y >= b.y + b.height || b.y >= a.y + a.height) {
-			return false;
-		}
-
-		return true;
 	}
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
@@ -132,6 +108,7 @@ class Table extends PhysicsThing {
 				pet.body.disableCCD = false;
 			}
 		}
+		reactivated = true;
 	}
 
 	private var tableConfigurations = [
@@ -186,10 +163,50 @@ class Table extends PhysicsThing {
 			new ThingDef(-116, 16, AssetPaths.LPlate__png),
 			new ThingDef(116, -8, AssetPaths.fork__png),
 			new ThingDef(47, -115, AssetPaths.spoon__png),
-		])
+		]),
+		new TableConfiguration([
+			new ThingDef(-13, -264, AssetPaths.SquareMug__png),
+			new ThingDef(-54, -68, AssetPaths.SquareMug__png),
+			new ThingDef(-121, -1, AssetPaths.SquareMug__png),
+			new ThingDef(-7, -1, AssetPaths.SquareMug__png),
+			new ThingDef(101, -2, AssetPaths.SquareMug__png),
+			new ThingDef(35, -68, AssetPaths.SquareMug__png),
+			new ThingDef(78, -35, AssetPaths.LPlate__png),
+			new ThingDef(-77, -35, AssetPaths.LPlate__png),
+			new ThingDef(-7, -99, AssetPaths.LPlate__png),
+			new ThingDef(10, -172, AssetPaths.Stein__png)
+		]),
+		// new TableConfiguration([
+		// 	new ThingDef(98, -57, AssetPaths.Shot__png),
+		// 	new ThingDef(-95, -57, AssetPaths.Shot__png),
+		// 	new ThingDef(95, -7, AssetPaths.RoundMug__png),
+		// 	new ThingDef(-78, -7, AssetPaths.RoundMug__png),
+		// 	new ThingDef(-49, -141, AssetPaths.Wine__png),
+		// 	new ThingDef(51, -141, AssetPaths.Wine__png),
+		// ])
 	];
 }
 
+// public static var picklist = [
+// 	new ThingDef(AssetPaths.SBowl__png),
+// 	new ThingDef(AssetPaths.MBowl__png),
+// 	new ThingDef(AssetPaths.LBowl__png),
+// 	new ThingDef(AssetPaths.SPlate__png),
+// 	new ThingDef(AssetPaths.MPlate__png),
+// 	new ThingDef(AssetPaths.LPlate__png),
+// 	new ThingDef(AssetPaths.fork__png),
+// 	new ThingDef(AssetPaths.knife__png),
+// 	new ThingDef(AssetPaths.spoon__png),
+// 	new ThingDef(AssetPaths.Martini__png),
+// 	new ThingDef(AssetPaths.Pint__png),
+// 	new ThingDef(AssetPaths.RoundMug__png),
+// 	new ThingDef(AssetPaths.Shot__png),
+// 	new ThingDef(AssetPaths.SquareMug__png),
+// 	new ThingDef(AssetPaths.Stein__png),
+// 	new ThingDef(AssetPaths.Tall__png)
+// 	new ThingDef(AssetPaths.Wine__png),
+// 	new ThingDef(AssetPaths.wineGlass__png)
+// ];
 // -300, -100,
 // -200, -100,
 // -100, -100,
@@ -211,7 +228,6 @@ class Table extends PhysicsThing {
 // 100, -300,
 // 200, -300,
 // 300, -300,
-
 class TableConfiguration {
 	public var things:Array<ThingDef>;
 
