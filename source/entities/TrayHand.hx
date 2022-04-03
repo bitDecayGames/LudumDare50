@@ -19,7 +19,7 @@ class TrayHand extends PhysicsThing {
 	private var ocellateCenter:FlxPoint;
 
 	public function new(x:Float = 0, y:Float = 0) {
-		super(x, y, AssetPaths.trayHand__png, AssetPaths.trayHandBody__png, 20, 5, BodyType.KINEMATIC, false, jakeTanium());
+		super(x, y, AssetPaths.trayHand__png, BodyType.KINEMATIC, jakeTanium());
 
 		initPosition = body.position.x;
 		ocellateCenter = FlxPoint.get(body.position.x + OCELLATE_MAGNITUDE, body.position.y + OCELLATE_MAGNITUDE);

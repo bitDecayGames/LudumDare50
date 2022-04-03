@@ -14,22 +14,24 @@ class Table extends PhysicsThing {
 	public var numItems:Int = 0;
 
 	public static var picklist = [
-		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, true),
-		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, true),
-		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, true),
-		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, true),
-		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, true),
-		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, true),
-		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, true),
-		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, true),
-		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, true),
-		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, true),
-		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, 24, 8, true),
-		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, 24, 8, true)
+		new ThingDef(AssetPaths.SBowl__png),
+		new ThingDef(AssetPaths.MBowl__png),
+		new ThingDef(AssetPaths.LBowl__png),
+		new ThingDef(AssetPaths.SPlate__png),
+		new ThingDef(AssetPaths.MPlate__png),
+		new ThingDef(AssetPaths.LPlate__png),
+		new ThingDef(AssetPaths.fork__png),
+		new ThingDef(AssetPaths.knife__png),
+		new ThingDef(AssetPaths.spoon__png),
+		new ThingDef(AssetPaths.Martini__png),
+		new ThingDef(AssetPaths.Pint__png),
+		new ThingDef(AssetPaths.RoundMug__png),
+		new ThingDef(AssetPaths.Shot__png),
+		new ThingDef(AssetPaths.SquareMug__png),
+		new ThingDef(AssetPaths.Stein__png),
+		new ThingDef(AssetPaths.Tall__png),
+		new ThingDef(AssetPaths.Wine__png),
+		new ThingDef(AssetPaths.wineGlass__png)
 	];
 
 	private var removed:Bool = false;
@@ -37,7 +39,7 @@ class Table extends PhysicsThing {
 	private var deleteBuffer:Float = 10;
 
 	public function new(x:Float, y:Float, thingCount:Int) {
-		super(x, y, AssetPaths.table__png, AssetPaths.tableBody__png, BodyType.KINEMATIC);
+		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
 		removePosition.y = y;
 		spawnThings(thingCount);
 	}
@@ -161,23 +163,14 @@ class Table extends PhysicsThing {
 
 class ThingDef {
 	public var img:FlxGraphicAsset;
-	public var collisions:FlxGraphicAsset;
-	public var cellSize:Float;
-	public var subSize:Float;
-	public var includeAssetBodyPhysicsShape:Bool;
 	public var material:Null<Material>;
 
-	public function new(img:FlxGraphicAsset, collisions:FlxGraphicAsset, cellSize:Float = 10, subSize:Float = 2, includeAssetBodyPhysicsShape:Bool,
-			?material:Material) {
+	public function new(img:FlxGraphicAsset, ?material:Material) {
 		this.img = img;
-		this.collisions = collisions;
-		this.cellSize = cellSize;
-		this.subSize = subSize;
-		this.includeAssetBodyPhysicsShape = includeAssetBodyPhysicsShape;
 		this.material = material;
 	}
 
 	public function toPhysicsThing(x:Float, y:Float, bodyType:BodyType):PhysicsThing {
-		return new PhysicsThing(x, y, img, collisions, cellSize, subSize, bodyType, includeAssetBodyPhysicsShape, material);
+		return new PhysicsThing(x, y, img, bodyType, material);
 	}
 }
