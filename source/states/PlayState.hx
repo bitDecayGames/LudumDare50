@@ -158,15 +158,13 @@ class PlayState extends FlxTransitionableState {
 		this.handleFocus();
 	}
 
-	public static function KillThingsOutsideBoundary() {
-		for (thing in FlxG.state.members) {
+	public function KillThingsOutsideBoundary() {
+		for (thing in other) {
 			if (thing.active) {
 				if (Std.isOfType(thing, SoftBody)) {
-					trace("Found softbody");
 					var obj = cast(thing, SoftBody);
 					var pos = obj.avgPos;
 					if (pos.y > FlxG.height + 100 || pos.y < -500 || pos.x < -500 || pos.x > FlxG.width + 2000) {
-						trace("Kill softbody");
 						obj.kill();
 						obj.active = false;
 						obj.destroy();
@@ -176,7 +174,12 @@ class PlayState extends FlxTransitionableState {
 					if (obj.y > FlxG.height + 100 || obj.y < -500 || obj.x < -500 || obj.x > FlxG.width + 2000) {
 						obj.kill();
 						obj.active = false;
-						FmodFlxUtilities.TransitionToState(new LoseState());
+
+						if (endStarted) {
+							FmodFlxUtilities.TransitionToState(new VictoryState());
+						} else {
+							FmodFlxUtilities.TransitionToState(new LoseState());
+						}
 					}
 				}
 			}
