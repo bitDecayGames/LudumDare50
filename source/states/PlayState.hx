@@ -111,6 +111,8 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	var maxY = 10000.0;
+	var victoryY = 5;
+	var endStarted = false;
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
@@ -139,6 +141,12 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
+
+		if (FlxG.keys.justPressed.E || (maxY <= victoryY && !endStarted)) {
+			// TODO: Sneeze sfx
+			endStarted = true;
+			trayHand.sneeze();
+		}
 	}
 
 	override public function onFocusLost() {
