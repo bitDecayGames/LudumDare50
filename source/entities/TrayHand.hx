@@ -1,5 +1,6 @@
 package entities;
 
+import helpers.StackInfo;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
 import nape.geom.Vec2;
@@ -52,6 +53,39 @@ class TrayHand extends PhysicsThing {
 		// } else {
 		// 	body.velocity.set(new Vec2(0, 0));
 		// }
+	}
+
+	public function findCurrentHighest():StackInfo {
+		var fringe:Array<PhysicsThing> = [this];
+		var visitCount:Int = 0;
+		var alreadyVisited:Map<PhysicsThing, Bool> = [];
+		var highest:PhysicsThing = null;
+
+		while (fringe.length > 0) {
+			var current = fringe.pop();
+			if (alreadyVisited.exists(current)) {
+				// don't expand this thing's contacts if we've already done it
+				continue;
+			} else {
+				// mark that we've looked at this thing so we don't do it again later
+				alreadyVisited.set(current, true);
+				visitCount++;
+			}
+
+			if (highest == null || current.body.position.y < highest.body.position.y) {
+				if (!current.inTow) {
+					// Only set this if the player isn't actively holding the object
+					highest = current;
+				}
+			}
+
+			for (thing => value in current.inContactWith) {
+				fringe.push(thing);
+			}
+		}
+
+		// sub one because tray doesn't count as an item on the pile
+		return new StackInfo(highest, visitCount - 1);
 	}
 
 	private function ocellate() {

@@ -22,6 +22,8 @@ import openfl.display.BitmapData;
 import helpers.Materials;
 
 class PhysicsThing extends FlxNapeSprite {
+	static public var SPIN_DAMPING = 0.95;
+
 	public var bitmapShell:BitmapData;
 	public var bitmapFiller:BitmapData;
 	public var visuals:FlxSprite;
@@ -35,7 +37,9 @@ class PhysicsThing extends FlxNapeSprite {
 
 	public var inTow:Bool = false;
 
-	static public var SPIN_DAMPING = 0.95;
+	// This is here to track all other physics things we are touching so we can figure out
+	// if each is part of the pile
+	public var inContactWith:Map<PhysicsThing, Bool> = [];
 
     // @formatter:off
 	private var vertices = [

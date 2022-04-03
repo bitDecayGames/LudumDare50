@@ -29,6 +29,7 @@ using extensions.FlxStateExt;
 class PlayState extends FlxTransitionableState {
 	private var tableSpawner:TableSpawner;
 	private var heightometer:Heightometer;
+	private var trayHand:TrayHand;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -62,7 +63,7 @@ class PlayState extends FlxTransitionableState {
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
 
-		var trayHand = new TrayHand(250, 700);
+		trayHand = new TrayHand(250, 700);
 		add(trayHand);
 
 		tableSpawner = new TableSpawner(800, 700, 1600, 700, add, allThings.push);
@@ -75,8 +76,8 @@ class PlayState extends FlxTransitionableState {
 
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			itemCollideCallback));
-		// FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
-		// 	itemCollideCallback));
+		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
+			itemCollideCallback));
 	}
 
 	var clinkSFX = FlxG.sound.cache(AssetPaths.glass_clink1__wav);
@@ -86,10 +87,20 @@ class PlayState extends FlxTransitionableState {
 		var item2 = cast(cb.int2.castBody.userData.data, PhysicsThing);
 		trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
 
-		// TODO: These are delayed for some stupid reason... why
-		// clinkSFX.play();
-		// FlxG.sound.play(AssetPaths.glass_clink1__wav);
+		if (cb.event == CbEvent.BEGIN) {
+			// TODO: These are delayed for some stupid reason... why
+			// clinkSFX.play();
+			// FlxG.sound.play(AssetPaths.glass_clink1__wav);
+
+			item1.inContactWith.set(item2, true);
+			item2.inContactWith.set(item1, true);
+		} else if (cb.event == CbEvent.END) {
+			item1.inContactWith.remove(item2);
+			item2.inContactWith.remove(item1);
+		}
 	}
+
+	var maxY = 10000.0;
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
@@ -102,6 +113,14 @@ class PlayState extends FlxTransitionableState {
 		// 		add(thing);
 		// 	}
 		// }
+
+		var stackInfo = trayHand.findCurrentHighest();
+		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
+			maxY = stackInfo.heightItem.y;
+		}
+
+		heightometer.y = maxY;
+		heightometer.itemCount = stackInfo.itemCount;
 	}
 
 	override public function onFocusLost() {

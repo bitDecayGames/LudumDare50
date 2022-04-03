@@ -29,6 +29,8 @@ class Heightometer extends FlxObject {
 	private var line:FlxTiledSprite;
 	private var tray:FlxObject;
 
+	public var itemCount = 0;
+
 	public function new(tray:FlxObject) {
 		super(0, tray.y);
 		this.tray = tray;
@@ -75,6 +77,8 @@ class Heightometer extends FlxObject {
 		if (inches > 0) {
 			str += inches + "in";
 		}
+
+		str += ' (${itemCount} items)';
 		return str;
 	}
 }

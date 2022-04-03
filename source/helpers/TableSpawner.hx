@@ -15,9 +15,9 @@ class TableSpawner extends FlxObject {
 
 	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, _add:(Object:flixel.FlxBasic) -> {}, _addToAllThings:(PhysicsThing) -> Int) {
 		super(x, y);
-		add = _add.bind(_);
-		addToAllThings = _addToAllThings.bind(_);
-		spawnLocation = new Vec2(x + 1500, y);
+		add = _add;
+		addToAllThings = _addToAllThings;
+		spawnLocation = new Vec2(x + 1000, y);
 		spawnTable();
 	}
 
