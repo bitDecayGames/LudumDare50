@@ -123,15 +123,17 @@ class SoftBody extends FlxSprite {
 		// and in determining area for gas forces.
 		var refEdges:Array<Edge> = [];
 		body.userData.refEdges = refEdges;
+
+		var inner = poly;
 		// Deflate the input polygon for inner vertices
-		var inner = poly.inflate(-thickness);
+		var outer = poly.inflate(thickness);
 		// Create Bodies about the border of polygon.
-		var start = poly.current();
+		var start = outer.current();
 		do {
 			// Current and next vertex along polygon.
-			var current = poly.current();
-			poly.skipForward(1);
-			var next = poly.current();
+			var current = outer.current();
+			outer.skipForward(1);
+			var next = outer.current();
 			// Current and next vertex along inner-polygon.
 			var iCurrent = inner.current();
 			inner.skipForward(1);
@@ -167,7 +169,7 @@ class SoftBody extends FlxSprite {
 			// Release vectors to object pool.
 			delta.dispose();
 			iDelta.dispose();
-		} while (poly.current() != start);
+		} while (outer.current() != start);
 			// Create sets of PivotJoints to link segments together.
 		for (i in 0...segments.length) {
 			var leftSegment = segments[(i - 1 + segments.length) % segments.length];
@@ -222,8 +224,8 @@ class SoftBody extends FlxSprite {
             y,
             0xd6a146,
             Polygon.regular(
-                /*xRadius*/30,
-                /*yRadius*/30,
+                /*xRadius*/15,
+                /*yRadius*/15,
                 /*segments*/30),
             /*thickness*/ 15,
             /*discretisation*/ 120,
@@ -239,8 +241,8 @@ class SoftBody extends FlxSprite {
             y,
             0xf2e28c,
             Polygon.regular(
-                /*xRadius*/20,
-                /*yRadius*/20,
+                /*xRadius*/10,
+                /*yRadius*/10,
                 /*segments*/20),
             /*thickness*/ 10,
             /*discretisation*/ 30,
@@ -256,10 +258,10 @@ class SoftBody extends FlxSprite {
             y,
             0xd8c563,
             Polygon.regular(
-                /*xRadius*/40,
-                /*yRadius*/10,
+                /*xRadius*/30,
+                /*yRadius*/5,
                 /*segments*/20),
-            /*thickness*/ 4,
+            /*thickness*/ 10,
             /*discretisation*/ 60,
             /*frequency*/ 1,
             /*damping*/ 200);
@@ -272,14 +274,21 @@ class SoftBody extends FlxSprite {
             x,
             y,
             0x512b04,
-            Polygon.regular(
-                /*xRadius*/20,
-                /*yRadius*/40,
-                /*segments*/10),
-            /*thickness*/ 4,
-            /*discretisation*/ 60,
+			rect(50, 5),
+            /*thickness*/ 10,
+            /*discretisation*/ 30,
             /*frequency*/ 1,
-            /*damping*/ 200);
+            /*damping*/ 30);
         // @formatter:on
+	}
+
+	private static function rect(width:Float, height:Float):Array<Vec2> {
+		var points:Array<Vec2> = [
+			Vec2.get(0, 0),
+			Vec2.get(width, 0),
+			Vec2.get(width, height),
+			Vec2.get(0, height),
+		];
+		return points;
 	}
 }

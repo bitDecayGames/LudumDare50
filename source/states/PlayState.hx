@@ -1,12 +1,9 @@
 package states;
 
-<<<<<<< HEAD
 import flixel.group.FlxGroup;
 import haxefmod.flixel.FmodFlxUtilities;
-=======
 import flixel.math.FlxPoint;
 import entities.SoftBody;
->>>>>>> 7702409 (J E L L O, its alive)
 import flixel.system.FlxSound;
 import nape.callbacks.InteractionType;
 import nape.callbacks.CbEvent;
@@ -158,11 +155,14 @@ class PlayState extends FlxTransitionableState {
 		for (thing in FlxG.state.members) {
 			if (thing.active) {
 				if (Std.isOfType(thing, SoftBody)) {
+					trace("Found softbody");
 					var obj = cast(thing, SoftBody);
 					var pos = obj.avgPos;
 					if (pos.y > FlxG.height + 100 || pos.y < -500 || pos.x < -500 || pos.x > FlxG.width + 2000) {
+						trace("Kill softbody");
 						obj.kill();
 						obj.active = false;
+						obj.destroy();
 					}
 				} else if (Std.isOfType(thing, FlxObject)) {
 					var obj = cast(thing, FlxObject);
