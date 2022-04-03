@@ -1,6 +1,6 @@
 package states.dev;
 
-import entities.TrayHand;
+import entities.Table;
 import nape.phys.BodyType;
 import entities.PhysicsThing;
 import entities.PickingHand;
@@ -13,21 +13,17 @@ import flixel.FlxG;
 
 using extensions.FlxStateExt;
 
-class MikesPlayState extends FlxTransitionableState {
-	var player:FlxSprite;
+class AllShapesState extends FlxTransitionableState {
+	static var columns:Int = 5;
+	static var spacing:Float = 200.0;
 
 	override public function create() {
 		super.create();
 		PlayState.InitState();
 
-		add(new PhysicsThing(300, 0, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
-		add(new PhysicsThing(150, 100, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
-		// add(new PhysicsThing(300, 200, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
-		// add(new PhysicsThing(150, 300, AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 20, 5, BodyType.DYNAMIC, true));
-
-		add(new PickingHand());
-
-		add(new TrayHand(200, 200));
+		for (thing in spawnAllThings(100, 100)) {
+			add(thing);
+		}
 	}
 
 	override public function update(elapsed:Float) {
@@ -42,5 +38,15 @@ class MikesPlayState extends FlxTransitionableState {
 	override public function onFocus() {
 		super.onFocus();
 		this.handleFocus();
+	}
+
+	private function spawnAllThings(x:Float, y:Float):Array<PhysicsThing> {
+		var things:Array<PhysicsThing> = [];
+		var i:Int = 0;
+		for (def in Table.picklist) {
+			things.push(def.toPhysicsThing(x + ((i % columns) * spacing), y + (Math.floor(i / columns) * spacing), BodyType.KINEMATIC));
+			i++;
+		}
+		return things;
 	}
 }

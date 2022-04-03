@@ -1,5 +1,6 @@
 package states;
 
+import helpers.TableSpawner;
 import config.Configure;
 import constants.CbTypes;
 import entities.PhysicsThing;
@@ -20,7 +21,8 @@ import signals.Lifecycle;
 using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
-	private var table:Table;
+	// private var table:Table;
+	private var tableSpawner:TableSpawner;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -51,16 +53,11 @@ class PlayState extends FlxTransitionableState {
 
 		InitState();
 
-		var trayHand = new TrayHand(250, 700);
+		var trayHand = new TrayHand(250, 400);
 		add(trayHand);
 
-		table = new Table(800, 700, 4);
-		add(table);
-
-		for (thing in table.items) {
-			add(thing);
-			allThings.push(thing);
-		}
+		tableSpawner = new TableSpawner(800, 400, 1600, 700, add, allThings.push);
+		add(tableSpawner);
 
 		add(new PickingHand());
 	}
@@ -69,17 +66,18 @@ class PlayState extends FlxTransitionableState {
 		super.update(elapsed);
 
 		for (thing in allThings) {
-			if (thing.y > FlxG.height + 100 || thing.x > FlxG.width || thing.x < 0) {
+			// if (thing.y > FlxG.height + 100 || thing.x > FlxG.width || thing.x < 0) {
+			if (thing.y > FlxG.height + 100) {
 				// TODO: This is bad! Loser!
-				thing.destroy();
+				thing.kill();
 			}
 		}
 
-		if (FlxG.keys.justPressed.T) {
-			for (thing in table.spawnThings(3)) {
-				add(thing);
-			}
-		}
+		// if (FlxG.keys.justPressed.T) {
+		// 	for (thing in table.spawnThings(3)) {
+		// 		add(thing);
+		// 	}
+		// }
 	}
 
 	override public function onFocusLost() {

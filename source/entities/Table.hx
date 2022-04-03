@@ -1,33 +1,35 @@
 package entities;
 
+import js.html.Float32Array;
 import nape.phys.Material;
 import nape.geom.AABB;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.FlxG;
+import nape.geom.Vec2;
 
 class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
 	public var numItems:Int = 0;
 
-	private var picklist = [
-		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, true),
-		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, true),
-		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, true),
-		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, false),
-		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, false),
-		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, false),
-		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, false),
-		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, false),
-		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, false),
+	public static var picklist = [
+		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.SPlate__png, AssetPaths.SPlateBody__png, true),
+		new ThingDef(AssetPaths.MPlate__png, AssetPaths.MPlateBody__png, true),
+		new ThingDef(AssetPaths.LPlate__png, AssetPaths.LPlateBody__png, true),
+		new ThingDef(AssetPaths.fork__png, AssetPaths.forkBody__png, true),
+		new ThingDef(AssetPaths.knife__png, AssetPaths.knifeBody__png, true),
+		new ThingDef(AssetPaths.spoon__png, AssetPaths.spoonBody__png, true),
 		new ThingDef(AssetPaths.Martini__png, AssetPaths.MartiniBody__png, true),
-		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, true),
+		new ThingDef(AssetPaths.Pint__png, AssetPaths.PintBody__png, 24, 8, true),
 		new ThingDef(AssetPaths.RoundMug__png, AssetPaths.RoundMugBody__png, true),
 		new ThingDef(AssetPaths.Shot__png, AssetPaths.ShotBody__png, true),
 		new ThingDef(AssetPaths.SquareMug__png, AssetPaths.SquareMugBody__png, true),
-		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, true),
-		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, true)
+		new ThingDef(AssetPaths.Stein__png, AssetPaths.SteinBody__png, 24, 8, true),
+		new ThingDef(AssetPaths.Tall__png, AssetPaths.TallBody__png, 24, 8, true)
 	];
 
 	private var removed:Bool = false;
@@ -43,10 +45,14 @@ class Table extends PhysicsThing {
 	override public function update(delta:Float) {
 		super.update(delta);
 
+		FlxG.watch.addQuick("num items", numItems);
+
 		if (numItems > 0) {
 			numItems = 0;
 			for (i in items) {
-				if (i.x >= body.position.x - (body.bounds.width / 2) && i.x <= body.position.x + (body.bounds.width / 2)) {
+				if (i.x >= body.position.x - (body.bounds.width / 2)
+					&& i.x <= body.position.x + (body.bounds.width / 2)
+					&& i.y <= body.position.y - (body.bounds.height / 2)) {
 					numItems++;
 				}
 			}
@@ -55,7 +61,8 @@ class Table extends PhysicsThing {
 			removeTable();
 		} else {
 			if (body.position.x >= removePosition.x - deleteBuffer) {
-				this.destroy();
+				kill();
+				active = false;
 			}
 		}
 	}
@@ -72,8 +79,7 @@ class Table extends PhysicsThing {
 			// trace('spawning a ${assets.img}');
 			var iX = FlxG.random.float(x - width / 2, x + width / 2);
 			var iY = FlxG.random.float(y - height / 2 - 100, y - height / 2 - 50);
-			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions, assets.cellSize, assets.subSize, BodyType.DYNAMIC,
-				assets.includeAssetBodyPhysicsShape, assets.material);
+			var thing = assets.toPhysicsThing(iX, iY, BodyType.DYNAMIC);
 			var aabb = thing.body.bounds;
 
 			// Would rather use Int.max sort of thing here
@@ -105,6 +111,9 @@ class Table extends PhysicsThing {
 
 			items.push(thing);
 			madeThings.push(thing);
+
+			thing.body.allowMovement = false;
+			thing.body.allowRotation = false;
 			numItems++;
 		}
 		return madeThings;
@@ -127,6 +136,28 @@ class Table extends PhysicsThing {
 
 		return true;
 	}
+
+	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
+		for (pet in items) {
+			if (pet.body != null) {
+				var petTarget:Vec2 = new Vec2(targetPosition.x + (pet.body.position.x - body.position.x), pet.body.position.y);
+				pet.body.setVelocityFromTarget(petTarget, targetRotation, deltaTime);
+			}
+		}
+	}
+
+	public function reactivateMeAndMyPets() {
+		body.velocity.set(new Vec2());
+		for (pet in items) {
+			if (pet.body != null) {
+				pet.body.velocity.set(new Vec2());
+				pet.body.allowMovement = true;
+				pet.body.allowRotation = true;
+				pet.body.disableCCD = false;
+			}
+		}
+	}
 }
 
 class ThingDef {
@@ -145,5 +176,9 @@ class ThingDef {
 		this.subSize = subSize;
 		this.includeAssetBodyPhysicsShape = includeAssetBodyPhysicsShape;
 		this.material = material;
+	}
+
+	public function toPhysicsThing(x:Float, y:Float, bodyType:BodyType):PhysicsThing {
+		return new PhysicsThing(x, y, img, collisions, cellSize, subSize, bodyType, includeAssetBodyPhysicsShape, material);
 	}
 }
