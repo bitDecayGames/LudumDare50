@@ -111,6 +111,31 @@ class SoftBody extends FlxSprite {
 		super.kill();
 	}
 
+	public function temporarilyDisable() {
+		softBody.visitBodies((b) -> {
+			b.allowMovement = false;
+			b.allowRotation = false;
+		});
+	}
+
+	public function reEnable() {
+		softBody.visitBodies((b) -> {
+			b.allowMovement = true;
+			b.allowRotation = true;
+		});
+	}
+
+	public function setVelocityFromTarget(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		var center = softBody.COM();
+		softBody.visitBodies((b) -> {
+			b.setVelocityFromTarget(targetPosition.sub(center.sub(b.position)), targetRotation, deltaTime);
+		});
+	}
+
+	public function centerOfMass():Vec2 {
+		return softBody.COM();
+	}
+
 	static function polygonalBody(position:Vec2, thickness:Float, discretisation:Float, frequency:Float, damping:Float, poly:GeomPoly):Compound {
 		// We're going to collect all Bodies and Constraints into a SoftBody
 		// for ease of use hereafter.

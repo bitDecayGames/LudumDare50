@@ -44,6 +44,10 @@ class TableSpawner extends FlxObject {
 			add(thing);
 			addToAllThings(thing);
 		}
+		for (softy in table.softies) {
+			trace("Add softy");
+			add(softy);
+		}
 		tableJustSpawned = true;
 	}
 

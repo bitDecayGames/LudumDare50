@@ -11,6 +11,7 @@ import nape.geom.Vec2;
 
 class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
+	public var softies:Array<SoftBody> = [];
 	public var numItems:Int = 0;
 
 	private var reactivated:Bool = false;
@@ -82,6 +83,11 @@ class Table extends PhysicsThing {
 			thing.body.allowRotation = false;
 			numItems++;
 		}
+		for (softy in configuration.softies) {
+			var softBody = softy.body(softy.x + body.position.x, softy.y + body.position.y - 85);
+			softBody.temporarilyDisable();
+			softies.push(softBody);
+		}
 	}
 
 	private function getRandomConfiguration():TableConfiguration {
@@ -96,6 +102,11 @@ class Table extends PhysicsThing {
 				pet.body.setVelocityFromTarget(petTarget, targetRotation, deltaTime);
 			}
 		}
+		for (pet in softies) {
+			var com = pet.centerOfMass();
+			var petTarget:Vec2 = new Vec2(targetPosition.x + (com.x - body.position.x), com.y);
+			pet.setVelocityFromTarget(petTarget, targetRotation, deltaTime);
+		}
 	}
 
 	public function reactivateMeAndMyPets() {
@@ -107,6 +118,10 @@ class Table extends PhysicsThing {
 				pet.body.allowRotation = true;
 				pet.body.disableCCD = false;
 			}
+		}
+		for (pet in softies) {
+			trace("Re-enable softie");
+			pet.reEnable();
 		}
 		reactivated = true;
 	}
@@ -121,7 +136,7 @@ class Table extends PhysicsThing {
 			new ThingDef(-53, -105, AssetPaths.fork__png),
 			new ThingDef(176, -33, AssetPaths.knife__png),
 			new ThingDef(107, -105, AssetPaths.spoon__png),
-		]),
+		], [new SoftBodyDef(-140, -15, SoftBody.NewDumpling),]),
 		new TableConfiguration([
 			new ThingDef(148, 16, AssetPaths.MPlate__png),
 			new ThingDef(-2, 16, AssetPaths.MPlate__png),
@@ -143,6 +158,9 @@ class Table extends PhysicsThing {
 			new ThingDef(46, -4, AssetPaths.SquareMug__png),
 			new ThingDef(-100, -38, AssetPaths.fork__png),
 			new ThingDef(103, -49, AssetPaths.spoon__png),
+		], [
+			new SoftBodyDef(-140, -15, SoftBody.NewFrenchOmlette),
+			new SoftBodyDef(122, -15, SoftBody.NewSteak),
 		]),
 		new TableConfiguration([
 			new ThingDef(-20, -81, AssetPaths.Wine__png),
@@ -161,8 +179,12 @@ class Table extends PhysicsThing {
 			new ThingDef(-120, -46, AssetPaths.Pint__png),
 			new ThingDef(121, 18, AssetPaths.LPlate__png),
 			new ThingDef(-116, 16, AssetPaths.LPlate__png),
-			new ThingDef(116, -8, AssetPaths.fork__png),
+			new ThingDef(116, -19, AssetPaths.fork__png),
 			new ThingDef(47, -115, AssetPaths.spoon__png),
+		], [
+			new SoftBodyDef(121, -5, SoftBody.NewFrenchOmlette),
+			new SoftBodyDef(-120, -60, SoftBody.NewDollupOfMashedPotatoes),
+			new SoftBodyDef(-80, -10, SoftBody.NewDollupOfMashedPotatoes),
 		]),
 		new TableConfiguration([
 			new ThingDef(-13, -264, AssetPaths.SquareMug__png),
@@ -176,14 +198,14 @@ class Table extends PhysicsThing {
 			new ThingDef(-7, -99, AssetPaths.LPlate__png),
 			new ThingDef(10, -172, AssetPaths.Stein__png)
 		]),
-		// new TableConfiguration([
-		// 	new ThingDef(98, -57, AssetPaths.Shot__png),
-		// 	new ThingDef(-95, -57, AssetPaths.Shot__png),
-		// 	new ThingDef(95, -7, AssetPaths.RoundMug__png),
-		// 	new ThingDef(-78, -7, AssetPaths.RoundMug__png),
-		// 	new ThingDef(-49, -141, AssetPaths.Wine__png),
-		// 	new ThingDef(51, -141, AssetPaths.Wine__png),
-		// ])
+		new TableConfiguration([
+			new ThingDef(98, -57, AssetPaths.Shot__png),
+			new ThingDef(-95, -57, AssetPaths.Shot__png),
+			new ThingDef(95, -7, AssetPaths.RoundMug__png),
+			new ThingDef(-78, -7, AssetPaths.RoundMug__png),
+			new ThingDef(-49, -141, AssetPaths.Wine__png),
+			new ThingDef(51, -141, AssetPaths.Wine__png),
+		])
 	];
 }
 
@@ -230,9 +252,15 @@ class Table extends PhysicsThing {
 // 300, -300,
 class TableConfiguration {
 	public var things:Array<ThingDef>;
+	public var softies:Array<SoftBodyDef>;
 
-	public function new(things:Array<ThingDef>) {
+	public function new(things:Array<ThingDef>, ?softies:Array<SoftBodyDef>) {
 		this.things = things;
+		if (softies == null) {
+			this.softies = [];
+		} else {
+			this.softies = softies;
+		}
 	}
 }
 
@@ -251,5 +279,17 @@ class ThingDef {
 
 	public function toPhysicsThing(offsetX:Float, offsetY:Float):PhysicsThing {
 		return new PhysicsThing(x + offsetX, y + offsetY, img, BodyType.DYNAMIC, material);
+	}
+}
+
+class SoftBodyDef {
+	public var x:Float;
+	public var y:Float;
+	public var body:Float->Float->SoftBody;
+
+	public function new(x:Float, y:Float, body:Float->Float->SoftBody) {
+		this.x = x;
+		this.y = y;
+		this.body = body;
 	}
 }

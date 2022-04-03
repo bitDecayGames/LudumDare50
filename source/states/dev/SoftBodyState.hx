@@ -36,6 +36,15 @@ class SoftBodyState extends FlxTransitionableState {
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+		if (FlxG.keys.pressed.LEFT) {
+			bod.setVelocityFromTarget(Vec2.get(FlxG.width, FlxG.height), 0, .25);
+		}
+		if (FlxG.keys.pressed.RIGHT) {
+			bod.setVelocityFromTarget(Vec2.get(0, 0), 0, .25);
+		}
+		if (FlxG.keys.pressed.SPACE) {
+			bod.reEnable();
+		}
 	}
 
 	override public function onFocusLost() {
@@ -47,6 +56,8 @@ class SoftBodyState extends FlxTransitionableState {
 		super.onFocus();
 		this.handleFocus();
 	}
+
+	var bod:SoftBody;
 
 	function init() {
 		var w = FlxG.width;
@@ -68,5 +79,8 @@ class SoftBodyState extends FlxTransitionableState {
 		add(SoftBody.NewDollupOfMashedPotatoes(500, h - 500));
 		add(SoftBody.NewDumpling(600, h - 500));
 		add(SoftBody.NewSteak(700, h - 500));
+		bod = SoftBody.NewSteak(700, h - 700);
+		bod.temporarilyDisable();
+		add(bod);
 	}
 }
