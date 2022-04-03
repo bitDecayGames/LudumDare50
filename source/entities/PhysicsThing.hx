@@ -600,7 +600,7 @@ class PhysicsThing extends FlxNapeSprite {
 
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
-		body.isBullet = true;
+		body.isBullet = false;
 	}
 
 	private function buildNewBody(vertices:Array<Vec2>, collisionFilter:InteractionFilter, mat:Material) {
