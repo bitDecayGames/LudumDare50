@@ -33,6 +33,10 @@ class PhysicsThing extends FlxNapeSprite {
 
 	public var originalAsset:FlxGraphicAsset;
 
+	public var inTow:Bool = false;
+
+	static public var SPIN_DAMPING = 0.95;
+
     // @formatter:off
 	private var vertices = [
         AssetPaths.wineGlass__png => [
@@ -666,6 +670,11 @@ class PhysicsThing extends FlxNapeSprite {
 
 	override public function update(delta:Float) {
 		super.update(delta);
+
+        // keep things from spinning like mad when player is holding them
+        if (inTow && Math.abs(body.angularVel) > 0.01) {
+            body.angularVel *= SPIN_DAMPING;
+        }
 	}
 
 	private function setup(?material:Material) {

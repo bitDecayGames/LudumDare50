@@ -96,6 +96,7 @@ class PickingHand extends FlxSprite {
 			joint.anchor2.set(body.worldPointToLocal(pos, true));
 			joint.body2 = body;
 			joint.active = true;
+			cast(body.userData.data, PhysicsThing).inTow = true;
 			break;
 		}
 		pos.dispose();
@@ -105,5 +106,8 @@ class PickingHand extends FlxSprite {
 		loadGraphic(AssetPaths.handOpen__png);
 		isGrabbing = false;
 		joint.active = false;
+		if (joint.body2 != null) {
+			cast(joint.body2.userData.data, PhysicsThing).inTow = false;
+		}
 	}
 }

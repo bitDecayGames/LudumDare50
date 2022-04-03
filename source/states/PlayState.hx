@@ -59,10 +59,13 @@ class PlayState extends FlxTransitionableState {
 
 		InitState();
 
-		var trayHand = new TrayHand(250, 400);
+		var bg = new FlxSprite(AssetPaths.background__png);
+		add(bg);
+
+		var trayHand = new TrayHand(250, 700);
 		add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 400, 1600, 700, add, allThings.push);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, add, allThings.push);
 		add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
