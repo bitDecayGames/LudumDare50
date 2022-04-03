@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.math.FlxMath;
 import flixel.addons.display.FlxTiledSprite;
 import openfl.geom.Rectangle;
 import flixel.FlxObject;
@@ -22,8 +23,11 @@ import flixel.FlxSprite;
 class Heightometer extends FlxObject {
 	private static var TEXT_OFFSET_Y:Float = -25.0;
 	private static var TEXT_OFFSET_X:Float = 50.0;
+	private static var MAX_TEXT_OFFSET_X:Float = 800;
 	private static var PIXELS_PER_INCH:Float = 10.0;
 	private static var COLOR:FlxColor = FlxColor.GRAY;
+
+	private static var MAX_HEIGHT = 10;
 
 	private var text:FlxText;
 	private var line:FlxTiledSprite;
@@ -54,7 +58,17 @@ class Heightometer extends FlxObject {
 	}
 
 	private function snapToPosition() {
-		text.y = y + TEXT_OFFSET_Y;
+		var diffFromMax = y - MAX_HEIGHT;
+		var totalDist = tray.y - MAX_HEIGHT;
+		var ratio = 1 - (diffFromMax / totalDist);
+
+		text.x = x + FlxMath.lerp(TEXT_OFFSET_X, MAX_TEXT_OFFSET_X, ratio);
+		text.y = y;
+		if (y < FlxG.height / 4) {
+			text.y -= TEXT_OFFSET_Y;
+		} else {
+			text.y += TEXT_OFFSET_Y;
+		}
 		line.y = y;
 	}
 

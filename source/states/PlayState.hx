@@ -115,15 +115,9 @@ class PlayState extends FlxTransitionableState {
 		KillThingsOutsideBoundary(allThings);
 		heightometer.y = CalculateHeighestObject(allThings);
 
-		// if (FlxG.keys.justPressed.T) {
-		// 	for (thing in table.spawnThings(3)) {
-		// 		add(thing);
-		// 	}
-		// }
-
 		var stackInfo = trayHand.findCurrentHighest();
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
-			maxY = stackInfo.heightItem.y;
+			maxY = stackInfo.heightItem.body.bounds.min.y;
 		}
 
 		heightometer.y = maxY;
