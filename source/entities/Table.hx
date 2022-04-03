@@ -5,6 +5,7 @@ import nape.geom.AABB;
 import nape.phys.BodyType;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.FlxG;
+import nape.geom.Vec2;
 
 class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];

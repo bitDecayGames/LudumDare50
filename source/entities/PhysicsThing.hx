@@ -39,8 +39,11 @@ class PhysicsThing extends FlxNapeSprite {
 
 	private var includeAssetBodyPhysicsShape:Bool = false;
 
+	private var originalAsset:FlxGraphicAsset;
+
 	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, cellSize:Float = 20, subSize:Float = 5, ?type:BodyType,
 			includeAssetBodyPhysicsShape:Bool = false, ?material:Material) {
+		originalAsset = asset;
 		super(x, y, asset);
 		if (type == null) {
 			type = BodyType.DYNAMIC;
@@ -77,9 +80,11 @@ class PhysicsThing extends FlxNapeSprite {
 		body.shapes.clear();
 		if (includeAssetBodyPhysicsShape) {
 			// TODO: MW this interaction filter is most likely wrong, ugh
-			buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)));
+			var count = buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)), cellSize * 2);
+			trace('asset: ${originalAsset} had ${count} shapes for the click shapes');
 		}
-		buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)));
+		var count = buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)), cellSize);
+		trace('asset: ${originalAsset} had ${count} shapes for the physics shapes');
 		body.setShapeMaterials(material != null ? material : Material.glass());
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
@@ -91,8 +96,12 @@ class PhysicsThing extends FlxNapeSprite {
 	 * @param bitmap
 	 * @param collisionFilter
 	 */
-	private function buildBody(bitmap:BitmapData, collisionFilter:InteractionFilter) {
-		var space = FlxNapeSpace.space;
+	private function buildBody(bitmap:BitmapData, collisionFilter:InteractionFilter, cellSize:Float):Int {
+		var shapeCount = 0;
+
+		isoBounds.width = cellSize;
+		isoBounds.height = cellSize;
+
 		var region = new AABB(0, 0, bitmapShell.width, bitmapShell.height);
 		// compute effected cells.
 		var x0 = Std.int(region.min.x / cellSize);
@@ -132,6 +141,7 @@ class PhysicsThing extends FlxNapeSprite {
 
 						// trace(bodyPolyelocalVerts);
 						body.shapes.add(bodyPoly);
+						shapeCount++;
 
 						// Recycle GeomPoly and its vertices
 						q.dispose();
@@ -148,6 +158,8 @@ class PhysicsThing extends FlxNapeSprite {
 				polys.clear();
 			}
 		}
+
+		return shapeCount;
 	}
 
 	// iso-function for terrain, computed as a linearly-interpolated
