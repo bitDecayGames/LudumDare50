@@ -1,5 +1,6 @@
 package entities;
 
+import haxe.Timer;
 import helpers.StackInfo;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
@@ -16,6 +17,7 @@ class TrayHand extends PhysicsThing {
 	var OCELLATE_MAGNITUDE:Float = 10.0;
 
 	var initPosition:Float = 0;
+	var sneezing = false;
 
 	private var ocellateCenter:FlxPoint;
 
@@ -29,7 +31,9 @@ class TrayHand extends PhysicsThing {
 	override public function update(delta:Float) {
 		super.update(delta);
 
-		ocellate();
+		if (!sneezing) {
+			ocellate();
+		}
 		// var moveDistance = 0.0;
 
 		// if (FlxG.keys.anyPressed([LEFT, A])) {
@@ -86,6 +90,27 @@ class TrayHand extends PhysicsThing {
 
 		// sub one because tray doesn't count as an item on the pile
 		return new StackInfo(highest, visitCount - 1);
+	}
+
+	public function sneeze() {
+		if (!sneezing) {
+			sneezing = true;
+		}
+		var firstTarget = body.position.copy().addeq(Vec2.weak(0, 5));
+		var secondTarget = body.position.copy().addeq(Vec2.weak(0, -10));
+
+		// Will need to tune these
+		var windUpTimeMS = 800;
+		var releaseTimeMS = 50;
+
+		body.setVelocityFromTarget(firstTarget, body.rotation, windUpTimeMS / 1000);
+		FlxG.sound.play(AssetPaths.male_sneeze1__mp3);
+		Timer.delay(() -> {
+			body.setVelocityFromTarget(secondTarget, body.rotation, releaseTimeMS / 1000);
+			Timer.delay(() -> {
+				body.velocity.setxy(0, 0);
+			}, releaseTimeMS);
+		}, windUpTimeMS);
 	}
 
 	private function ocellate() {
