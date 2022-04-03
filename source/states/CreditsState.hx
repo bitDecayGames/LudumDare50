@@ -104,6 +104,9 @@ class CreditsState extends FlxUIState {
 		center(_txtThankYou);
 		add(_txtThankYou);
 		_allCreditElements.push(_txtThankYou);
+
+		// restore mouse visibility
+		FlxG.mouse.visible = true;
 	}
 
 	private function AddSectionToCreditsTextArrays(role:String, creators:Array<String>, finalRoleArray:Array<FlxText>, finalCreatorsArray:Array<FlxText>) {

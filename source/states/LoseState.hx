@@ -23,7 +23,7 @@ class LoseState extends FlxUIState {
 		_txtTitle.setPosition(FlxG.width / 2, FlxG.height / 4);
 		_txtTitle.size = 40;
 		_txtTitle.alignment = FlxTextAlign.CENTER;
-		_txtTitle.text = "You broke a dish. You're fired!";
+		_txtTitle.text = "You made a mess. You're fired!";
 
 		add(_txtTitle);
 
@@ -31,6 +31,8 @@ class LoseState extends FlxUIState {
 		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
 		_btnDone.updateHitbox();
 		add(_btnDone);
+		// restore mouse
+		FlxG.mouse.visible = true;
 	}
 
 	override public function update(elapsed:Float):Void {

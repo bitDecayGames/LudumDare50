@@ -23,7 +23,7 @@ class VictoryState extends FlxUIState {
 		_txtTitle.setPosition(FlxG.width / 2, FlxG.height / 4);
 		_txtTitle.size = 40;
 		_txtTitle.alignment = FlxTextAlign.CENTER;
-		_txtTitle.text = "Victory!";
+		_txtTitle.text = "Your shift was almost over anyways.";
 
 		add(_txtTitle);
 

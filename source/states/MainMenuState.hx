@@ -64,6 +64,9 @@ class MainMenuState extends FlxUIState {
 
 		// we will handle transitions manually
 		transOut = null;
+
+		// restore mouse visibility
+		FlxG.mouse.visible = true;
 	}
 
 	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
