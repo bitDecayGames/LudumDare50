@@ -11,7 +11,7 @@ class Table extends PhysicsThing {
 	public var items:Array<PhysicsThing> = [];
 	public var numItems:Int = 0;
 
-	private var picklist = [
+	public static var picklist = [
 		new ThingDef(AssetPaths.SBowl__png, AssetPaths.SBowlBody__png, true),
 		new ThingDef(AssetPaths.MBowl__png, AssetPaths.MBowlBody__png, true),
 		new ThingDef(AssetPaths.LBowl__png, AssetPaths.LBowlBody__png, true),

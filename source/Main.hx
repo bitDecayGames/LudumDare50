@@ -20,6 +20,8 @@ import states.dev.JakesPlayState;
 import states.dev.LogansPlayState;
 #elseif mike
 import states.dev.MikesPlayState;
+#elseif shapes
+import states.dev.AllShapesState;
 #end
 
 class Main extends Sprite {
@@ -36,6 +38,8 @@ class Main extends Sprite {
 		startingState = LogansPlayState;
 		#elseif mike
 		startingState = MikesPlayState;
+		#elseif shapes
+		startingState = AllShapesState;
 		#else
 		if (Macros.isDefined("SKIP_SPLASH")) {
 			startingState = MainMenuState;
