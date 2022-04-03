@@ -45,14 +45,13 @@ class Table extends PhysicsThing {
 	override public function update(delta:Float) {
 		super.update(delta);
 
-		FlxG.watch.addQuick("num items", numItems);
-
 		if (numItems > 0) {
 			numItems = 0;
 			for (i in items) {
 				if (i.x >= body.position.x - (body.bounds.width / 2)
 					&& i.x <= body.position.x + (body.bounds.width / 2)
-					&& i.y <= body.position.y - (body.bounds.height / 2)) {
+					&& i.y <= body.position.y - (body.bounds.height / 2)
+					&& i.active) {
 					numItems++;
 				}
 			}

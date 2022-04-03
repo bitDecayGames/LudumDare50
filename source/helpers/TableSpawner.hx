@@ -24,10 +24,6 @@ class TableSpawner extends FlxObject {
 	override public function update(delta:Float) {
 		super.update(delta);
 
-		FlxG.watch.addQuick("table alive", table.alive);
-		FlxG.watch.addQuick("table exists", table.exists);
-		FlxG.watch.addQuick("table active", table.active);
-
 		if (tableJustSpawned) {
 			if (!tableAtSpawner()) {
 				var moveTo = new Vec2(this.x, this.y);

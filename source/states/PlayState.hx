@@ -66,10 +66,11 @@ class PlayState extends FlxTransitionableState {
 		super.update(elapsed);
 
 		for (thing in allThings) {
-			// if (thing.y > FlxG.height + 100 || thing.x > FlxG.width || thing.x < 0) {
-			if (thing.y > FlxG.height + 100) {
+			// Not removing items from the right cause thats where the table comes from
+			if (thing.y > FlxG.height + 100 || thing.y < 0 || thing.x < 0) {
 				// TODO: This is bad! Loser!
 				thing.kill();
+				thing.active = false;
 			}
 		}
 
