@@ -1,5 +1,6 @@
 package entities;
 
+import constants.CbTypes;
 import nape.geom.GeomPoly;
 import nape.dynamics.InteractionFilter;
 import constants.CGroups;
@@ -41,7 +42,7 @@ class PhysicsThing extends FlxNapeSprite {
 
 	private var includeAssetBodyPhysicsShape:Bool = false;
 
-	private var originalAsset:FlxGraphicAsset;
+	public var originalAsset:FlxGraphicAsset;
 
     // @formatter:off
 	private var vertices = [
@@ -544,7 +545,26 @@ class PhysicsThing extends FlxNapeSprite {
             ],
         ]
 	];
-    // @formatter:on
+    //@formatter:on
+	private var materialTypes = [
+	    AssetPaths.SBowl__png => GLASS_MATERIAL_NAME,
+		AssetPaths.MBowl__png => GLASS_MATERIAL_NAME,
+		AssetPaths.LBowl__png => GLASS_MATERIAL_NAME,
+		AssetPaths.SPlate__png => GLASS_MATERIAL_NAME,
+		AssetPaths.MPlate__png => GLASS_MATERIAL_NAME,
+		AssetPaths.LPlate__png => GLASS_MATERIAL_NAME,
+		AssetPaths.fork__png => METAL_MATERIAL_NAME,
+		AssetPaths.knife__png => METAL_MATERIAL_NAME,
+		AssetPaths.spoon__png => METAL_MATERIAL_NAME,
+		AssetPaths.Martini__png => GLASS_MATERIAL_NAME,
+		AssetPaths.Pint__png => GLASS_MATERIAL_NAME,
+		AssetPaths.RoundMug__png => GLASS_MATERIAL_NAME,
+		AssetPaths.Shot__png => GLASS_MATERIAL_NAME,
+		AssetPaths.SquareMug__png => GLASS_MATERIAL_NAME,
+		AssetPaths.Stein__png => GLASS_MATERIAL_NAME,
+		AssetPaths.Tall__png => GLASS_MATERIAL_NAME,
+    ];
+
 	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, cellSize:Float = 20, subSize:Float = 5, ?type:BodyType,
 			includeAssetBodyPhysicsShape:Bool = false, ?material:Material) {
 		originalAsset = asset;
@@ -622,6 +642,8 @@ class PhysicsThing extends FlxNapeSprite {
 			bodyPoly.material = mat;
 			body.shapes.add(bodyPoly);
 		}
+
+        body.cbTypes.add(CbTypes.CB_ITEM);
 	}
 
 	/**

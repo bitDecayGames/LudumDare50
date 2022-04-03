@@ -24,3 +24,6 @@ function jakeTanium() {
 function air() {
 	return new Material(0, 0, 0, 0.001, 0.001);
 }
+
+var GLASS_MATERIAL_NAME = "glass";
+var METAL_MATERIAL_NAME = "metal";

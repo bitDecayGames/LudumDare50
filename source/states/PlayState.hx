@@ -1,5 +1,9 @@
 package states;
 
+import flixel.system.FlxSound;
+import nape.callbacks.InteractionType;
+import nape.callbacks.CbEvent;
+import nape.callbacks.InteractionListener;
 import entities.Heightometer;
 import flixel.FlxObject;
 import helpers.TableSpawner;
@@ -66,6 +70,23 @@ class PlayState extends FlxTransitionableState {
 		add(heightometer);
 
 		add(new PickingHand());
+
+		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
+			itemCollideCallback));
+		// FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
+		// 	itemCollideCallback));
+	}
+
+	var clinkSFX = FlxG.sound.cache(AssetPaths.glass_clink1__wav);
+
+	public function itemCollideCallback(cb:nape.callbacks.InteractionCallback) {
+		var item1 = cast(cb.int1.castBody.userData.data, PhysicsThing);
+		var item2 = cast(cb.int2.castBody.userData.data, PhysicsThing);
+		trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
+
+		// TODO: These are delayed for some stupid reason... why
+		// clinkSFX.play();
+		// FlxG.sound.play(AssetPaths.glass_clink1__wav);
 	}
 
 	override public function update(elapsed:Float) {
