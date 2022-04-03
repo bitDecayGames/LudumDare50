@@ -1,5 +1,6 @@
 package entities;
 
+import nape.geom.GeomPoly;
 import nape.dynamics.InteractionFilter;
 import constants.CGroups;
 import nape.phys.Material;
@@ -17,6 +18,7 @@ import nape.phys.BodyType;
 import nape.shape.Polygon;
 import nape.space.Space;
 import openfl.display.BitmapData;
+import helpers.Materials;
 
 class PhysicsThing extends FlxNapeSprite {
 	public var bitmapShell:BitmapData;
@@ -40,6 +42,25 @@ class PhysicsThing extends FlxNapeSprite {
 	private var includeAssetBodyPhysicsShape:Bool = false;
 
 	private var originalAsset:FlxGraphicAsset;
+
+	private var vertices = [
+		AssetPaths.Martini__png => [
+			[
+				Vec2.get(0, 0),
+				Vec2.get(71, 0),
+				Vec2.get(37, 54),
+				Vec2.get(37, 105),
+				Vec2.get(58, 108),
+				Vec2.get(13, 108),
+				Vec2.get(34, 105),
+				Vec2.get(34, 54),
+			],
+			[
+				Vec2.get(0, 0), Vec2.get(3, 0), Vec2.get(34, 47), Vec2.get(37, 47), Vec2.get(69, 0), Vec2.get(71, 0), Vec2.get(37, 54), Vec2.get(37, 105),
+				Vec2.get(58, 108), Vec2.get(13, 108), Vec2.get(34, 105), Vec2.get(34, 54),
+			]
+		],
+	];
 
 	public function new(x:Float, y:Float, asset:FlxGraphicAsset, bodyAsset:FlxGraphicAsset, cellSize:Float = 20, subSize:Float = 5, ?type:BodyType,
 			includeAssetBodyPhysicsShape:Bool = false, ?material:Material) {
@@ -79,16 +100,48 @@ class PhysicsThing extends FlxNapeSprite {
 		body.type = type;
 		body.shapes.clear();
 		if (includeAssetBodyPhysicsShape) {
-			// TODO: MW this interaction filter is most likely wrong, ugh
-			var count = buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)), cellSize * 2);
-			trace('asset: ${originalAsset} had ${count} shapes for the click shapes');
+			if (vertices.exists(originalAsset)) {
+				buildNewBody(vertices.get(originalAsset)[0], new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)), air());
+			} else {
+				// TODO: MW this interaction filter is most likely wrong, ugh
+				var count = buildBody(bitmapFiller, new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)), cellSize * 2);
+				trace('asset: ${originalAsset} had ${count} shapes for the click shapes');
+			}
 		}
-		var count = buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)), cellSize);
-		trace('asset: ${originalAsset} had ${count} shapes for the physics shapes');
-		body.setShapeMaterials(material != null ? material : Material.glass());
+		if (vertices.exists(originalAsset)) {
+			buildNewBody(vertices.get(originalAsset)[1], new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)),
+				material != null ? material : Material.glass());
+		} else {
+			// TODO: MW this interaction filter is most likely wrong, ugh
+			var count = buildBody(bitmapShell, new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)), cellSize);
+			trace('asset: ${originalAsset} had ${count} shapes for the physics shapes');
+		}
+
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
 		body.isBullet = true;
+	}
+
+	private function buildNewBody(vertices:Array<Vec2>, collisionFilter:InteractionFilter, mat:Material) {
+		var poly = new GeomPoly();
+		for (v in vertices) {
+			poly.push(v);
+		}
+
+		var resultPolys = poly.convexDecomposition(true);
+		trace('asset "${originalAsset} adding ${resultPolys.length} to body');
+
+		for (poly in resultPolys) {
+			var bodyPoly = new Polygon(poly);
+			// NOTE: This is to try to align the body with the sprite better
+			for (vert in bodyPoly.localVerts) {
+				vert.x -= width / 2;
+				vert.y -= height / 2;
+			}
+			bodyPoly.filter = collisionFilter;
+			bodyPoly.material = mat;
+			body.shapes.add(bodyPoly);
+		}
 	}
 
 	/**
