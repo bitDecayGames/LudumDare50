@@ -158,9 +158,59 @@ class Table extends PhysicsThing {
 			new ThingDef(-7, -96, AssetPaths.Shot__png),
 			new ThingDef(-65, -129, AssetPaths.fork__png),
 			new ThingDef(133, -137, AssetPaths.fork__png)
-		]) // new TableConfiguration([])
+		]),
+		new TableConfiguration([
+			new ThingDef(142, 16, AssetPaths.SPlate__png),
+			new ThingDef(-140, 17, AssetPaths.SPlate__png),
+			new ThingDef(-50, -3, AssetPaths.SquareMug__png),
+			new ThingDef(46, -4, AssetPaths.SquareMug__png),
+			new ThingDef(-100, -38, AssetPaths.fork__png),
+			new ThingDef(103, -49, AssetPaths.spoon__png),
+		]),
+		new TableConfiguration([
+			new ThingDef(-20, -81, AssetPaths.Wine__png),
+			new ThingDef(-88, -81, AssetPaths.Wine__png),
+			new ThingDef(42, -80, AssetPaths.Wine__png),
+			new ThingDef(-162, -37, AssetPaths.wineGlass__png),
+			new ThingDef(140, 5, AssetPaths.Shot__png),
+			new ThingDef(177, 5, AssetPaths.Shot__png),
+			new ThingDef(177, -35, AssetPaths.Shot__png),
+			new ThingDef(99, -35, AssetPaths.Shot__png),
+			new ThingDef(140, -35, AssetPaths.Shot__png),
+			new ThingDef(99, 5, AssetPaths.Shot__png),
+		]),
+		new TableConfiguration([
+			new ThingDef(-1, -38, AssetPaths.Tall__png),
+			new ThingDef(-120, -46, AssetPaths.Pint__png),
+			new ThingDef(121, 18, AssetPaths.LPlate__png),
+			new ThingDef(-116, 16, AssetPaths.LPlate__png),
+			new ThingDef(116, -8, AssetPaths.fork__png),
+			new ThingDef(47, -115, AssetPaths.spoon__png),
+		])
 	];
 }
+
+// -300, -100,
+// -200, -100,
+// -100, -100,
+// 0, -100,
+// 100, -100,
+// 200, -100,
+// 300, -100,
+// -300, -200,
+// -200, -200,
+// -100, -200,
+// 0, -200,
+// 100, -200,
+// 200, -200,
+// 300, -200,
+// -300, -300,
+// -200, -300,
+// -100, -300,
+// 0, -300,
+// 100, -300,
+// 200, -300,
+// 300, -300,
 
 class TableConfiguration {
 	public var things:Array<ThingDef>;
