@@ -74,8 +74,7 @@ class Table extends PhysicsThing {
 			// trace('spawning a ${assets.img}');
 			var iX = FlxG.random.float(x - width / 2, x + width / 2);
 			var iY = FlxG.random.float(y - height / 2 - 100, y - height / 2 - 50);
-			var thing = new PhysicsThing(iX, iY, assets.img, assets.collisions, assets.cellSize, assets.subSize, BodyType.DYNAMIC,
-				assets.includeAssetBodyPhysicsShape, assets.material);
+			var thing = assets.toPhysicsThing(iX, iY, BodyType.DYNAMIC);
 			var aabb = thing.body.bounds;
 
 			// Would rather use Int.max sort of thing here
