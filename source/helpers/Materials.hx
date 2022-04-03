@@ -20,3 +20,7 @@ import nape.phys.Material;
 function jakeTanium() {
 	return new Material(0.4, 0.95, 3.0, 8, 0.001);
 }
+
+function air() {
+	return new Material(0, 0, 0, 0.001, 0.001);
+}
