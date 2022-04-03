@@ -1,5 +1,7 @@
 package constants;
 
+import nape.dynamics.InteractionFilter;
+
 // CGroups are collision group flags
 class CGroups {
 	public static inline var PLATTER:Int = 0x1 << 0;
@@ -13,4 +15,7 @@ class CGroups {
 	// public static inline var OTHER_SENSOR:Int = 0x1 << 31;
 	// public static inline var TOW_COLLIDERS:Int = CARGO & HATCHES & TERRAIN;
 	public static inline var ALL:Int = ~(0);
+
+	public static var FILLER_FILTER:InteractionFilter = new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER));
+	public static var SHELL_FILTER:InteractionFilter = new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER));
 }

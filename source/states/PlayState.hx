@@ -1,7 +1,12 @@
 package states;
 
+<<<<<<< HEAD
 import flixel.group.FlxGroup;
 import haxefmod.flixel.FmodFlxUtilities;
+=======
+import flixel.math.FlxPoint;
+import entities.SoftBody;
+>>>>>>> 7702409 (J E L L O, its alive)
 import flixel.system.FlxSound;
 import nape.callbacks.InteractionType;
 import nape.callbacks.CbEvent;
@@ -93,7 +98,7 @@ class PlayState extends FlxTransitionableState {
 	public function itemCollideCallback(cb:nape.callbacks.InteractionCallback) {
 		var item1 = cast(cb.int1.castBody.userData.data, PhysicsThing);
 		var item2 = cast(cb.int2.castBody.userData.data, PhysicsThing);
-		trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
+		// trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
 
 		if (cb.event == CbEvent.BEGIN) {
 			// TODO: These are delayed for some stupid reason... why
@@ -113,8 +118,22 @@ class PlayState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		KillThingsOutsideBoundary(allThings);
+		KillThingsOutsideBoundary();
 		heightometer.y = CalculateHeighestObject(allThings);
+
+		var mousePos = FlxG.mouse.getWorldPosition();
+		if (FlxG.keys.justPressed.ONE) {
+			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.TWO) {
+			add(SoftBody.NewDumpling(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.THREE) {
+			add(SoftBody.NewFrenchOmlette(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.FOUR) {
+			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
+		}
 
 		var stackInfo = trayHand.findCurrentHighest();
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
@@ -135,14 +154,24 @@ class PlayState extends FlxTransitionableState {
 		this.handleFocus();
 	}
 
-	public static function KillThingsOutsideBoundary(things:Array<PhysicsThing>) {
-		for (thing in things) {
-			// Not removing items from the right cause thats where the table comes from
-			if (thing.y > FlxG.height + 100 || thing.y < -500 || thing.x < -500 || thing.x > FlxG.width + 2000) {
-				// TODO: This is bad! Loser!
-				thing.kill();
-				thing.active = false;
-				FmodFlxUtilities.TransitionToState(new LoseState());
+	public static function KillThingsOutsideBoundary() {
+		for (thing in FlxG.state.members) {
+			if (thing.active) {
+				if (Std.isOfType(thing, SoftBody)) {
+					var obj = cast(thing, SoftBody);
+					var pos = obj.avgPos;
+					if (pos.y > FlxG.height + 100 || pos.y < -500 || pos.x < -500 || pos.x > FlxG.width + 2000) {
+						obj.kill();
+						obj.active = false;
+					}
+				} else if (Std.isOfType(thing, FlxObject)) {
+					var obj = cast(thing, FlxObject);
+					if (obj.y > FlxG.height + 100 || obj.y < -500 || obj.x < -500 || obj.x > FlxG.width + 2000) {
+						obj.kill();
+						obj.active = false;
+						FmodFlxUtilities.TransitionToState(new LoseState());
+					}
+				}
 			}
 		}
 	}

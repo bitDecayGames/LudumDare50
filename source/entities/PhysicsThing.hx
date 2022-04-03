@@ -681,15 +681,20 @@ class PhysicsThing extends FlxNapeSprite {
         }
 	}
 
+    override function kill() {
+        body.space = null;
+        super.kill();
+    }
+
 	private function setup(?material:Material) {
 		body.type = type;
 		body.shapes.clear();
-        trace('preparing to build body for ${originalAsset}');
+        // trace('preparing to build body for ${originalAsset}');
         if (vertices.exists(originalAsset)) {
             if (vertices.get(originalAsset)[0].length > 0) {
-                buildNewBody(vertices.get(originalAsset)[0], new InteractionFilter(CGroups.FILLER, ~(CGroups.SHELL | CGroups.FILLER)), air());
+                buildNewBody(vertices.get(originalAsset)[0], CGroups.FILLER_FILTER, air());
             }
-            buildNewBody(vertices.get(originalAsset)[1], new InteractionFilter(CGroups.SHELL, ~(CGroups.FILLER)),
+            buildNewBody(vertices.get(originalAsset)[1], CGroups.SHELL_FILTER,
             material != null ? material : Material.glass());
         } else {
             throw('no vertex info for ${originalAsset}');

@@ -8,6 +8,6 @@ class CbTypes {
 
 	public static function initTypes() {
 		CB_ITEM = new CbType();
-		trace("CB_ITEM is " + CB_ITEM);
+		// trace("CB_ITEM is " + CB_ITEM);
 	}
 }

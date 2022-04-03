@@ -92,7 +92,7 @@ class PickingHand extends FlxSprite {
 		// the Nap way of trying to click an object
 		var pos = Vec2.get(x, y);
 		for (body in FlxNapeSpace.space.bodiesUnderPoint(pos)) {
-			if (!body.isDynamic()) {
+			if (!body.isDynamic() || body.isCompound()) {
 				continue;
 			}
 
@@ -100,7 +100,9 @@ class PickingHand extends FlxSprite {
 			joint.anchor2.set(body.worldPointToLocal(pos, true));
 			joint.body2 = body;
 			joint.active = true;
-			cast(body.userData.data, PhysicsThing).inTow = true;
+			if (Std.isOfType(body.userData.data, PhysicsThing)) {
+				cast(body.userData.data, PhysicsThing).inTow = true;
+			}
 			break;
 		}
 		pos.dispose();
@@ -111,7 +113,9 @@ class PickingHand extends FlxSprite {
 		isGrabbing = false;
 		joint.active = false;
 		if (joint.body2 != null) {
-			cast(joint.body2.userData.data, PhysicsThing).inTow = false;
+			if (Std.isOfType(joint.body2.userData.data, PhysicsThing)) {
+				cast(joint.body2.userData.data, PhysicsThing).inTow = false;
+			}
 		}
 	}
 }
