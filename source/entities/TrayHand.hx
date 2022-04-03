@@ -1,6 +1,5 @@
 package entities;
 
-import js.html.Console;
 import flixel.FlxG;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
@@ -42,10 +41,6 @@ class TrayHand extends PhysicsThing {
 				targetPosition.x = initPosition - MAX_POSITION;
 			}
 
-			Console.log("init pos: ", initPosition);
-			Console.log("body x: ", body.position.x);
-			Console.log("body y: ", body.position.y);
-			Console.log("target position: ", targetPosition.x);
 			body.setVelocityFromTarget(targetPosition, 0, MOVE_TIME);
 		} else {
 			body.velocity.set(new Vec2(0, 0));

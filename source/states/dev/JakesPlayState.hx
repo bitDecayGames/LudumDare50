@@ -1,13 +1,8 @@
 package states.dev;
 
-import nape.phys.Material;
 import entities.PhysicsThing;
-import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
-import signals.Lifecycle;
 import entities.TrayHand;
-import flixel.FlxSprite;
-import flixel.FlxG;
 
 using extensions.FlxStateExt;
 

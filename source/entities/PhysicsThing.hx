@@ -33,7 +33,7 @@ class PhysicsThing extends FlxNapeSprite {
 	var isoBounds:AABB;
 
 	public var isoGranularity:Vec2;
-	public var isoQuality:Int = 8;
+	public var isoQuality:Int = 2;
 
 	public var type:BodyType;
 
