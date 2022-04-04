@@ -87,7 +87,6 @@ class SettingsState extends FlxUIState {
 
 	function makeNewCheckbox(xOffset:Float, yOffset:Float, label:String, checked:Bool):FlxUICheckBox {
 		var checkbox = new FlxUICheckBox((FlxG.width / 2) + xOffset, (FlxG.height / 2) + yOffset, null, null, "", 200);
-		checkbox.scale.set(2, 2);
 		checkbox.setLabel(new FlxUIText(0, 0, 200, label, 20));
 		checkbox.button.setAllLabelOffsets(checkbox.box.width * 2, -(checkbox.box.height / 2));
 		checkbox.checked = checked;
