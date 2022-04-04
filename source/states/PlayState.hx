@@ -1,5 +1,6 @@
 package states;
 
+import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup;
@@ -42,6 +43,9 @@ class PlayState extends FlxTransitionableState {
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
+
+	static var CLINK_THRESHOLD = 100;
+	static var MAX_VOLUME_CLINK = 400;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -108,7 +112,16 @@ class PlayState extends FlxTransitionableState {
 		if (cb.event == CbEvent.BEGIN) {
 			// TODO: These are delayed for some stupid reason... why
 			// clinkSFX.play();
-			// FlxG.sound.play(AssetPaths.glass_clink1__wav);
+			// if (cb.arbiters.at(0).collisionArbiter.totalImpulse)
+			var impulse = cb.arbiters.at(0).collisionArbiter.totalImpulse(true).length;
+			// trace('total impulse: ${impulse}');
+			if (impulse > CLINK_THRESHOLD) {
+				// The idea is softer hits make softer sounds
+				var volume = FlxMath.lerp(0, 1, Math.min(impulse / MAX_VOLUME_CLINK, 1));
+				// trace('      volume: ${volume}');
+
+				FlxG.sound.play(AssetPaths.glass_clink1__wav, volume);
+			}
 
 			item1.inContactWith.set(item2, true);
 			item2.inContactWith.set(item1, true);
