@@ -1,5 +1,9 @@
 package states;
 
+import helpers.Global.HARD_OBJECTS;
+import flixel.addons.ui.FlxUIText;
+import helpers.Global.PRACTICE;
+import flixel.addons.ui.FlxUICheckBox;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.text.FlxText;
@@ -10,10 +14,13 @@ import helpers.UiHelpers;
 
 using extensions.FlxStateExt;
 
-class VictoryState extends FlxUIState {
+class SettingsState extends FlxUIState {
 	var _btnDone:FlxButton;
 
 	var _txtTitle:FlxText;
+
+	var _practiceBox:FlxUICheckBox;
+	var _hardObjectsBox:FlxUICheckBox;
 
 	override public function create():Void {
 		super.create();
@@ -23,15 +30,15 @@ class VictoryState extends FlxUIState {
 		_txtTitle.setPosition(FlxG.width / 2, FlxG.height / 4);
 		_txtTitle.size = 40;
 		_txtTitle.alignment = FlxTextAlign.CENTER;
-		_txtTitle.text = "Your shift was almost over anyways.";
-
+		_txtTitle.text = "Settings";
 		add(_txtTitle);
+
+		addSettingsButtons();
 
 		_btnDone = UiHelpers.createMenuButton("Main Menu", clickMainMenu);
 		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
 		_btnDone.updateHitbox();
 		add(_btnDone);
-
 		// restore mouse
 		FlxG.mouse.visible = true;
 	}
@@ -41,10 +48,22 @@ class VictoryState extends FlxUIState {
 		FmodManager.Update();
 
 		_txtTitle.x = FlxG.width / 2 - _txtTitle.width / 2;
+		PRACTICE = _practiceBox.checked;
+		HARD_OBJECTS = _hardObjectsBox.checked;
 	}
 
 	function clickMainMenu():Void {
 		FmodFlxUtilities.TransitionToState(new MainMenuState());
+	}
+
+	function addSettingsButtons() {
+		_practiceBox = new FlxUICheckBox(FlxG.width / 2, FlxG.height / 2, null, null, "Practice");
+		_practiceBox.checked = PRACTICE;
+		add(_practiceBox);
+
+		_hardObjectsBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + _practiceBox.height, null, null, "Hard Objects");
+		_hardObjectsBox.checked = HARD_OBJECTS;
+		add(_hardObjectsBox);
 	}
 
 	override public function onFocusLost() {
