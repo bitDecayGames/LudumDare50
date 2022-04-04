@@ -1,5 +1,6 @@
 package states;
 
+import sort.ItemSorter.sortItems;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
@@ -31,6 +32,7 @@ import flixel.util.FlxColor;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
 import signals.Lifecycle;
+import sort.ItemSorter;
 
 using extensions.FlxStateExt;
 
@@ -84,9 +86,9 @@ class PlayState extends FlxTransitionableState {
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
 
-		add(foregroundGroup);
-		add(items);
 		add(misc);
+		add(items);
+		add(foregroundGroup);
 
 		trayHand = new TrayHand(250, 700);
 		misc.add(trayHand);
@@ -155,6 +157,8 @@ class PlayState extends FlxTransitionableState {
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+
+		items.sort(sortItems);
 
 		timer += elapsed;
 
