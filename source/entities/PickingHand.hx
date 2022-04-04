@@ -16,6 +16,7 @@ class PickingHand extends FlxSprite {
 	// the offset of the hand to the point at which the object is picked up
 	private static var HAND_OFFSET_X = 75.0;
 	private static var HAND_OFFSET_Y = 85.0;
+	private static var FUZZY_CLICK_RADIUS = 10.0;
 
 	private var joint:PivotJoint;
 	private var isGrabbing = false;
@@ -73,20 +74,12 @@ class PickingHand extends FlxSprite {
 
 		// the Nap way of trying to click an object
 		var pos = Vec2.get(x, y);
-		if (!_grabAtPoint(pos)) {
-			if (!_grabAtPoint(pos.add(Vec2.get(-5, 0)))) {
-				if (!_grabAtPoint(pos.add(Vec2.get(5, 0)))) {
-					if (!_grabAtPoint(pos.add(Vec2.get(0, -5)))) {
-						if (!_grabAtPoint(pos.add(Vec2.get(0, 5)))) {}
-					}
-				}
-			}
-		}
+		_grabAtPoint(pos);
 		pos.dispose();
 	}
 
-	private function _grabAtPoint(pos:Vec2):Bool {
-		for (body in FlxNapeSpace.space.bodiesUnderPoint(pos)) {
+	private function _grabAtPoint(pos:Vec2) {
+		for (body in FlxNapeSpace.space.bodiesInCircle(pos, FUZZY_CLICK_RADIUS)) {
 			if (!body.isDynamic() || body.isCompound()) {
 				continue;
 			}
@@ -97,9 +90,8 @@ class PickingHand extends FlxSprite {
 			if (Std.isOfType(body.userData.data, PhysicsThing)) {
 				cast(body.userData.data, PhysicsThing).inTow = true;
 			}
-			return true;
+			return;
 		}
-		return false;
 	}
 
 	private function endGrab() {
