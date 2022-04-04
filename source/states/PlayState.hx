@@ -1,42 +1,32 @@
 package states;
 
-import helpers.Achievements;
-import entities.AchievementToast;
-import flixel.util.FlxSort;
-import sort.ItemSorter.sortItems;
-import flixel.math.FlxMath;
-import helpers.Global.PRACTICE;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxStringUtil;
-import flixel.text.FlxText;
-import flixel.group.FlxGroup;
-import haxefmod.flixel.FmodFlxUtilities;
-import flixel.math.FlxPoint;
-import entities.SoftBody;
-import flixel.system.FlxSound;
-import nape.callbacks.InteractionType;
-import nape.callbacks.CbEvent;
-import nape.callbacks.InteractionListener;
-import entities.Heightometer;
-import flixel.FlxObject;
-import helpers.TableSpawner;
-import config.Configure;
 import constants.CbTypes;
+import entities.Heightometer;
 import entities.PhysicsThing;
 import entities.PickingHand;
-import entities.Table;
+import entities.SoftBody;
 import entities.TrayHand;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.nape.FlxNapeSpace;
-import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
+import flixel.util.FlxStringUtil;
+import haxefmod.flixel.FmodFlxUtilities;
+import helpers.Achievements;
+import helpers.Global.PRACTICE;
+import helpers.TableSpawner;
+import nape.callbacks.CbEvent;
+import nape.callbacks.InteractionListener;
+import nape.callbacks.InteractionType;
 import nape.geom.Vec2;
-import nape.phys.BodyType;
 import signals.Lifecycle;
-import sort.ItemSorter;
+import sort.ItemSorter.sortItems;
 
 using extensions.FlxStateExt;
 
@@ -187,8 +177,8 @@ class PlayState extends FlxTransitionableState {
 		if (FlxG.keys.justPressed.FOUR) {
 			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
 		}
-		if (FlxG.keys.justPressed.SPACE) {
-			add(Achievements.NewHeightAchievement());
+		if (FlxG.keys.justPressed.P) {
+			add(Achievements.HEIGHT.toToast(true));
 		}
 		#end
 
@@ -199,8 +189,8 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
-		if (!Achievements._itemCountAchievement && stackInfo.itemCount >= Achievements._itemCountAchievementCount) {
-			add(Achievements.NewItemCountAchievement());
+		if (!Achievements.ITEM_COUNT.achieved && stackInfo.itemCount >= Achievements.ITEM_COUNT.count) {
+			add(Achievements.ITEM_COUNT.toToast(true));
 		}
 
 		var withMS = heightometer.lastRatio >= 0.8;
@@ -208,7 +198,7 @@ class PlayState extends FlxTransitionableState {
 
 		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
 			// TODO: Sneeze sfx
-			add(Achievements.NewHeightAchievement());
+			add(Achievements.HEIGHT.toToast(true));
 			endStarted = true;
 			trayHand.sneeze();
 			heightGoalSuccess.setVisible(true);

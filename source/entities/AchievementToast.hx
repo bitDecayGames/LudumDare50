@@ -30,11 +30,13 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private static var DESCRIPTION_TEXT_SIZE:Int = 15;
 	private static var PADDING:Float = 10;
 	private static var TEXT_COLOR:FlxColor = 0x5b4f37;
+	private static var ICON_SIZE:Int = 70;
 
 	private var title:FlxText;
 	private var description:FlxText;
 	private var background:FlxSprite;
 	private var icon:FlxSprite;
+	private var tint:FlxSprite;
 	private var TOAST_X:Float;
 	private var TOAST_Y:Float;
 	private var TOAST_HEIGHT_FROM_BOTTOM:Float;
@@ -52,7 +54,7 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 		TOAST_HEIGHT_FROM_BOTTOM = FlxG.height - background.height;
 
 		this.icon = new FlxSprite(0, 0);
-		this.icon.loadGraphic(AssetPaths.icons__png, true);
+		this.icon.loadGraphic(AssetPaths.icons__png, true, ICON_SIZE, ICON_SIZE);
 		this.icon.animation.add("default", [icon]);
 		this.icon.animation.play("default");
 		add(this.icon);
@@ -82,7 +84,18 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private function waitThenClose(_:FlxTween) {
 		var _wait = FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TIME_TO_VIEW);
 		_wait.onComplete = (_) -> {
-			FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_Y, TIME_TO_TRANSITION);
+			var _out = FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_Y, TIME_TO_TRANSITION);
+			_out.onComplete = (_) -> {
+				this.kill();
+			}
 		};
+	}
+
+	public function dim():AchievementToast {
+		tint = new FlxSprite(x, y);
+		tint.makeGraphic(background.graphic.width, background.graphic.height, 0x99aeaeae);
+		add(tint);
+		tint.setPosition(x, y);
+		return this;
 	}
 }

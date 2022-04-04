@@ -1,63 +1,43 @@
 package helpers;
 
-import flixel.FlxObject;
 import entities.AchievementToast;
 
 class Achievements {
-	public static var ICON_EIFLE_TOWER = 0;
-	public static var _heightAchievement:Bool = false;
+	public static var HEIGHT:AchievementDef = new AchievementDef("4ft Tall", "Reached the pinnacle of bus-boymanship.", 0);
+	public static var ITEM_COUNT:AchievementDef = new AchievementDef('Hold At Least 10 Items', "Have you been working out?", 2, 10);
+	public static var FIRST_TABLE:AchievementDef = new AchievementDef("My First Table", "They grow up so fast.", 1, 1);
+	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef = new AchievementDef("Shot Glass Cork", "In case you lost the cork.", 0);
+	public static var ALL:Array<AchievementDef> = [HEIGHT, ITEM_COUNT, FIRST_TABLE, SHOT_GLASS_ON_WINE_BOTTLE];
+}
 
-	public static function NewHeightAchievement():FlxObject {
-		// TODO: MW ANALYTICS
-		var a:FlxObject;
-		if (!_heightAchievement) {
-			a = new AchievementToast("4ft Tall", "Reached the pinnacle of bus-boymanship.", ICON_EIFLE_TOWER).show();
-			_heightAchievement = true;
-		} else {
-			a = new FlxObject();
-		}
-		return a;
+class AchievementDef {
+	public var title:String;
+	public var description:String;
+	public var iconIndex:Int;
+	public var count:Int;
+	public var achieved:Bool;
+
+	public function new(title:String, description:String, iconIndex:Int, count:Int = 0) {
+		this.title = title;
+		this.description = description;
+		this.iconIndex = iconIndex;
+		this.count = count;
+		this.achieved = false;
 	}
 
-	public static var _itemCountAchievementCount:Int = 3;
-	public static var _itemCountAchievement:Bool = false;
-
-	public static function NewItemCountAchievement():FlxObject {
-		// TODO: MW ANALYTICS
-		var a:FlxObject;
-		if (!_itemCountAchievement) {
-			a = new AchievementToast('Hold At Least ${_itemCountAchievementCount} Items', "Have you been working out?", ICON_EIFLE_TOWER).show();
-			_itemCountAchievement = true;
+	public function toToast(show:Bool):AchievementToast {
+		var a = new AchievementToast(title, description, iconIndex);
+		if (show) {
+			if (!achieved) {
+				a.show();
+				achieved = true;
+			} else {
+				a.active = false;
+			}
 		} else {
-			a = new FlxObject();
-		}
-		return a;
-	}
-
-	public static var _firstTableAchievement:Bool = false;
-
-	public static function NewFirstTableAchievement():FlxObject {
-		// TODO: MW ANALYTICS
-		var a:FlxObject;
-		if (!_firstTableAchievement) {
-			a = new AchievementToast("My First Table", "They grow up so fast.", ICON_EIFLE_TOWER).show();
-			_firstTableAchievement = true;
-		} else {
-			a = new FlxObject();
-		}
-		return a;
-	}
-
-	public static var _shotGlassOnWineAchievement:Bool = false;
-
-	public static function NewShotGlassOnWineBottle():FlxObject {
-		// TODO: MW ANALYTICS
-		var a:FlxObject;
-		if (!_shotGlassOnWineAchievement) {
-			a = new AchievementToast("Shot Glass on Wine Bottle", "In case you need just a tiny sip.", ICON_EIFLE_TOWER).show();
-			_shotGlassOnWineAchievement = true;
-		} else {
-			a = new FlxObject();
+			if (!achieved) {
+				a.dim();
+			}
 		}
 		return a;
 	}
