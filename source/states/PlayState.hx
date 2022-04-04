@@ -2,6 +2,7 @@ package states;
 
 import sort.ItemSorter.sortItems;
 import flixel.math.FlxMath;
+import helpers.Global.PRACTICE;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
@@ -101,6 +102,9 @@ class PlayState extends FlxTransitionableState {
 		heightGoal = new Heightometer(trayHand, FlxColor.RED, false, false);
 		foregroundGroup.add(heightGoal);
 		heightGoal.x = 0;
+		if (PRACTICE) {
+			heightGoal.setVisible(false);
+		}
 		FlxTween.linearMotion(heightGoal, 0, -400, 0, VICTORY_Y, 6);
 		heightGoalSuccess = new Heightometer(trayHand, FlxColor.LIME, false, false);
 		heightGoalSuccess.setVisible(false);
@@ -193,7 +197,7 @@ class PlayState extends FlxTransitionableState {
 		var withMS = heightometer.lastRatio >= 0.8;
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 
-		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted)) {
+		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
 			// TODO: Sneeze sfx
 			endStarted = true;
 			trayHand.sneeze();
@@ -230,10 +234,12 @@ class PlayState extends FlxTransitionableState {
 						obj.kill();
 						obj.active = false;
 
-						if (endStarted) {
-							FmodFlxUtilities.TransitionToState(new VictoryState());
-						} else {
-							FmodFlxUtilities.TransitionToState(new LoseState());
+						if (!PRACTICE) {
+							if (endStarted) {
+								FmodFlxUtilities.TransitionToState(new VictoryState());
+							} else {
+								FmodFlxUtilities.TransitionToState(new LoseState());
+							}
 						}
 					}
 				}
