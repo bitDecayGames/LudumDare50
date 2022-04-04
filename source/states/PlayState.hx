@@ -55,6 +55,8 @@ class PlayState extends FlxTransitionableState {
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
+	public var secondSneeze:Float = 7;
+	public var afterSecondSneezeTimer:Float = 5;
 
 	static var CLINK_THRESHOLD = 100;
 	static var MAX_VOLUME_CLINK = 400;
@@ -210,6 +212,19 @@ class PlayState extends FlxTransitionableState {
 		if (isWin()) {
 			triggerWin(stackInfo);
 		}
+		if (endStarted) {
+			if (secondSneeze > 0) {
+				secondSneeze -= elapsed;
+				if (secondSneeze < 0) {
+					secondSneezeWin();
+				}
+			} else {
+				afterSecondSneezeTimer -= elapsed;
+				if (afterSecondSneezeTimer < 0) {
+					goToVictoryScreen();
+				}
+			}
+		}
 	}
 
 	public function debugLogic() {
@@ -235,14 +250,25 @@ class PlayState extends FlxTransitionableState {
 		return FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
 	}
 
+	public function goToVictoryScreen() {
+		FmodFlxUtilities.TransitionToState(new VictoryState());
+	}
+
+	public function goToLoseScreen() {
+		FmodFlxUtilities.TransitionToState(new LoseState());
+	}
+
 	public function triggerWin(stackInfo:StackInfo) {
 		// TODO: Sneeze sfx
-		add(Achievements.HEIGHT.toToast(true));
+		if (!Achievements.HEIGHT.achieved) {
+			add(Achievements.HEIGHT.toToast(true));
+		}
 		endStarted = true;
 		trayHand.sneeze();
 		heightGoalSuccess.setVisible(true);
 		heightGoal.setVisible(false);
 		heightometer.setVisible(false);
+		heightGoalSuccess.y = heightometer.y;
 
 		if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
 			add(Achievements.SPEEDY.toToast(true));
@@ -259,6 +285,13 @@ class PlayState extends FlxTransitionableState {
 		if (!Achievements.HARD_MODE.achieved && HARD_OBJECTS) {
 			add(Achievements.HARD_MODE.toToast(true));
 		}
+	}
+
+	public function secondSneezeWin() {
+		if (!Achievements.SECOND_SNEEZE.achieved) {
+			add(Achievements.SECOND_SNEEZE.toToast(true));
+		}
+		trayHand.sneeze();
 	}
 
 	override public function onFocusLost() {
@@ -290,9 +323,9 @@ class PlayState extends FlxTransitionableState {
 
 						if (!PRACTICE) {
 							if (endStarted) {
-								FmodFlxUtilities.TransitionToState(new VictoryState());
+								goToVictoryScreen();
 							} else {
-								FmodFlxUtilities.TransitionToState(new LoseState());
+								goToLoseScreen();
 							}
 						}
 					}
