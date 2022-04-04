@@ -21,6 +21,7 @@ import lime.system.System;
 
 class MainMenuState extends FlxUIState {
 	var _btnPlay:FlxButton;
+	var _btnSettings:FlxButton;
 	var _btnCredits:FlxButton;
 	var _btnExit:FlxButton;
 
@@ -78,6 +79,10 @@ class MainMenuState extends FlxUIState {
 				clickPlay();
 			}
 
+			if (button_action == "settings") {
+				clickSettings();
+			}
+
 			if (button_action == "credits") {
 				clickCredits();
 			}
@@ -110,6 +115,10 @@ class MainMenuState extends FlxUIState {
 			FlxG.switchState(new PlayState());
 		}, FlxColor.GRAY);
 		openSubState(swirlOut);
+	}
+
+	function clickSettings():Void {
+		FmodFlxUtilities.TransitionToState(new SettingsState());
 	}
 
 	function clickCredits():Void {
