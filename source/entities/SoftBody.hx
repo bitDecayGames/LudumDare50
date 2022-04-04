@@ -271,8 +271,8 @@ class SoftBody extends FlxSprite {
             Polygon.regular(
                 /*xRadius*/10,
                 /*yRadius*/10,
-                /*segments*/20),
-            /*thickness*/ 10,
+                /*segments*/10),
+            /*thickness*/ 5,
             /*discretisation*/ 30,
             /*frequency*/ 1,
             /*damping*/ 100);
