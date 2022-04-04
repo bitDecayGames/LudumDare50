@@ -72,6 +72,7 @@ class PlayState extends FlxTransitionableState {
 	static var MAX_VOLUME_CLINK = 400;
 
 	public static function InitState() {
+		Achievements.ACHIEVEMENTS_DISPLAYED = 0;
 		FlxG.mouse.visible = false;
 
 		Lifecycle.startup.dispatch();

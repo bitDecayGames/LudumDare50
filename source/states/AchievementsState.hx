@@ -24,6 +24,7 @@ class AchievementsState extends FlxUIState {
 
 	override public function create():Void {
 		super.create();
+		Achievements.ACHIEVEMENTS_DISPLAYED = 0;
 		bgColor = FlxColor.TRANSPARENT;
 
 		_txtTitle = new FlxText();
