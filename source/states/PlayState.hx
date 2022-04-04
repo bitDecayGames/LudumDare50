@@ -206,6 +206,7 @@ class PlayState extends FlxTransitionableState {
 
 		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
 			// TODO: Sneeze sfx
+			add(Achievements.NewHeightAchievement());
 			endStarted = true;
 			trayHand.sneeze();
 			heightGoalSuccess.setVisible(true);
