@@ -1,5 +1,6 @@
 package entities;
 
+import helpers.Global.HARD_OBJECTS;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import js.html.Float32Array;
@@ -80,12 +81,15 @@ class Table extends PhysicsThing {
 		var configuration = getRandomConfiguration();
 
 		for (thingDef in configuration.things) {
-			var thing = thingDef.toPhysicsThing(body.position.x, body.position.y - 85);
-			myItems.push(thing);
+			var isHardObject = thingDef.isHardObject();
+			if ((isHardObject && HARD_OBJECTS) || !isHardObject) {
+				var thing = thingDef.toPhysicsThing(body.position.x, body.position.y - 85);
+				myItems.push(thing);
 
-			// Turn myItems off initially because table spawns and then moves. Thigns are turned on later.
-			thing.body.allowMovement = false;
-			thing.body.allowRotation = false;
+				// Turn myItems off initially because table spawns and then moves. Thigns are turned on later.
+				thing.body.allowMovement = false;
+				thing.body.allowRotation = false;
+			}
 		}
 		for (softy in configuration.softies) {
 			var softBody = softy.body(softy.x + body.position.x, softy.y + body.position.y - 85);
@@ -288,6 +292,11 @@ class ThingDef {
 
 	public function toPhysicsThing(offsetX:Float, offsetY:Float):PhysicsThing {
 		return new PhysicsThing(x + offsetX, y + offsetY, img, BodyType.DYNAMIC, material);
+	}
+
+	public function isHardObject():Bool {
+		return (img == AssetPaths.fork__png || img == AssetPaths.spoon__png || img == AssetPaths.knife__png || img == AssetPaths.Martini__png
+			|| img == AssetPaths.RoundMug__png);
 	}
 }
 
