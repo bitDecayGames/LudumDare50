@@ -1,5 +1,6 @@
 package entities;
 
+import helpers.Achievements;
 import nape.phys.Body;
 import flixel.addons.nape.FlxNapeSprite;
 import openfl.ui.Mouse;
@@ -89,6 +90,8 @@ class PickingHand extends FlxSprite {
 			joint.active = true;
 			if (Std.isOfType(body.userData.data, PhysicsThing)) {
 				cast(body.userData.data, PhysicsThing).inTow = true;
+			} else if (!Achievements.TOUCH_FOOD.achieved && Std.isOfType(body.userData.data, SoftBody)) {
+				FlxG.state.add(Achievements.TOUCH_FOOD.toToast(true));
 			}
 			return;
 		}
