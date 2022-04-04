@@ -5,7 +5,7 @@ import flixel.util.FlxSave;
 
 // Settings
 var PRACTICE:Bool = false;
-var HARD_OBJECTS:Bool = true;
+var HARD_OBJECTS:Bool = false;
 var EASY_TRAY:Bool = false;
 
 // High Scores
