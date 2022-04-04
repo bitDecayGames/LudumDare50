@@ -1,5 +1,7 @@
 package states;
 
+import helpers.Analytics;
+import com.bitdecay.analytics.Bitlytics;
 import screenshot.Screenshotter;
 import helpers.StackInfo;
 import helpers.Global.HARD_OBJECTS;
@@ -184,10 +186,6 @@ class PlayState extends FlxTransitionableState {
 
 		timer += elapsed;
 
-		KillThingsOutsideBoundary();
-		// MW This doesn't seem to be used anymore
-		// heightometer.y = CalculateHeighestObject(allThings);
-
 		#if debug
 		debugLogic();
 		#end
@@ -196,6 +194,8 @@ class PlayState extends FlxTransitionableState {
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
 			maxY = stackInfo.heightItem.body.bounds.min.y;
 		}
+
+		KillThingsOutsideBoundary(stackInfo);
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
@@ -266,11 +266,15 @@ class PlayState extends FlxTransitionableState {
 		FmodFlxUtilities.TransitionToState(new VictoryState());
 	}
 
-	public function goToLoseScreen() {
+	public function goToLoseScreen(stackInfo:StackInfo) {
+		Analytics.reportLoss(stackInfo.itemCount, heightometer.lastRatio, timer);
 		FmodFlxUtilities.TransitionToState(new LoseState());
 	}
 
 	public function triggerWin(stackInfo:StackInfo) {
+		// report our win
+		Analytics.reportWin(stackInfo.itemCount, timer);
+
 		// TODO: Sneeze sfx
 		if (!Achievements.HEIGHT.achieved) {
 			add(Achievements.HEIGHT.toToast(true));
@@ -316,7 +320,7 @@ class PlayState extends FlxTransitionableState {
 		this.handleFocus();
 	}
 
-	public function KillThingsOutsideBoundary() {
+	public function KillThingsOutsideBoundary(stackInfo:StackInfo) {
 		for (item in items) {
 			if (item.active) {
 				if (item.y > FlxG.height + 100 || item.y < -500 || item.x < -500 || item.x > FlxG.width + 2000) {
@@ -327,7 +331,7 @@ class PlayState extends FlxTransitionableState {
 						if (endStarted) {
 							goToVictoryScreen();
 						} else {
-							goToLoseScreen();
+							goToLoseScreen(stackInfo);
 						}
 					}
 				}
