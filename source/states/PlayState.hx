@@ -41,6 +41,7 @@ class PlayState extends FlxTransitionableState {
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
 	private var items:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	private var clothGroup:FlxGroup = new FlxGroup();
 	private var misc:FlxGroup = new FlxGroup();
 
 	public var timer:Float = 0;
@@ -82,12 +83,13 @@ class PlayState extends FlxTransitionableState {
 
 		add(misc);
 		add(items);
+		add(clothGroup);
 		add(foregroundGroup);
 
 		trayHand = new TrayHand(250, 700);
 		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push, clothGroup);
 		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);

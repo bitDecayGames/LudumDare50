@@ -15,10 +15,13 @@ class TableSpawner extends FlxObject {
 	private var items:FlxTypedGroup<FlxSprite>;
 	private var addToAllThings:(PhysicsThing) -> Int;
 	private var totalClearedTableCount:Int = -1;
+	private var clothGroup:FlxGroup;
 
-	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int) {
+	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int,
+			clothGroup:FlxGroup) {
 		super(x, y);
 		this.items = items;
+		this.clothGroup = clothGroup;
 		addToAllThings = _addToAllThings;
 		spawnLocation = new Vec2(x + 1000, y);
 		spawnTable();
@@ -43,6 +46,9 @@ class TableSpawner extends FlxObject {
 	private function spawnTable() {
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
 		items.add(table);
+		clothGroup.add(table.leftCloth);
+		clothGroup.add(table.tablecloth);
+		clothGroup.add(table.rightCloth);
 		for (thing in table.myItems) {
 			items.add(thing);
 			addToAllThings(thing);

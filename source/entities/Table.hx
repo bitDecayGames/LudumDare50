@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.FlxObject;
+import flixel.addons.effects.FlxClothSprite;
 import helpers.Global.HARD_OBJECTS;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -24,29 +26,65 @@ class Table extends PhysicsThing {
 	private var spawnLocation:Vec2;
 	private var deleteBuffer:Float = 10;
 
+	public var tablecloth:FlxClothSprite;
+	public var leftCloth:FlxClothSprite;
+	public var rightCloth:FlxClothSprite;
+
+	private var clothOffset = Vec2.get(117, 0);
+	private var leftClothOffset = Vec2.get(0, 1);
+	private var rightClothOffset = Vec2.get(404, 1);
+
+	private var clothXSpeed = 50;
+	private var clothYSpeed = 10;
+
 	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
 		this.allItems = allItems;
 		spawnLocation = new Vec2(x, y);
 		spawnThings();
+
+		// This show how to set mesh scale, custom pinned points and set iterations
+		tablecloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png);
+
+		tablecloth.pinnedSide = FlxObject.UP;
+		tablecloth.meshScale.set(1, 1);
+		tablecloth.setMesh(10, 10);
+		tablecloth.iterations = 8;
+		tablecloth.maxVelocity.set(200, 200);
+		tablecloth.meshVelocity.y = clothYSpeed;
+		tablecloth.meshFriction.set(0.95, 0.95);
+
+		leftCloth = new FlxClothSprite(x, y, AssetPaths.tableClothSide__png, 1, 10);
+		leftCloth.iterations = 8;
+		leftCloth.meshVelocity.y = clothYSpeed;
+		leftCloth.meshFriction.set(0.95, 0.95);
+
+		rightCloth = new FlxClothSprite(x, y, AssetPaths.tableClothSide__png, 1, 10);
+		rightCloth.iterations = 8;
+		rightCloth.meshVelocity.y = clothYSpeed;
+		rightCloth.meshFriction.set(0.95, 0.95);
 	}
 
 	override public function update(delta:Float) {
 		super.update(delta);
 
+		tablecloth.setPosition(x + clothOffset.x, y + clothOffset.y);
+		leftCloth.setPosition(x + leftClothOffset.x, y + leftClothOffset.y);
+		rightCloth.setPosition(x + rightClothOffset.x, y + rightClothOffset.y);
+
 		// output item nums
-		// for (i in 0...myItems.length) {
-		// 	if (i >= 5) {
-		// 		var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
-		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
-		// 	}
-		// }
-		for (i in 0...softies.length) {
-			if (i >= 5) {
-				var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
-				FlxG.watch.addQuick('softy#${i}', absolutePos);
+		for (i in 0...myItems.length) {
+			if (i >= 0) {
+				var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
+				FlxG.watch.addQuick('item#${i}', absolutePos);
 			}
 		}
+		// for (i in 0...softies.length) {
+		// 	if (i >= 5) {
+		// 		var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
+		// 		FlxG.watch.addQuick('softy#${i}', absolutePos);
+		// 	}
+		// }
 
 		if (reactivated) {
 			var haveItemsAbove = false;
@@ -76,6 +114,17 @@ class Table extends PhysicsThing {
 
 	function removeTable() {
 		body.setVelocityFromTarget(spawnLocation, 0, 0.5);
+
+		if (body.velocity.x > x) {
+			tablecloth.meshVelocity.x = -clothXSpeed;
+			leftCloth.meshVelocity.x = -clothXSpeed;
+			rightCloth.meshVelocity.x = -clothXSpeed;
+		}
+		if (body.velocity.x < x) {
+			tablecloth.meshVelocity.x = clothXSpeed;
+			leftCloth.meshVelocity.x = clothXSpeed;
+			rightCloth.meshVelocity.x = clothXSpeed;
+		}
 	}
 
 	private function spawnThings() {
@@ -109,6 +158,17 @@ class Table extends PhysicsThing {
 	}
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		if (targetPosition.x > x) {
+			tablecloth.meshVelocity.x = -clothXSpeed;
+			leftCloth.meshVelocity.x = -clothXSpeed;
+			rightCloth.meshVelocity.x = -clothXSpeed;
+		}
+		if (targetPosition.x < x) {
+			tablecloth.meshVelocity.x = clothXSpeed;
+			leftCloth.meshVelocity.x = clothXSpeed;
+			rightCloth.meshVelocity.x = clothXSpeed;
+		}
+
 		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
 		for (pet in myItems) {
 			if (pet.body != null) {
@@ -124,6 +184,10 @@ class Table extends PhysicsThing {
 	}
 
 	public function reactivateMeAndMyPets() {
+		tablecloth.meshVelocity.x = 0;
+		leftCloth.meshVelocity.x = 0;
+		rightCloth.meshVelocity.x = 0;
+
 		body.velocity.set(new Vec2());
 		for (pet in myItems) {
 			if (pet.body != null) {
@@ -239,9 +303,32 @@ class Table extends PhysicsThing {
 			new ThingDef(-160, -221, AssetPaths.Martini__png),
 		], [
 			new SoftBodyDef(-158, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-158, -96, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
+		]),
+		new TableConfiguration([
+			new ThingDef(-148, 13, AssetPaths.SPlate__png),
+			new ThingDef(136, 13, AssetPaths.SPlate__png),
+			new ThingDef(-48, -1, AssetPaths.SquareMug__png),
+			new ThingDef(48, -6, AssetPaths.RoundMug__png),
+			new ThingDef(-105, -37, AssetPaths.fork__png),
+			new ThingDef(86, -60, AssetPaths.fork__png),
+		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),]),
+		new TableConfiguration([
+			new ThingDef(-61, -40, AssetPaths.Stein__png),
+			new ThingDef(86, -40, AssetPaths.Stein__png),
+			new ThingDef(-7, -152, AssetPaths.fork__png),
+			new ThingDef(-3, -124, AssetPaths.spoon__png),
+			new ThingDef(-7, -191, AssetPaths.knife__png),
+			new ThingDef(-2, -220, AssetPaths.spoon__png),
+			new ThingDef(-5, -292, AssetPaths.knife__png),
+			new ThingDef(-7, -255, AssetPaths.fork__png),
+		], [
+			new SoftBodyDef(45, -10, SoftBody.NewSteak),
+			new SoftBodyDef(45, -35, SoftBody.NewSteak),
+			new SoftBodyDef(45, -60, SoftBody.NewSteak),
+			new SoftBodyDef(45, -85, SoftBody.NewSteak),
+			new SoftBodyDef(45, -110, SoftBody.NewSteak),
+			new SoftBodyDef(45, -135, SoftBody.NewSteak),
 		])
 	];
 }
