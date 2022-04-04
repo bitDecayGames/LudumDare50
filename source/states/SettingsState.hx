@@ -1,5 +1,6 @@
 package states;
 
+import helpers.Global.HARD_OBJECTS;
 import flixel.addons.ui.FlxUIText;
 import helpers.Global.PRACTICE;
 import flixel.addons.ui.FlxUICheckBox;
@@ -18,7 +19,8 @@ class SettingsState extends FlxUIState {
 
 	var _txtTitle:FlxText;
 
-	var _freePlayBox:FlxUICheckBox;
+	var _practiceBox:FlxUICheckBox;
+	var _hardObjectsBox:FlxUICheckBox;
 
 	override public function create():Void {
 		super.create();
@@ -31,9 +33,7 @@ class SettingsState extends FlxUIState {
 		_txtTitle.text = "Settings";
 		add(_txtTitle);
 
-		_freePlayBox = new FlxUICheckBox(FlxG.width / 2, FlxG.height / 2, null, null, "Practice");
-		_freePlayBox.checked = PRACTICE;
-		add(_freePlayBox);
+		addSettingsButtons();
 
 		_btnDone = UiHelpers.createMenuButton("Main Menu", clickMainMenu);
 		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
@@ -48,11 +48,22 @@ class SettingsState extends FlxUIState {
 		FmodManager.Update();
 
 		_txtTitle.x = FlxG.width / 2 - _txtTitle.width / 2;
-		PRACTICE = _freePlayBox.checked;
+		PRACTICE = _practiceBox.checked;
+		HARD_OBJECTS = _hardObjectsBox.checked;
 	}
 
 	function clickMainMenu():Void {
 		FmodFlxUtilities.TransitionToState(new MainMenuState());
+	}
+
+	function addSettingsButtons() {
+		_practiceBox = new FlxUICheckBox(FlxG.width / 2, FlxG.height / 2, null, null, "Practice");
+		_practiceBox.checked = PRACTICE;
+		add(_practiceBox);
+
+		_hardObjectsBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + _practiceBox.height, null, null, "Hard Objects");
+		_hardObjectsBox.checked = HARD_OBJECTS;
+		add(_hardObjectsBox);
 	}
 
 	override public function onFocusLost() {
