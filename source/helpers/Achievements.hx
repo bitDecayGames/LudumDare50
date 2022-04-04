@@ -1,38 +1,65 @@
 package helpers;
 
+import helpers.Global.saveAchievement;
+import helpers.Global.isAchievementSaved;
 import entities.AchievementToast;
 
 class Achievements {
-	public static var HEIGHT:AchievementDef = new AchievementDef("achwin", "Sois Béni", "Win the game", 0);
-	public static var FIRST_TABLE:AchievementDef = new AchievementDef("achfirsttable", "My First Table", "Bus your first table", 1, 1);
-	public static var ITEM_COUNT:AchievementDef = new AchievementDef("achtenitems", "That Looks Heavy", "Hold ten items", 2, 10);
-	public static var FIVE_TABLES:AchievementDef = new AchievementDef("achfivetables", "Workaholic", "Bus five tables", 3, 5);
-	public static var ONE_MINUTE:AchievementDef = new AchievementDef("achoneminute", "Break Time?", "Work for one minute", 4, 60);
-	public static var FIVE_MINUTES:AchievementDef = new AchievementDef("achfiveminutes", "Overtime", "Work for five minutes", 5, 300);
-	public static var SPEEDY:AchievementDef = new AchievementDef("achspeedy", "The Hare", "Finished in under 2 min", 6, 120);
-	public static var SLOW:AchievementDef = new AchievementDef("achslow", "The Tortoise", "Finished in over 10 min", 7, 600);
-	public static var MINIMALIST:AchievementDef = new AchievementDef("achminimalist", "Minimalist", "Finished with less than 15 items", 8, 15);
-	public static var HOARDER:AchievementDef = new AchievementDef("achhoarder", "Hoarder", "Finished with more than 50 items", 9, 50);
-	public static var HARD_MODE:AchievementDef = new AchievementDef("achhardmode", "Masochist", "Win with hard objects", 9);
-	public static var TOUCH_FOOD:AchievementDef = new AchievementDef("achstickyfingers", "Sticky Fingers", "Pick up food", 0);
-	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef = new AchievementDef("achshotglasscork", "Shot Glass Cork", "In case you lost the cork", 0);
-	// @formatter:off
-	public static var ALL:Array<AchievementDef> = [
-		HEIGHT,
-		FIRST_TABLE,
-		ITEM_COUNT,
-		FIVE_TABLES,
-		ONE_MINUTE,
-		FIVE_MINUTES,
-		SPEEDY,
-		SLOW,
-		MINIMALIST,
-		HOARDER,
-		HARD_MODE,
-		TOUCH_FOOD,
-		SHOT_GLASS_ON_WINE_BOTTLE,
-	];
-	// @formatter:on
+	public static var HEIGHT:AchievementDef;
+	public static var ITEM_COUNT:AchievementDef;
+	public static var FIRST_TABLE:AchievementDef;
+	public static var FIVE_TABLES:AchievementDef;
+	public static var ONE_MINUTE:AchievementDef;
+	public static var TEN_MINUTE:AchievementDef;
+	public static var SPEEDY:AchievementDef;
+	public static var SLOW:AchievementDef;
+	public static var MINIMALIST:AchievementDef;
+	public static var HOARDER:AchievementDef;
+	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef;
+	public static var ALL:Array<AchievementDef>;
+	public static var ACHIEVEMENTS_DISPLAYED:Array<AchievementDef> = [];
+
+	public static function initAchievements() {
+		trace("initted the acheeeevements");
+
+		HEIGHT = new AchievementDef("achwin", "Sois Béni", "Win the game", 0);
+		FIRST_TABLE = new AchievementDef("achfirsttable", "My First Table", "Bus your first table", 1, 1);
+		ITEM_COUNT = new AchievementDef("achtenitems", "That Looks Heavy", "Hold ten items", 2, 10);
+		FIVE_TABLES = new AchievementDef("achfivetables", "Workaholic", "Bus five tables", 3, 5);
+		ONE_MINUTE = new AchievementDef("achoneminute", "Break Time?", "Work for one minute", 4, 60);
+		FIVE_MINUTES = new AchievementDef("achfiveminutes", "Overtime", "Work for five minutes", 5, 300);
+		SPEEDY = new AchievementDef("achspeedy", "The Hare", "Finished in under 2 min", 6, 120);
+		SLOW = new AchievementDef("achslow", "The Tortoise", "Finished in over 10 min", 7, 600);
+		MINIMALIST = new AchievementDef("achminimalist", "Minimalist", "Finished with less than 15 items", 8, 15);
+		HOARDER = new AchievementDef("achhoarder", "Hoarder", "Finished with more than 50 items", 9, 50);
+		HARD_MODE = new AchievementDef("achhardmode", "Masochist", "Win with hard objects", 9);
+		TOUCH_FOOD = new AchievementDef("achstickyfingers", "Sticky Fingers", "Pick up food", 0);
+		SHOT_GLASS_ON_WINE_BOTTLE = new AchievementDef("achshotglasscork", "Shot Glass Cork", "In case you lost the cork", 0);
+
+		// @formatter:off
+		ALL = [
+			HEIGHT,
+			FIRST_TABLE,
+			ITEM_COUNT,
+			FIVE_TABLES,
+			ONE_MINUTE,
+			FIVE_MINUTES,
+			SPEEDY,
+			SLOW,
+			MINIMALIST,
+			HOARDER,
+			HARD_MODE,
+			TOUCH_FOOD,
+			SHOT_GLASS_ON_WINE_BOTTLE,
+		];
+		// @formatter:on
+	}
+
+	public static function clearAchievements() {
+		for (ach in ALL) {
+			ach.achieved = false;
+		}
+	}
 }
 
 class AchievementDef {
@@ -51,9 +78,8 @@ class AchievementDef {
 		this.iconIndex = iconIndex;
 		this.count = count;
 		this.hidden = hidden;
-		this.achieved = false;
 
-		// TODO: MW here is where we should check the key in localStorage to check if they have already achieved this thing
+		this.achieved = isAchievementSaved(key);
 	}
 
 	public function toToast(show:Bool, force:Bool = false):AchievementToast {
@@ -62,7 +88,7 @@ class AchievementDef {
 			if (!achieved || force) {
 				a.show();
 				// TODO: analytics
-				// TODO: MW here is where we should track this achievement by the key in localStorage
+				saveAchievement(key);
 				achieved = true;
 			} else {
 				a.active = false;
