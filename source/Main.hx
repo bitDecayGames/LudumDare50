@@ -23,10 +23,10 @@ import states.dev.JakesPlayState;
 import states.dev.LogansPlayState;
 #elseif mike
 import states.dev.MikesPlayState;
-#elseif shapes
-import states.dev.AllShapesState;
 #elseif soft
 import states.dev.SoftBodyState;
+#elseif shapes
+import states.dev.AllShapesState;
 #elseif settings
 import states.SettingsState;
 #elseif achievements

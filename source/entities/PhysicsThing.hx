@@ -1,5 +1,6 @@
 package entities;
 
+import nape.shape.Circle;
 import constants.CbTypes;
 import nape.geom.GeomPoly;
 import nape.dynamics.InteractionFilter;
@@ -42,7 +43,37 @@ class PhysicsThing extends FlxNapeSprite {
 	public var inContactWith:Map<PhysicsThing, Bool> = [];
 
     // @formatter:off
-	private var vertices = [
+    private static var sensors = [
+        AssetPaths.Wine__png => [
+            S.get(0, -100, "wine_bottle", 5),
+        ],
+        AssetPaths.Shot__png => [
+            S.get(0, 0, "shot_glass"),
+        ],
+        AssetPaths.Martini__png => [
+            S.get(-35, -55, "martini_left", 7),
+            S.get(35, -55, "martini_right", 7),
+        ],
+        AssetPaths.Pint__png => [
+            S.get(0, 20, "glass_bottom", 20),
+        ],
+        AssetPaths.Tall__png => [
+            S.get(0, 25, "glass_bottom", 20),
+        ],
+        AssetPaths.Stein__png => [
+            S.get(-18, 10, "glass_bottom", 40),
+        ],
+        AssetPaths.trayHand__png => [
+            S.get(-150, -35, "tray_corner"),
+            S.get(150, -35, "tray_corner"),
+        ],
+        AssetPaths.trayHandEasy__png => [
+            S.get(-160, -55, "tray_corner"),
+            S.get(160, -55, "tray_corner"),
+        ],
+    ];
+
+	public static var vertices = [
         AssetPaths.wineGlass__png => [
             [
                 Vec2.get(4,0),
@@ -707,11 +738,14 @@ class PhysicsThing extends FlxNapeSprite {
 		body.shapes.clear();
         // trace('preparing to build body for ${originalAsset}');
         if (vertices.exists(originalAsset)) {
-            if (vertices.get(originalAsset)[0].length > 0) {
-                buildNewBody(vertices.get(originalAsset)[0], CGroups.FILLER_FILTER, air());
+            var bodyDef = vertices.get(originalAsset);
+            if (bodyDef[0].length > 0) {
+                buildNewBody(bodyDef[0], CGroups.FILLER_FILTER, air());
             }
-            buildNewBody(vertices.get(originalAsset)[1], CGroups.SHELL_FILTER,
-            material != null ? material : Material.glass());
+            buildNewBody(bodyDef[1], CGroups.SHELL_FILTER, material != null ? material : Material.glass());
+            if (sensors.exists(originalAsset)) {
+                buildSensors(sensors.get(originalAsset), CGroups.SENSOR_FILTER, air());
+            }
         } else {
             throw('no vertex info for ${originalAsset}');
         }
@@ -719,7 +753,7 @@ class PhysicsThing extends FlxNapeSprite {
 		body.space = FlxNapeSpace.space;
 		body.userData.data = this;
 		body.isBullet = false;
-	}
+}
 
 	private function buildNewBody(vertices:Array<Vec2>, collisionFilter:InteractionFilter, mat:Material) {
 		var poly = new GeomPoly();
@@ -742,5 +776,28 @@ class PhysicsThing extends FlxNapeSprite {
 		}
 
         body.cbTypes.add(CbTypes.CB_ITEM);
+}
+
+	private function buildSensors(sensors:Array<S>, collisionFilter:InteractionFilter, mat:Material) {
+        for (s in sensors) {
+            var sensor = new Circle(s.r, s.v, mat, collisionFilter);
+            sensor.userData.key = s.k;
+            sensor.sensorEnabled = true;
+            body.shapes.add(sensor);
+        }
 	}
+}
+
+class S {
+    public var v:Vec2;
+    public var r:Float;
+    public var k:String;
+    public function new(x:Float, y:Float, k:String, r:Float = 10) {
+        v = Vec2.get(x, y);
+        this.k = k;
+        this.r = r;
+    }
+    public static function get(x:Float, y:Float, k:String, r:Float=10):S {
+        return new S(x, y, k, r);
+    }
 }

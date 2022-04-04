@@ -392,8 +392,8 @@ class ThingDef {
 		this.material = material;
 	}
 
-	public function toPhysicsThing(offsetX:Float, offsetY:Float):PhysicsThing {
-		return new PhysicsThing(x + offsetX, y + offsetY, img, BodyType.DYNAMIC, material);
+	public function toPhysicsThing(offsetX:Float, offsetY:Float, ?bodyType:BodyType):PhysicsThing {
+		return new PhysicsThing(x + offsetX, y + offsetY, img, bodyType, material);
 	}
 
 	public function isHardObject():Bool {

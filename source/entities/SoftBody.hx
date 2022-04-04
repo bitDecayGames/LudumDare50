@@ -52,7 +52,8 @@ class SoftBody extends FlxSprite {
 		_color = color;
 		avgPos = FlxPoint.get(x, y);
 		var poly = new GeomPoly(polygon);
-		softBody = polygonalBody(Vec2.get(x, y), thickness, discretisation, frequency, damping, poly);
+		softBody = polygonalBody(Vec2.get(x, y), thickness, discretisation, frequency, damping, poly, this);
+		softBody.userData.data = this;
 		softBody.space = FlxNapeSpace.space;
 		makeGraphic(FlxG.width, FlxG.height, 0x0, true);
 	}
@@ -136,7 +137,8 @@ class SoftBody extends FlxSprite {
 		return softBody.COM();
 	}
 
-	static function polygonalBody(position:Vec2, thickness:Float, discretisation:Float, frequency:Float, damping:Float, poly:GeomPoly):Compound {
+	static function polygonalBody(position:Vec2, thickness:Float, discretisation:Float, frequency:Float, damping:Float, poly:GeomPoly,
+			softBody:SoftBody):Compound {
 		// We're going to collect all Bodies and Constraints into a SoftBody
 		// for ease of use hereafter.
 		var body = new Compound();
@@ -174,6 +176,7 @@ class SoftBody extends FlxSprite {
 				// vertices so that all Vec2 are automatically released
 				// to object pool.
 				var segment = new Body();
+				segment.userData.data = softBody;
 				var outerPoint = current.addMul(delta, gap * i);
 				var innerPoint = iCurrent.addMul(iDelta, gap * i);
 				var polygon = new Polygon([
