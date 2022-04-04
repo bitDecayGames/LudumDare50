@@ -1,6 +1,8 @@
 package states;
 
 import nape.geom.Geom;
+import helpers.UiHelpers;
+import flixel.ui.FlxButton;
 import helpers.Analytics;
 import com.bitdecay.analytics.Bitlytics;
 import screenshot.Screenshotter;
@@ -141,7 +143,21 @@ class PlayState extends FlxTransitionableState {
 
 		timerDisplay = new FlxText(FlxG.width - 75, 5);
 		timerDisplay.size = 20;
-		foregroundGroup.add(timerDisplay);
+
+		if (!PRACTICE) {
+			// Only show the timer if we aren't in practice mode
+			foregroundGroup.add(timerDisplay);
+		} else {
+			var exitButton = UiHelpers.createMenuButton("Main Menu", () -> {
+				Analytics.reportPracticeSession(timer);
+				FmodFlxUtilities.TransitionToState(new MainMenuState());
+			});
+			exitButton.y = 0;
+			exitButton.x = FlxG.width - exitButton.width;
+
+			// Put it in this group so the hand is in front of it
+			clothGroup.add(exitButton);
+		}
 
 		makeHighScoreArea(FlxG.width - 450, timerDisplay.y + timerDisplay.height);
 	}

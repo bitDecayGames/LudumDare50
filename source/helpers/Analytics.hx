@@ -4,6 +4,8 @@ import com.bitdecay.metrics.Tag;
 import com.bitdecay.analytics.Bitlytics;
 
 class Analytics {
+	private static var METRIC_PRACTICE_TIME = "practice_time";
+
 	private static var METRIC_VICTORY = "victory";
 	private static var METRIC_VICTORY_ITEM_COUNT = "victory_item_count";
 	private static var METRIC_VICTORY_TIME = "victory_time";
@@ -30,5 +32,9 @@ class Analytics {
 		Bitlytics.Instance().Queue(METRIC_FAILURE, precentComplete);
 		Bitlytics.Instance().Queue(METRIC_FAILURE_ITEM_COUNT, itemCount);
 		Bitlytics.Instance().Queue(METRIC_FAILURE_TIME, time);
+	}
+
+	public static function reportPracticeSession(time:Float) {
+		Bitlytics.Instance().Queue(METRIC_PRACTICE_TIME, time);
 	}
 }
