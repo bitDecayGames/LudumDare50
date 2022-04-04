@@ -111,9 +111,11 @@ class MainMenuState extends FlxUIState {
 			trace("---------- Bitlytics Stopped ----------");
 		}
 
+		#if debug
 		if (FlxG.keys.pressed.K) {
 			deleteData();
 		}
+		#end
 	}
 
 	function clickPlay():Void {
