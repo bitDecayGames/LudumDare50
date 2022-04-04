@@ -1,8 +1,7 @@
 package states;
 
-import helpers.Global.HARD_OBJECTS;
+import helpers.Global;
 import flixel.addons.ui.FlxUIText;
-import helpers.Global.PRACTICE;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
@@ -21,6 +20,7 @@ class SettingsState extends FlxUIState {
 
 	var _practiceBox:FlxUICheckBox;
 	var _hardObjectsBox:FlxUICheckBox;
+	var _easyTrayBox:FlxUICheckBox;
 
 	override public function create():Void {
 		super.create();
@@ -50,6 +50,7 @@ class SettingsState extends FlxUIState {
 		_txtTitle.x = FlxG.width / 2 - _txtTitle.width / 2;
 		PRACTICE = _practiceBox.checked;
 		HARD_OBJECTS = _hardObjectsBox.checked;
+		EASY_TRAY = _easyTrayBox.checked;
 	}
 
 	function clickMainMenu():Void {
@@ -57,13 +58,20 @@ class SettingsState extends FlxUIState {
 	}
 
 	function addSettingsButtons() {
+		var yOffset = 0.0;
 		_practiceBox = new FlxUICheckBox(FlxG.width / 2, FlxG.height / 2, null, null, "Practice");
 		_practiceBox.checked = PRACTICE;
 		add(_practiceBox);
+		yOffset += _practiceBox.height;
 
-		_hardObjectsBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + _practiceBox.height, null, null, "Hard Objects");
+		_hardObjectsBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + yOffset, null, null, "Hard Objects");
 		_hardObjectsBox.checked = HARD_OBJECTS;
 		add(_hardObjectsBox);
+		yOffset += _hardObjectsBox.height;
+
+		_easyTrayBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + yOffset, null, null, "Easy Tray");
+		_easyTrayBox.checked = EASY_TRAY;
+		add(_easyTrayBox);
 	}
 
 	override public function onFocusLost() {

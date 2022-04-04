@@ -7,6 +7,7 @@ import flixel.FlxG;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
 import helpers.Materials;
+import helpers.Global;
 
 class TrayHand extends PhysicsThing {
 	// +/- max position tray hand can move from start
@@ -22,7 +23,7 @@ class TrayHand extends PhysicsThing {
 	private var ocellateCenter:FlxPoint;
 
 	public function new(x:Float = 0, y:Float = 0) {
-		super(x, y, AssetPaths.trayHandEasy__png, BodyType.KINEMATIC, jakeTanium());
+		super(x, y, EASY_TRAY ? AssetPaths.trayHandEasy__png : AssetPaths.trayHand__png, BodyType.KINEMATIC, jakeTanium());
 
 		initPosition = body.position.x;
 		ocellateCenter = FlxPoint.get(body.position.x + OCELLATE_MAGNITUDE, body.position.y + OCELLATE_MAGNITUDE);
