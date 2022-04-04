@@ -17,8 +17,8 @@
 	},
 	"menus": {
 		"mouseNavigation": true,
-		"keyboardNavigation": true,
-		"controllerNavigation": true
+		"keyboardNavigation": false,
+		"controllerNavigation": false
 	},
 	"credits": {
 		"sections": [

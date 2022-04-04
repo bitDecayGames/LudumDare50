@@ -83,6 +83,10 @@ class MainMenuState extends FlxUIState {
 				clickSettings();
 			}
 
+			if (button_action == "achievements") {
+				clickAchievements();
+			}
+
 			if (button_action == "credits") {
 				clickCredits();
 			}
@@ -113,6 +117,10 @@ class MainMenuState extends FlxUIState {
 
 	function clickSettings():Void {
 		FmodFlxUtilities.TransitionToState(new SettingsState());
+	}
+
+	function clickAchievements():Void {
+		FmodFlxUtilities.TransitionToState(new AchievementsState());
 	}
 
 	function clickCredits():Void {

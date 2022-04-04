@@ -26,6 +26,8 @@ import states.dev.AllShapesState;
 import states.dev.SoftBodyState;
 #elseif settings
 import states.SettingsState;
+#elseif achievements
+import states.AchievementsState;
 #end
 
 class Main extends Sprite {
@@ -48,6 +50,8 @@ class Main extends Sprite {
 		startingState = SoftBodyState;
 		#elseif settings
 		startingState = SettingsState;
+		#elseif achievements
+		startingState = AchievementsState;
 		#else
 		if (Macros.isDefined("SKIP_SPLASH")) {
 			startingState = MainMenuState;

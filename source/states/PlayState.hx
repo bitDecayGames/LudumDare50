@@ -204,9 +204,28 @@ class PlayState extends FlxTransitionableState {
 			heightGoalSuccess.setVisible(true);
 			heightGoal.setVisible(false);
 			heightometer.setVisible(false);
+
+			if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
+				add(Achievements.SPEEDY.toToast(true));
+			}
+			if (!Achievements.SLOW.achieved && timer >= Achievements.SLOW.count) {
+				add(Achievements.SLOW.toToast(true));
+			}
+			if (!Achievements.MINIMALIST.achieved && stackInfo.itemCount <= Achievements.MINIMALIST.count) {
+				add(Achievements.MINIMALIST.toToast(true));
+			}
+			if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
+				add(Achievements.HOARDER.toToast(true));
+			}
 		}
 
 		items.sort(sortItems, FlxSort.DESCENDING);
+
+		if (!Achievements.ONE_MINUTE.achieved && timer > Achievements.ONE_MINUTE.count) {
+			add(Achievements.ONE_MINUTE.toToast(true));
+		} else if (!Achievements.TEN_MINUTE.achieved && timer > Achievements.TEN_MINUTE.count) {
+			add(Achievements.TEN_MINUTE.toToast(true));
+		}
 	}
 
 	override public function onFocusLost() {

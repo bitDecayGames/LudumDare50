@@ -34,7 +34,6 @@ class SettingsState extends FlxUIState {
 		add(_txtTitle);
 
 		addSettingsButtons();
-		addAchievementToasts();
 
 		_btnDone = UiHelpers.createMenuButton("Main Menu", clickMainMenu);
 		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
@@ -73,17 +72,6 @@ class SettingsState extends FlxUIState {
 		_easyTrayBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + yOffset, null, null, "Easy Tray");
 		_easyTrayBox.checked = EASY_TRAY;
 		add(_easyTrayBox);
-	}
-
-	function addAchievementToasts() {
-		var x = 20;
-		var y = 20;
-		for (def in Achievements.ALL) {
-			var a = def.toToast(false);
-			add(a);
-			a.setPosition(x, y);
-			y += 100;
-		}
 	}
 
 	override public function onFocusLost() {

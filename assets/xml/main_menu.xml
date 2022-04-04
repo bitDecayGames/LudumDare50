@@ -7,7 +7,13 @@
 		<param type="string" value="play"/>
 	</button>
 
-		<button x="center" name="settings_button" label="Settings" align="center">
+	<button x="center" name="achievements_button" label="Achievements" align="center">
+		<!-- anchor the button at the center of the screen, 'flush' with the center of the button -->
+		<anchor x="center" x-flush="center" />
+		<param type="string" value="achievements"/>
+	</button>
+
+	<button x="center" name="settings_button" label="Settings" align="center">
 		<!-- anchor the button at the center of the screen, 'flush' with the center of the button -->
 		<anchor x="center" x-flush="center" />
 		<param type="string" value="settings"/>
@@ -28,6 +34,6 @@
 	<align axis="vertical" spacing="2" resize="false">
 		<!-- May need to add space if we want more objects in this alignment -->
 		<bounds top="70%" bottom="90%"/>
-		<objects value="play_button,settings_button,credits_button,exit_button"/>
+		<objects value="play_button,achievements_button,settings_button,credits_button,exit_button"/>
 	</align>
 </data>

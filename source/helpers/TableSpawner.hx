@@ -9,6 +9,8 @@ import flixel.group.FlxGroup;
 import nape.geom.Vec2;
 
 class TableSpawner extends FlxObject {
+	private static var TABLE_X_OFFSET:Float = 100;
+
 	private var tableJustSpawned:Bool = false;
 	private var table:Table;
 	private var spawnLocation:Vec2;
@@ -23,7 +25,7 @@ class TableSpawner extends FlxObject {
 		this.items = items;
 		this.clothGroup = clothGroup;
 		addToAllThings = _addToAllThings;
-		spawnLocation = new Vec2(x + 1000, y);
+		spawnLocation = new Vec2(x + TABLE_X_OFFSET, y);
 		spawnTable();
 	}
 
@@ -44,6 +46,7 @@ class TableSpawner extends FlxObject {
 	}
 
 	private function spawnTable() {
+		tableJustSpawned = true;
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
 		items.add(table);
 		clothGroup.add(table.leftCloth);
@@ -58,8 +61,10 @@ class TableSpawner extends FlxObject {
 			items.add(softy);
 		}
 		totalClearedTableCount++;
-		if (totalClearedTableCount == 1) {
+		if (totalClearedTableCount == Achievements.FIRST_TABLE.count) {
 			FlxG.state.add(Achievements.FIRST_TABLE.toToast(true));
+		} else if (totalClearedTableCount == Achievements.FIVE_TABLES.count) {
+			FlxG.state.add(Achievements.FIVE_TABLES.toToast(true));
 		}
 	}
 
