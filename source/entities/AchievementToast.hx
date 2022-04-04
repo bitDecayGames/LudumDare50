@@ -23,12 +23,13 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 
 class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
-	private static var TIME_TO_TRANSITION:Float = 1;
-	private static var TIME_TO_VIEW:Float = 5;
+	private static var TIME_TO_TRANSITION:Float = .25;
+	private static var TIME_TO_VIEW:Float = 7;
 
-	private static var TITLE_TEXT_SIZE:Int = 15;
-	private static var DESCRIPTION_TEXT_SIZE:Int = 10;
-	private static var PADDING:Float = 20;
+	private static var TITLE_TEXT_SIZE:Int = 18;
+	private static var DESCRIPTION_TEXT_SIZE:Int = 15;
+	private static var PADDING:Float = 10;
+	private static var TEXT_COLOR:FlxColor = 0x5b4f37;
 
 	private var title:FlxText;
 	private var description:FlxText;
@@ -38,27 +39,35 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private var TOAST_Y:Float;
 	private var TOAST_HEIGHT_FROM_BOTTOM:Float;
 
-	public function new(title:String, description:String, icon:flixel.system.FlxAssets.FlxGraphicAsset) {
+	public function new(title:String, description:String, icon:Int) {
 		super();
-		TOAST_X = FlxG.width / 2.0;
-		TOAST_Y = FlxG.height + 300;
-		TOAST_HEIGHT_FROM_BOTTOM = FlxG.height - 300;
 
-		background = new FlxSprite(0, 0, AssetPaths.Bread__png);
+		background = new FlxSprite(0, 0, AssetPaths.toastBG__png);
 		add(background);
 		background.setPosition(0, 0);
 
-		this.icon = new FlxSprite(0, 0, icon);
+		TOAST_X = FlxG.width - background.width - PADDING;
+		TOAST_Y = FlxG.height + background.height;
+
+		TOAST_HEIGHT_FROM_BOTTOM = FlxG.height - background.height;
+
+		this.icon = new FlxSprite(0, 0);
+		this.icon.loadGraphic(AssetPaths.icons__png, true);
+		this.icon.animation.add("default", [icon]);
+		this.icon.animation.play("default");
 		add(this.icon);
 		this.icon.setPosition(PADDING, PADDING);
 
-		this.title = new FlxText(0, 0, background.width, title, TITLE_TEXT_SIZE);
+		var startTextX = PADDING * 2 + this.icon.width;
+		this.title = new FlxText(0, 0, background.width - startTextX, title, TITLE_TEXT_SIZE);
+		this.title.color = TEXT_COLOR;
 		add(this.title);
-		this.title.setPosition(PADDING * 2 + this.icon.width, PADDING);
+		this.title.setPosition(startTextX, PADDING);
 
-		this.description = new FlxText(0, 0, background.width, description, DESCRIPTION_TEXT_SIZE);
+		this.description = new FlxText(0, 0, background.width - startTextX, description, DESCRIPTION_TEXT_SIZE);
+		this.description.color = TEXT_COLOR;
 		add(this.description);
-		this.description.setPosition(PADDING * 2 + this.icon.width, this.title.height + PADDING);
+		this.description.setPosition(startTextX, this.title.height + PADDING);
 
 		x = TOAST_X;
 		y = TOAST_Y;
@@ -75,9 +84,5 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 		_wait.onComplete = (_) -> {
 			FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_Y, TIME_TO_TRANSITION);
 		};
-	}
-
-	public static function NewSneezeAchievement():AchievementToast {
-		return new AchievementToast("Sneeze Away", "Reached the pinnacle of bus-boymanship.", AssetPaths.Bone__png).show();
 	}
 }

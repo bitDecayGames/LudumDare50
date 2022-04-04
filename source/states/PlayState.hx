@@ -1,5 +1,6 @@
 package states;
 
+import helpers.Achievements;
 import entities.AchievementToast;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
@@ -178,7 +179,7 @@ class PlayState extends FlxTransitionableState {
 			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
 		}
 		if (FlxG.keys.justPressed.SPACE) {
-			add(AchievementToast.NewSneezeAchievement());
+			add(Achievements.NewHeightAchievement());
 		}
 		#end
 
@@ -189,6 +190,9 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
+		if (!Achievements._itemCountAchievement && stackInfo.itemCount >= Achievements._itemCountAchievementCount) {
+			add(Achievements.NewItemCountAchievement());
+		}
 
 		var withMS = heightometer.lastRatio >= 0.8;
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);

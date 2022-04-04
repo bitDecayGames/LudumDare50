@@ -1,5 +1,6 @@
 package helpers;
 
+import helpers.Achievements.NewFirstTableAchievement;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
@@ -14,6 +15,8 @@ class TableSpawner extends FlxObject {
 	private var spawnLocation:Vec2;
 	private var items:FlxTypedGroup<FlxSprite>;
 	private var addToAllThings:(PhysicsThing) -> Int;
+	private var initialTableSpawned:Bool = false;
+	private var secondTableSpawned:Bool = false;
 
 	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int) {
 		super(x, y);
@@ -40,6 +43,11 @@ class TableSpawner extends FlxObject {
 	}
 
 	private function spawnTable() {
+		if (initialTableSpawned && !secondTableSpawned) {
+			// this is not your second table
+			FlxG.state.add(Achievements.NewFirstTableAchievement());
+			secondTableSpawned = true;
+		}
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
 		items.add(table);
 		for (thing in table.myItems) {
@@ -51,6 +59,7 @@ class TableSpawner extends FlxObject {
 			items.add(softy);
 		}
 		tableJustSpawned = true;
+		initialTableSpawned = true;
 	}
 
 	private function tableAtSpawner():Bool {
