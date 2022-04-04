@@ -1,5 +1,6 @@
 package states;
 
+import entities.AchievementToast;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
@@ -161,6 +162,9 @@ class PlayState extends FlxTransitionableState {
 		}
 		if (FlxG.keys.justPressed.FOUR) {
 			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.SPACE) {
+			add(AchievementToast.NewSneezeAchievement());
 		}
 		#end
 
