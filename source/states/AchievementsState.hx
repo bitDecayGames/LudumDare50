@@ -14,10 +14,10 @@ import helpers.UiHelpers;
 using extensions.FlxStateExt;
 
 class AchievementsState extends FlxUIState {
-	private static var NUM_OF_COLUMNS:Int = 2;
+	private static var NUM_OF_COLUMNS:Int = 3;
 	private static var VERTICAL_SPACING:Float = 100;
-	private static var HORIZONTAL_SPACING:Float = 100;
-	private static var VERTICAL_OFFSET:Float = 200;
+	private static var HORIZONTAL_SPACING:Float = 0;
+	private static var VERTICAL_OFFSET:Float = 100;
 
 	var _txtTitle:FlxText;
 	var _btnDone:FlxButton;
@@ -30,7 +30,7 @@ class AchievementsState extends FlxUIState {
 		_txtTitle.size = 40;
 		_txtTitle.alignment = FlxTextAlign.CENTER;
 		_txtTitle.text = "Achievements";
-		_txtTitle.setPosition((FlxG.width - _txtTitle.width) / 2, FlxG.height * .1);
+		_txtTitle.setPosition((FlxG.width - _txtTitle.width) / 2, VERTICAL_OFFSET * .5);
 		add(_txtTitle);
 
 		addAchievementToasts();

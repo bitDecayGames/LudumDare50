@@ -1,5 +1,6 @@
 package states;
 
+import helpers.Global.HARD_OBJECTS;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
 import helpers.Global.saveItemCount;
@@ -233,14 +234,17 @@ class PlayState extends FlxTransitionableState {
 			if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
 				add(Achievements.HOARDER.toToast(true));
 			}
+			if (!Achievements.HARD_MODE.achieved && HARD_OBJECTS) {
+				add(Achievements.HARD_MODE.toToast(true));
+			}
 		}
 
 		items.sort(sortItems, FlxSort.DESCENDING);
 
 		if (!Achievements.ONE_MINUTE.achieved && timer > Achievements.ONE_MINUTE.count) {
 			add(Achievements.ONE_MINUTE.toToast(true));
-		} else if (!Achievements.TEN_MINUTE.achieved && timer > Achievements.TEN_MINUTE.count) {
-			add(Achievements.TEN_MINUTE.toToast(true));
+		} else if (!Achievements.FIVE_MINUTES.achieved && timer > Achievements.FIVE_MINUTES.count) {
+			add(Achievements.FIVE_MINUTES.toToast(true));
 		}
 	}
 
