@@ -1,5 +1,12 @@
 package states;
 
+import haxe.Timer;
+import flixel.math.FlxVector;
+import flixel.math.FlxMath;
+import flixel.system.macros.FlxMacroUtil;
+import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import screenshot.Screenshotter;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.text.FlxText;
@@ -9,6 +16,7 @@ import haxefmod.flixel.FmodFlxUtilities;
 import helpers.UiHelpers;
 
 using extensions.FlxStateExt;
+using extensions.FlxObjectExt;
 
 class VictoryState extends FlxUIState {
 	var _btnDone:FlxButton;
@@ -34,6 +42,45 @@ class VictoryState extends FlxUIState {
 
 		// restore mouse
 		FlxG.mouse.visible = true;
+
+		var picFadeTime = 1;
+		var picNum = 0;
+		for (pic in Screenshotter.runHistory) {
+			// uses the known width of the polaroid image file
+			var pickedX = FlxG.random.int(10, Std.int(FlxG.width - 538 - 10));
+			// pickedX = 0;
+			var rotation = FlxG.random.int(0, 60) - 30;
+
+			var photoBack = new FlxSprite(AssetPaths.polaroid__png);
+			photoBack.x = pickedX;
+
+			var polaroidCenter = photoBack.getGraphicMidpoint();
+
+			// magic numbers Erik gave me. get photo center into world coordinates
+			var photoCenterPoint = FlxVector.get(0, -64).addPoint(polaroidCenter);
+
+			// This is the vector from the center of the polaroid image to the center of the 'photo area'
+			var centerOffset = FlxVector.get().copyFrom(polaroidCenter).subtractPoint(photoCenterPoint);
+
+			centerOffset.rotateByDegrees(rotation);
+
+			photoBack.angle = rotation;
+
+			pic.alpha = 0;
+			pic.scale.set(0.5, 0.5);
+			pic.updateHitbox();
+			pic.centerOffsets();
+			pic.x = polaroidCenter.x - centerOffset.x - pic.width / 2;
+			pic.y = polaroidCenter.y - centerOffset.y - pic.height / 2;
+			pic.angle = rotation;
+
+			Timer.delay(() -> {
+				add(photoBack);
+				add(pic);
+				FlxTween.tween(pic, {alpha: 1}, picFadeTime);
+			}, picNum * picFadeTime * 1000);
+			picNum++;
+		}
 	}
 
 	override public function update(elapsed:Float):Void {

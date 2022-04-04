@@ -1,9 +1,12 @@
 package states;
 
+import screenshot.Screenshotter;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
 import helpers.Global.saveItemCount;
 import helpers.Global.saveHeight;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.math.FlxMath;
 import constants.CbTypes;
 import entities.Heightometer;
@@ -84,6 +87,7 @@ class PlayState extends FlxTransitionableState {
 		super.create();
 
 		InitState();
+		Screenshotter.reset();
 
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
@@ -212,8 +216,11 @@ class PlayState extends FlxTransitionableState {
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 		highScore.text = Heightometer.getHeightText(HEIGHT, ITEM_COUNT);
 
-		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
+		if (#if debug FlxG.keys.justPressed.E || #end (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
 			// TODO: Sneeze sfx
+
+			Screenshotter.capture();
+
 			add(Achievements.HEIGHT.toToast(true));
 			endStarted = true;
 			trayHand.sneeze();
