@@ -34,6 +34,7 @@ class Heightometer extends FlxObject {
 	private var tray:FlxObject;
 
 	public var itemCount = 0;
+	public var lastRatio:Float = 0;
 
 	public function new(tray:FlxObject) {
 		super(0, tray.y);
@@ -60,9 +61,9 @@ class Heightometer extends FlxObject {
 	private function snapToPosition() {
 		var diffFromMax = y - MAX_HEIGHT;
 		var totalDist = tray.y - MAX_HEIGHT;
-		var ratio = 1 - (diffFromMax / totalDist);
+		lastRatio = 1 - (diffFromMax / totalDist);
 
-		text.x = x + FlxMath.lerp(TEXT_OFFSET_X, MAX_TEXT_OFFSET_X, ratio);
+		text.x = x + FlxMath.lerp(TEXT_OFFSET_X, MAX_TEXT_OFFSET_X, lastRatio);
 		text.y = y;
 		if (y < FlxG.height / 4) {
 			text.y -= TEXT_OFFSET_Y;

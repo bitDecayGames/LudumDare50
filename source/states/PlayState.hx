@@ -1,5 +1,7 @@
 package states;
 
+import flixel.util.FlxStringUtil;
+import flixel.text.FlxText;
 import flixel.group.FlxGroup;
 import haxefmod.flixel.FmodFlxUtilities;
 import flixel.math.FlxPoint;
@@ -37,6 +39,9 @@ class PlayState extends FlxTransitionableState {
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
 	private var other:FlxGroup = new FlxGroup();
+
+	public var timer:Float = 0;
+	public var timerDisplay:FlxText;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -87,6 +92,10 @@ class PlayState extends FlxTransitionableState {
 			itemCollideCallback));
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			itemCollideCallback));
+
+		timerDisplay = new FlxText(FlxG.width - 150, 5);
+		timerDisplay.size = 20;
+		foregroundGroup.add(timerDisplay);
 	}
 
 	var clinkSFX = FlxG.sound.cache(AssetPaths.glass_clink1__wav);
@@ -116,6 +125,8 @@ class PlayState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
+		timer += elapsed;
+
 		KillThingsOutsideBoundary();
 		heightometer.y = CalculateHeighestObject(allThings);
 
@@ -140,6 +151,9 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
+
+		var withMS = heightometer.lastRatio >= 0.8;
+		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 
 		if (FlxG.keys.justPressed.E || (maxY <= victoryY && !endStarted)) {
 			// TODO: Sneeze sfx
