@@ -27,3 +27,4 @@ function air() {
 
 var GLASS_MATERIAL_NAME = "glass";
 var METAL_MATERIAL_NAME = "metal";
+var FOOD_MATERIAL_NAME = "food";
