@@ -108,6 +108,7 @@ class AchievementDef {
 				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
 				Analytics.reportAchievement(this.key);
 				saveAchievement(key);
+				// TODO: MW SFX here for getting achievement
 				achieved = true;
 			} else {
 				a.active = false;
