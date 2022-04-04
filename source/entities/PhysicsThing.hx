@@ -45,7 +45,7 @@ class PhysicsThing extends FlxNapeSprite {
     // @formatter:off
     private static var sensors = [
         AssetPaths.Wine__png => [
-            S.get(0, -100, "wine_bottle"),
+            S.get(0, -100, "wine_bottle", 5),
         ],
         AssetPaths.Shot__png => [
             S.get(0, 0, "shot_glass"),
@@ -64,8 +64,8 @@ class PhysicsThing extends FlxNapeSprite {
             S.get(-18, 10, "glass_bottom", 40),
         ],
         AssetPaths.trayHand__png => [
-            S.get(-150, -45, "tray_corner"),
-            S.get(150, -45, "tray_corner"),
+            S.get(-150, -35, "tray_corner"),
+            S.get(150, -35, "tray_corner"),
         ],
         AssetPaths.trayHandEasy__png => [
             S.get(-160, -55, "tray_corner"),
