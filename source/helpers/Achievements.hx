@@ -18,6 +18,7 @@ class Achievements {
 	public static var HARD_MODE:AchievementDef;
 	public static var TOUCH_FOOD:AchievementDef;
 	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef;
+	public static var MAGICIAN:AchievementDef;
 	public static var SECOND_SNEEZE:AchievementDef;
 	public static var ALL:Array<AchievementDef>;
 	public static var ACHIEVEMENTS_DISPLAYED:Int = 0;
@@ -39,6 +40,7 @@ class Achievements {
 		TOUCH_FOOD = new AchievementDef("achstickyfingers", "Sticky Fingers", "Pick up food", 0);
 		SHOT_GLASS_ON_WINE_BOTTLE = new AchievementDef("achshotglasscork", "Shot Glass Cork", "In case you lost the cork", 0);
 		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 0);
+		MAGICIAN = new AchievementDef("achmagician", "Magician", "Fit a tray inside a glass", 0);
 
 		// @formatter:off
 		ALL = [
@@ -56,6 +58,7 @@ class Achievements {
 			TOUCH_FOOD,
 			SHOT_GLASS_ON_WINE_BOTTLE,
 			SECOND_SNEEZE,
+			MAGICIAN,
 		];
 		// @formatter:on
 	}
