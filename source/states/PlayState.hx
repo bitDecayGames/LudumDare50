@@ -1,6 +1,7 @@
 package states;
 
 import flixel.math.FlxMath;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup;
@@ -34,12 +35,17 @@ import signals.Lifecycle;
 using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
+	public static var VICTORY_Y = 170;
+
 	private var tableSpawner:TableSpawner;
 	private var heightometer:Heightometer;
+	private var heightGoal:Heightometer;
+	private var heightGoalSuccess:Heightometer;
 	private var trayHand:TrayHand;
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
-	private var other:FlxGroup = new FlxGroup();
+	private var items:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	private var misc:FlxGroup = new FlxGroup();
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
@@ -78,17 +84,27 @@ class PlayState extends FlxTransitionableState {
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
 
-		add(other);
 		add(foregroundGroup);
+		add(items);
+		add(misc);
 
 		trayHand = new TrayHand(250, 700);
-		other.add(trayHand);
+		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, other.add, allThings.push);
-		other.add(tableSpawner);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push);
+		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
 		foregroundGroup.add(heightometer);
+		heightGoal = new Heightometer(trayHand, FlxColor.RED, false, false);
+		foregroundGroup.add(heightGoal);
+		heightGoal.x = 0;
+		FlxTween.linearMotion(heightGoal, 0, -400, 0, VICTORY_Y, 6);
+		heightGoalSuccess = new Heightometer(trayHand, FlxColor.LIME, false, false);
+		heightGoalSuccess.setVisible(false);
+		foregroundGroup.add(heightGoalSuccess);
+		heightGoalSuccess.x = 0;
+		FlxTween.linearMotion(heightGoalSuccess, 0, -400, 0, VICTORY_Y, 6);
 
 		foregroundGroup.add(new PickingHand());
 
@@ -110,7 +126,8 @@ class PlayState extends FlxTransitionableState {
 		// trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
 
 		if (cb.event == CbEvent.BEGIN) {
-			// TODO: These are delayed for some stupid reason... why
+			#if !nosound
+			// TODO: These are delayed on Ubuntu for some stupid reason... why
 			// clinkSFX.play();
 			// if (cb.arbiters.at(0).collisionArbiter.totalImpulse)
 			var impulse = cb.arbiters.at(0).collisionArbiter.totalImpulse(true).length;
@@ -122,6 +139,7 @@ class PlayState extends FlxTransitionableState {
 
 				FlxG.sound.play(AssetPaths.glass_clink1__wav, volume);
 			}
+			#end
 
 			item1.inContactWith.set(item2, true);
 			item2.inContactWith.set(item1, true);
@@ -132,7 +150,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	var maxY = 10000.0;
-	var victoryY = 50;
+
 	var endStarted = false;
 
 	override public function update(elapsed:Float) {
@@ -141,8 +159,10 @@ class PlayState extends FlxTransitionableState {
 		timer += elapsed;
 
 		KillThingsOutsideBoundary();
-		heightometer.y = CalculateHeighestObject(allThings);
+		// MW This doesn't seem to be used anymore
+		// heightometer.y = CalculateHeighestObject(allThings);
 
+		#if debug
 		var mousePos = FlxG.mouse.getWorldPosition();
 		if (FlxG.keys.justPressed.ONE) {
 			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
@@ -156,6 +176,7 @@ class PlayState extends FlxTransitionableState {
 		if (FlxG.keys.justPressed.FOUR) {
 			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
 		}
+		#end
 
 		var stackInfo = trayHand.findCurrentHighest();
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
@@ -168,10 +189,13 @@ class PlayState extends FlxTransitionableState {
 		var withMS = heightometer.lastRatio >= 0.8;
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 
-		if (FlxG.keys.justPressed.E || (maxY <= victoryY && !endStarted)) {
+		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted)) {
 			// TODO: Sneeze sfx
 			endStarted = true;
 			trayHand.sneeze();
+			heightGoalSuccess.setVisible(true);
+			heightGoal.setVisible(false);
+			heightometer.setVisible(false);
 		}
 	}
 
@@ -186,7 +210,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	public function KillThingsOutsideBoundary() {
-		for (thing in other) {
+		for (thing in items) {
 			if (thing.active) {
 				if (Std.isOfType(thing, SoftBody)) {
 					var obj = cast(thing, SoftBody);

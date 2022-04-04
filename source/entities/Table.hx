@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import js.html.Float32Array;
 import nape.phys.Material;
 import nape.geom.AABB;
@@ -10,17 +12,20 @@ import flixel.FlxG;
 import nape.geom.Vec2;
 
 class Table extends PhysicsThing {
-	public var items:Array<PhysicsThing> = [];
+	static private var lastConfigs:Array<Int> = [];
+
+	public var allItems:FlxTypedGroup<FlxSprite>;
+	public var myItems:Array<PhysicsThing> = [];
 	public var softies:Array<SoftBody> = [];
-	public var numItems:Int = 0;
 
 	private var reactivated:Bool = false;
 	private var removed:Bool = false;
 	private var spawnLocation:Vec2;
 	private var deleteBuffer:Float = 10;
 
-	public function new(x:Float, y:Float) {
+	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
+		this.allItems = allItems;
 		spawnLocation = new Vec2(x, y);
 		spawnThings();
 	}
@@ -29,30 +34,30 @@ class Table extends PhysicsThing {
 		super.update(delta);
 
 		// // output item nums
-		// for (i in 0...items.length) {
+		// for (i in 0...myItems.length) {
 		// 	if (i >= 0) {
-		// 		var absolutePos = new Vec2(items[i].body.position.x - body.position.x, items[i].body.position.y - (body.position.y - 85));
+		// 		var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
 		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
 		// 	}
 		// }
 
-		// FlxG.watch.addQuick('num items', numItems);
+		// FlxG.watch.addQuick('Item#${i}', myItems[i].body.position);
+		// FlxG.watch.addQuick('num myItems', numItems);
 		// FlxG.watch.addQuick('table position', body.position);
 		// FlxG.watch.addQuick('table bounds', body.bounds);
 
 		if (reactivated) {
-			numItems = 0;
-			for (i in 0...items.length) {
-				// FlxG.watch.addQuick('Item#${i}', items[i].body.position);
-				if (items[i].x >= body.position.x - (body.bounds.width / 2)
-					&& items[i].x <= body.position.x + (body.bounds.width / 2)
-					&& items[i].y <= body.position.y - (body.bounds.height / 2)
-					&& items[i].exists) {
-					numItems++;
+			var haveItemsAbove = false;
+			allItems.forEach((item) -> {
+				if (item.x >= body.position.x - (body.bounds.width / 2)
+					&& item.x <= body.position.x + (body.bounds.width / 2)
+					&& item.y <= body.position.y - (body.bounds.height / 2)
+					&& item.exists) {
+					haveItemsAbove = true;
 				}
-			}
+			});
 
-			if (numItems == 0) {
+			if (!haveItemsAbove) {
 				if (!removed) {
 					removed = true;
 					removeTable();
@@ -76,12 +81,11 @@ class Table extends PhysicsThing {
 
 		for (thingDef in configuration.things) {
 			var thing = thingDef.toPhysicsThing(body.position.x, body.position.y - 85);
-			items.push(thing);
+			myItems.push(thing);
 
-			// Turn items off initially because table spawns and then moves. Thigns are turned on later.
+			// Turn myItems off initially because table spawns and then moves. Thigns are turned on later.
 			thing.body.allowMovement = false;
 			thing.body.allowRotation = false;
-			numItems++;
 		}
 		for (softy in configuration.softies) {
 			var softBody = softy.body(softy.x + body.position.x, softy.y + body.position.y - 85);
@@ -91,12 +95,17 @@ class Table extends PhysicsThing {
 	}
 
 	private function getRandomConfiguration():TableConfiguration {
-		return tableConfigurations[FlxG.random.int(0, tableConfigurations.length - 1)];
+		var nextRandomConfNum = FlxG.random.int(0, tableConfigurations.length - 1, lastConfigs);
+		lastConfigs.push(nextRandomConfNum);
+		if (lastConfigs.length >= 3) {
+			lastConfigs.remove(lastConfigs[0]);
+		}
+		return tableConfigurations[nextRandomConfNum];
 	}
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
 		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
-		for (pet in items) {
+		for (pet in myItems) {
 			if (pet.body != null) {
 				var petTarget:Vec2 = new Vec2(targetPosition.x + (pet.body.position.x - body.position.x), pet.body.position.y);
 				pet.body.setVelocityFromTarget(petTarget, targetRotation, deltaTime);
@@ -111,7 +120,7 @@ class Table extends PhysicsThing {
 
 	public function reactivateMeAndMyPets() {
 		body.velocity.set(new Vec2());
-		for (pet in items) {
+		for (pet in myItems) {
 			if (pet.body != null) {
 				pet.body.velocity.set(new Vec2());
 				pet.body.allowMovement = true;
