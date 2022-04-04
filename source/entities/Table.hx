@@ -27,6 +27,12 @@ class Table extends PhysicsThing {
 	private var deleteBuffer:Float = 10;
 
 	public var tablecloth:FlxClothSprite;
+	public var leftCloth:FlxClothSprite;
+	public var rightCloth:FlxClothSprite;
+
+	private var clothOffset = Vec2.get(117, 0);
+	private var leftClothOffset = Vec2.get(0, 1);
+	private var rightClothOffset = Vec2.get(404, 1);
 
 	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
@@ -35,7 +41,7 @@ class Table extends PhysicsThing {
 		spawnThings();
 
 		// This show how to set mesh scale, custom pinned points and set iterations
-		tablecloth = new FlxClothSprite(FlxG.width / 2 - 105, 10, AssetPaths.flag__png);
+		tablecloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png);
 
 		tablecloth.pinnedSide = FlxObject.UP;
 		tablecloth.meshScale.set(1, 1);
@@ -43,10 +49,17 @@ class Table extends PhysicsThing {
 		tablecloth.iterations = 8;
 		tablecloth.maxVelocity.set(200, 200);
 		tablecloth.meshVelocity.y = 40;
+
+		leftCloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png, 2, 10);
+		rightCloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png, 2, 10);
 	}
 
 	override public function update(delta:Float) {
 		super.update(delta);
+
+		tablecloth.setPosition(x + clothOffset.x, y + clothOffset.y);
+		leftCloth.setPosition(x + leftClothOffset.x, y + leftClothOffset.y);
+		rightCloth.setPosition(x + rightClothOffset.x, y + rightClothOffset.y);
 
 		// output item nums
 		// for (i in 0...myItems.length) {
@@ -124,10 +137,14 @@ class Table extends PhysicsThing {
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
 		if (targetPosition.x > x) {
-			tablecloth.meshVelocity.x = -50;
+			tablecloth.meshVelocity.x = 50;
+			leftCloth.meshVelocity.x = 50;
+			rightCloth.meshVelocity.x = 50;
 		}
 		if (targetPosition.x < x) {
-			tablecloth.meshVelocity.x = 50;
+			tablecloth.meshVelocity.x = -50;
+			leftCloth.meshVelocity.x = -50;
+			rightCloth.meshVelocity.x = -50;
 		}
 
 		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
