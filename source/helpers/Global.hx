@@ -34,7 +34,9 @@ function loadData():Void {
 		initSave = true;
 	}
 	if (initSave) {
+		#if !debug
 		_gameSave.flush();
+		#end
 	}
 
 	ITEM_COUNT = _gameSave.data.itemCount;
@@ -54,7 +56,9 @@ function saveHeight(newHeight:Float):Void {
 	if (newHeight > HEIGHT) {
 		HEIGHT = newHeight;
 		_gameSave.data.height = HEIGHT;
+		#if !debug
 		_gameSave.flush();
+		#end
 	}
 }
 
@@ -62,7 +66,9 @@ function saveItemCount(newItemCount:Int):Void {
 	if (newItemCount > ITEM_COUNT) {
 		ITEM_COUNT = newItemCount;
 		_gameSave.data.itemCount = ITEM_COUNT;
+		#if !debug
 		_gameSave.flush();
+		#end
 	}
 }
 
@@ -70,7 +76,9 @@ function saveAchievement(achievementKey:String):Void {
 	if (!ACHIEVEMENTS.contains(achievementKey)) {
 		ACHIEVEMENTS.push(achievementKey);
 		_gameSave.data.achievements = ACHIEVEMENTS;
+		#if !debug
 		_gameSave.flush();
+		#end
 	}
 }
 
