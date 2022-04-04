@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.FlxSort;
 import sort.ItemSorter.sortItems;
 import flixel.math.FlxMath;
 import helpers.Global.PRACTICE;
@@ -162,8 +163,6 @@ class PlayState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		items.sort(sortItems);
-
 		timer += elapsed;
 
 		KillThingsOutsideBoundary();
@@ -205,6 +204,8 @@ class PlayState extends FlxTransitionableState {
 			heightGoal.setVisible(false);
 			heightometer.setVisible(false);
 		}
+
+		items.sort(sortItems, FlxSort.DESCENDING);
 	}
 
 	override public function onFocusLost() {

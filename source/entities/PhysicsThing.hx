@@ -639,7 +639,21 @@ class PhysicsThing extends FlxNapeSprite {
                 Vec2.get(294,4),
                 Vec2.get(0,4),
             ],
-        ]
+        ],
+        AssetPaths.trayHandEasy__png => [
+            [],
+            [
+                Vec2.get(0,1),
+                Vec2.get(3,0),
+                Vec2.get(16,31),
+                Vec2.get(303,31),
+                Vec2.get(316,0),
+                Vec2.get(319,1),
+                Vec2.get(306,35),
+                Vec2.get(13,35),
+            ],
+        ],
+
 	];
     //@formatter:on
 	private var materialTypes = [
@@ -659,6 +673,8 @@ class PhysicsThing extends FlxNapeSprite {
 		AssetPaths.SquareMug__png => GLASS_MATERIAL_NAME,
 		AssetPaths.Stein__png => GLASS_MATERIAL_NAME,
 		AssetPaths.Tall__png => GLASS_MATERIAL_NAME,
+		AssetPaths.wineGlass__png => GLASS_MATERIAL_NAME,
+		AssetPaths.Wine__png => GLASS_MATERIAL_NAME,
     ];
 
 	public function new(x:Float, y:Float, asset:FlxGraphicAsset, ?type:BodyType, ?material:Material) {

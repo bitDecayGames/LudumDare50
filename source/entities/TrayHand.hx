@@ -22,7 +22,7 @@ class TrayHand extends PhysicsThing {
 	private var ocellateCenter:FlxPoint;
 
 	public function new(x:Float = 0, y:Float = 0) {
-		super(x, y, AssetPaths.trayHand__png, BodyType.KINEMATIC, jakeTanium());
+		super(x, y, AssetPaths.trayHandEasy__png, BodyType.KINEMATIC, jakeTanium());
 
 		initPosition = body.position.x;
 		ocellateCenter = FlxPoint.get(body.position.x + OCELLATE_MAGNITUDE, body.position.y + OCELLATE_MAGNITUDE);
@@ -97,7 +97,7 @@ class TrayHand extends PhysicsThing {
 			sneezing = true;
 		}
 		var firstTarget = body.position.copy().addeq(Vec2.weak(0, 5));
-		var secondTarget = body.position.copy().addeq(Vec2.weak(0, -10));
+		var secondTarget = body.position.copy().addeq(Vec2.weak(0, -20));
 
 		// Will need to tune these
 		var windUpTimeMS = 800;
