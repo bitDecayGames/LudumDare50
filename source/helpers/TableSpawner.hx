@@ -1,5 +1,7 @@
 package helpers;
 
+import entities.SoftBody;
+import flixel.addons.nape.FlxNapeSprite;
 import entities.PhysicsThing;
 import entities.Table;
 import flixel.FlxG;
@@ -14,16 +16,18 @@ class TableSpawner extends FlxObject {
 	private var tableJustSpawned:Bool = false;
 	private var table:Table;
 	private var spawnLocation:Vec2;
-	private var items:FlxTypedGroup<FlxSprite>;
+	private var items:FlxTypedGroup<FlxNapeSprite>;
+	private var softies:FlxTypedGroup<SoftBody>;
 	private var addToAllThings:(PhysicsThing) -> Int;
 	private var totalClearedTableCount:Int = -1;
 	private var clothGroup:FlxGroup;
 
-	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int,
-			clothGroup:FlxGroup) {
+	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxNapeSprite>, _addToAllThings:(PhysicsThing) -> Int,
+			clothGroup:FlxGroup, softies:FlxTypedGroup<SoftBody>) {
 		super(x, y);
 		this.items = items;
 		this.clothGroup = clothGroup;
+		this.softies = softies;
 		addToAllThings = _addToAllThings;
 		spawnLocation = new Vec2(x + TABLE_X_OFFSET, y);
 		spawnTable();
@@ -49,7 +53,7 @@ class TableSpawner extends FlxObject {
 		tableJustSpawned = true;
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
 		tableJustSpawned = true;
-		items.add(table);
+		clothGroup.add(table);
 		clothGroup.add(table.leftCloth);
 		clothGroup.add(table.tablecloth);
 		clothGroup.add(table.rightCloth);
@@ -58,8 +62,7 @@ class TableSpawner extends FlxObject {
 			addToAllThings(thing);
 		}
 		for (softy in table.softies) {
-			trace("Add softy");
-			items.add(softy);
+			softies.add(softy);
 		}
 		totalClearedTableCount++;
 		if (totalClearedTableCount == Achievements.FIRST_TABLE.count) {
