@@ -17,17 +17,19 @@ class TableSpawner extends FlxObject {
 	private var table:Table;
 	private var spawnLocation:Vec2;
 	private var items:FlxTypedGroup<FlxNapeSprite>;
+	private var solidFood:FlxTypedGroup<FlxNapeSprite>;
 	private var softies:FlxTypedGroup<SoftBody>;
 	private var addToAllThings:(PhysicsThing) -> Int;
 	private var totalClearedTableCount:Int = -1;
 	private var clothGroup:FlxGroup;
 
-	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxNapeSprite>, _addToAllThings:(PhysicsThing) -> Int,
-			clothGroup:FlxGroup, softies:FlxTypedGroup<SoftBody>) {
+	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxNapeSprite>, solidFood:FlxTypedGroup<FlxNapeSprite>,
+			_addToAllThings:(PhysicsThing) -> Int, clothGroup:FlxGroup, softies:FlxTypedGroup<SoftBody>) {
 		super(x, y);
 		this.items = items;
 		this.clothGroup = clothGroup;
 		this.softies = softies;
+		this.solidFood = solidFood;
 		addToAllThings = _addToAllThings;
 		spawnLocation = new Vec2(x + TABLE_X_OFFSET, y);
 		spawnTable();
@@ -58,8 +60,12 @@ class TableSpawner extends FlxObject {
 		clothGroup.add(table.tablecloth);
 		clothGroup.add(table.rightCloth);
 		for (thing in table.myItems) {
-			items.add(thing);
-			addToAllThings(thing);
+			if (thing.isFood) {
+				solidFood.add(thing);
+			} else {
+				items.add(thing);
+				addToAllThings(thing);
+			}
 		}
 		for (softy in table.softies) {
 			softies.add(softy);
