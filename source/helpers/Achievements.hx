@@ -1,5 +1,6 @@
 package helpers;
 
+import helpers.Global.PRACTICE;
 import com.bitdecay.analytics.Bitlytics;
 import helpers.Global.saveAchievement;
 import helpers.Global.isAchievementSaved;
@@ -103,7 +104,7 @@ class AchievementDef {
 	public function toToast(show:Bool, force:Bool = false):AchievementToast {
 		var a = new AchievementToast(this);
 		if (show) {
-			if (!achieved || force) {
+			if ((!achieved && !PRACTICE) || force) {
 				Achievements.ACHIEVEMENTS_DISPLAYED++;
 				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
 				Analytics.reportAchievement(this.key);
