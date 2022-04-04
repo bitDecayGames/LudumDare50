@@ -1,6 +1,8 @@
 package states;
 
 import screenshot.Screenshotter;
+import helpers.StackInfo;
+import helpers.Global.HARD_OBJECTS;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
 import helpers.Global.saveItemCount;
@@ -56,6 +58,8 @@ class PlayState extends FlxTransitionableState {
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
+	public var secondSneeze:Float = 7;
+	public var afterSecondSneezeTimer:Float = 5;
 
 	static var CLINK_THRESHOLD = 100;
 	static var MAX_VOLUME_CLINK = 400;
@@ -177,22 +181,7 @@ class PlayState extends FlxTransitionableState {
 		// heightometer.y = CalculateHeighestObject(allThings);
 
 		#if debug
-		var mousePos = FlxG.mouse.getWorldPosition();
-		if (FlxG.keys.justPressed.ONE) {
-			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.TWO) {
-			add(SoftBody.NewDumpling(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.THREE) {
-			add(SoftBody.NewFrenchOmlette(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.FOUR) {
-			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.P) {
-			add(Achievements.HEIGHT.toToast(true));
-		}
+		debugLogic();
 		#end
 
 		var stackInfo = trayHand.findCurrentHighest();
@@ -216,39 +205,99 @@ class PlayState extends FlxTransitionableState {
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 		highScore.text = Heightometer.getHeightText(HEIGHT, ITEM_COUNT);
 
-		if (#if debug FlxG.keys.justPressed.E || #end (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
-			// TODO: Sneeze sfx
-
-			Screenshotter.capture();
-
-			add(Achievements.HEIGHT.toToast(true));
-			endStarted = true;
-			trayHand.sneeze();
-			heightGoalSuccess.setVisible(true);
-			heightGoal.setVisible(false);
-			heightometer.setVisible(false);
-
-			if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
-				add(Achievements.SPEEDY.toToast(true));
-			}
-			if (!Achievements.SLOW.achieved && timer >= Achievements.SLOW.count) {
-				add(Achievements.SLOW.toToast(true));
-			}
-			if (!Achievements.MINIMALIST.achieved && stackInfo.itemCount <= Achievements.MINIMALIST.count) {
-				add(Achievements.MINIMALIST.toToast(true));
-			}
-			if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
-				add(Achievements.HOARDER.toToast(true));
-			}
-		}
-
 		items.sort(sortItems, FlxSort.DESCENDING);
 
 		if (!Achievements.ONE_MINUTE.achieved && timer > Achievements.ONE_MINUTE.count) {
 			add(Achievements.ONE_MINUTE.toToast(true));
-		} else if (!Achievements.TEN_MINUTE.achieved && timer > Achievements.TEN_MINUTE.count) {
-			add(Achievements.TEN_MINUTE.toToast(true));
+		} else if (!Achievements.FIVE_MINUTES.achieved && timer > Achievements.FIVE_MINUTES.count) {
+			add(Achievements.FIVE_MINUTES.toToast(true));
 		}
+
+		if (isWin()) {
+			triggerWin(stackInfo);
+		}
+		if (endStarted) {
+			if (secondSneeze > 0) {
+				secondSneeze -= elapsed;
+				if (secondSneeze < 0) {
+					secondSneezeWin();
+				}
+			} else {
+				afterSecondSneezeTimer -= elapsed;
+				if (afterSecondSneezeTimer < 0) {
+					goToVictoryScreen();
+				}
+			}
+		}
+	}
+
+	public function debugLogic() {
+		var mousePos = FlxG.mouse.getWorldPosition();
+		if (FlxG.keys.justPressed.ONE) {
+			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.TWO) {
+			add(SoftBody.NewDumpling(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.THREE) {
+			add(SoftBody.NewFrenchOmlette(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.FOUR) {
+			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.P) {
+			add(Achievements.HEIGHT.toToast(true, true));
+		}
+	}
+
+	public function isWin():Bool {
+		return FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
+	}
+
+	public function goToVictoryScreen() {
+		FmodFlxUtilities.TransitionToState(new VictoryState());
+	}
+
+	public function goToLoseScreen() {
+		FmodFlxUtilities.TransitionToState(new LoseState());
+	}
+
+	public function triggerWin(stackInfo:StackInfo) {
+		Screenshotter.capture();
+
+		// TODO: Sneeze sfx
+		if (!Achievements.HEIGHT.achieved) {
+			add(Achievements.HEIGHT.toToast(true));
+		}
+		endStarted = true;
+		trayHand.sneeze();
+		heightGoalSuccess.setVisible(true);
+		heightGoal.setVisible(false);
+		heightometer.setVisible(false);
+		heightGoalSuccess.y = heightometer.y;
+
+		if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
+			add(Achievements.SPEEDY.toToast(true));
+		}
+		if (!Achievements.SLOW.achieved && timer >= Achievements.SLOW.count) {
+			add(Achievements.SLOW.toToast(true));
+		}
+		if (!Achievements.MINIMALIST.achieved && stackInfo.itemCount <= Achievements.MINIMALIST.count) {
+			add(Achievements.MINIMALIST.toToast(true));
+		}
+		if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
+			add(Achievements.HOARDER.toToast(true));
+		}
+		if (!Achievements.HARD_MODE.achieved && HARD_OBJECTS) {
+			add(Achievements.HARD_MODE.toToast(true));
+		}
+	}
+
+	public function secondSneezeWin() {
+		if (!Achievements.SECOND_SNEEZE.achieved) {
+			add(Achievements.SECOND_SNEEZE.toToast(true));
+		}
+		trayHand.sneeze();
 	}
 
 	override public function onFocusLost() {
@@ -280,9 +329,9 @@ class PlayState extends FlxTransitionableState {
 
 						if (!PRACTICE) {
 							if (endStarted) {
-								FmodFlxUtilities.TransitionToState(new VictoryState());
+								goToVictoryScreen();
 							} else {
-								FmodFlxUtilities.TransitionToState(new LoseState());
+								goToLoseScreen();
 							}
 						}
 					}
