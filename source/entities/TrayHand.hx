@@ -1,5 +1,6 @@
 package entities;
 
+import screenshot.Screenshotter;
 import haxe.Timer;
 import helpers.StackInfo;
 import flixel.math.FlxPoint;
@@ -104,8 +105,17 @@ class TrayHand extends PhysicsThing {
 		var windUpTimeMS = 800;
 		var releaseTimeMS = 50;
 
+		var captureTimer = 20;
+
 		body.setVelocityFromTarget(firstTarget, body.rotation, windUpTimeMS / 1000);
 		FlxG.sound.play(AssetPaths.male_sneeze1__mp3);
+
+		// Capture screenshot after a short delay
+		Timer.delay(() -> {
+			Screenshotter.capture();
+		}, captureTimer);
+
+		// Trigger our sneeze and send 'em flying
 		Timer.delay(() -> {
 			body.setVelocityFromTarget(secondTarget, body.rotation, releaseTimeMS / 1000);
 			Timer.delay(() -> {

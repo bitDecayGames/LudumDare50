@@ -251,7 +251,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	public function isWin():Bool {
-		return FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
+		return #if debug FlxG.keys.justPressed.E || #end (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
 	}
 
 	public function goToVictoryScreen() {
@@ -263,8 +263,6 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	public function triggerWin(stackInfo:StackInfo) {
-		Screenshotter.capture();
-
 		// TODO: Sneeze sfx
 		if (!Achievements.HEIGHT.achieved) {
 			add(Achievements.HEIGHT.toToast(true));
