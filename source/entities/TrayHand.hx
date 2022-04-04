@@ -108,7 +108,7 @@ class TrayHand extends PhysicsThing {
 		var captureTimer = 20;
 
 		body.setVelocityFromTarget(firstTarget, body.rotation, windUpTimeMS / 1000);
-		FlxG.sound.play(AssetPaths.male_sneeze1__mp3);
+		FlxG.sound.play(AssetPaths.male_sneeze1_loud__ogg);
 
 		// Capture screenshot after a short delay
 		Timer.delay(() -> {

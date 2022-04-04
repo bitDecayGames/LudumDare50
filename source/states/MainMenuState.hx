@@ -21,6 +21,8 @@ import lime.system.System;
 #end
 
 class MainMenuState extends FlxUIState {
+	public static var viewedTutorial = false;
+
 	var _btnPlay:FlxButton;
 	var _btnSettings:FlxButton;
 	var _btnCredits:FlxButton;
@@ -119,7 +121,11 @@ class MainMenuState extends FlxUIState {
 	}
 
 	function clickPlay():Void {
-		FmodFlxUtilities.TransitionToState(new PlayState());
+		if (MainMenuState.viewedTutorial) {
+			FmodFlxUtilities.TransitionToState(new PlayState());
+		} else {
+			FmodFlxUtilities.TransitionToState(new TutorialState());
+		}
 	}
 
 	function clickSettings():Void {
