@@ -48,18 +48,19 @@ class Table extends PhysicsThing {
 	override public function update(delta:Float) {
 		super.update(delta);
 
-		// // output item nums
+		// output item nums
 		// for (i in 0...myItems.length) {
-		// 	if (i >= 0) {
+		// 	if (i >= 5) {
 		// 		var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
 		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
 		// 	}
 		// }
-
-		// FlxG.watch.addQuick('Item#${i}', myItems[i].body.position);
-		// FlxG.watch.addQuick('num myItems', numItems);
-		// FlxG.watch.addQuick('table position', body.position);
-		// FlxG.watch.addQuick('table bounds', body.bounds);
+		for (i in 0...softies.length) {
+			if (i >= 5) {
+				var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
+				FlxG.watch.addQuick('softy#${i}', absolutePos);
+			}
+		}
 
 		if (reactivated) {
 			var haveItemsAbove = false;
@@ -241,44 +242,66 @@ class Table extends PhysicsThing {
 			new ThingDef(-78, -7, AssetPaths.RoundMug__png),
 			new ThingDef(-49, -141, AssetPaths.Wine__png),
 			new ThingDef(51, -141, AssetPaths.Wine__png),
+		]),
+		new TableConfiguration([
+			new ThingDef(-158, -25, AssetPaths.Pint__png),
+			new ThingDef(-158, -96, AssetPaths.Pint__png),
+			new ThingDef(-96, -25, AssetPaths.Pint__png),
+			new ThingDef(-96, -96, AssetPaths.Pint__png),
+			new ThingDef(-129, -155, AssetPaths.LPlate__png),
+			new ThingDef(33, -34, AssetPaths.LPlate__png),
+			new ThingDef(51, -102, AssetPaths.LPlate__png),
+			new ThingDef(7, -134, AssetPaths.SquareMug__png),
+			new ThingDef(81, -135, AssetPaths.SquareMug__png),
+			new ThingDef(77, -1, AssetPaths.SquareMug__png),
+			new ThingDef(16, -1, AssetPaths.SquareMug__png),
+			new ThingDef(43, -76, AssetPaths.fork__png),
+			new ThingDef(-51, -202, AssetPaths.spoon__png),
+			new ThingDef(-51, -179, AssetPaths.fork__png),
+			new ThingDef(43, -55, AssetPaths.spoon__png),
+			new ThingDef(-160, -221, AssetPaths.Martini__png),
+		], [
+			new SoftBodyDef(-158, -25, SoftBody.NewDollupOfMashedPotatoes),
+			new SoftBodyDef(-158, -96, SoftBody.NewDollupOfMashedPotatoes),
+			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
+			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
 		])
 	];
 }
 
-// public static var picklist = [
-// 	new ThingDef(AssetPaths.SBowl__png),
-// 	new ThingDef(AssetPaths.MBowl__png),
-// 	new ThingDef(AssetPaths.LBowl__png),
-// 	new ThingDef(AssetPaths.SPlate__png),
-// 	new ThingDef(AssetPaths.MPlate__png),
-// 	new ThingDef(AssetPaths.LPlate__png),
-// 	new ThingDef(AssetPaths.fork__png),
-// 	new ThingDef(AssetPaths.knife__png),
-// 	new ThingDef(AssetPaths.spoon__png),
-// 	new ThingDef(AssetPaths.Martini__png),
-// 	new ThingDef(AssetPaths.Pint__png),
-// 	new ThingDef(AssetPaths.RoundMug__png),
-// 	new ThingDef(AssetPaths.Shot__png),
-// 	new ThingDef(AssetPaths.SquareMug__png),
-// 	new ThingDef(AssetPaths.Stein__png),
-// 	new ThingDef(AssetPaths.Tall__png)
-// 	new ThingDef(AssetPaths.Wine__png),
-// 	new ThingDef(AssetPaths.wineGlass__png)
-// ];
+// List of all object paths. Useful for creating new Table configurations
+// 	AssetPaths.SBowl__png
+// 	AssetPaths.MBowl__png
+// 	AssetPaths.LBowl__png
+// 	AssetPaths.SPlate__png
+// 	AssetPaths.MPlate__png
+// 	AssetPaths.LPlate__png
+// 	AssetPaths.fork__png
+// 	AssetPaths.knife__png
+// 	AssetPaths.spoon__png
+// 	AssetPaths.Martini__png
+// 	AssetPaths.Pint__png
+// 	AssetPaths.RoundMug__png
+// 	AssetPaths.Shot__png
+// 	AssetPaths.SquareMug__png
+// 	AssetPaths.Stein__png
+// 	AssetPaths.Tall__png
+// 	AssetPaths.Wine__png
+// 	AssetPaths.wineGlass__png
+// new ThingDef(),
+//
 // -300, -100,
 // -200, -100,
 // -100, -100,
 // 0, -100,
 // 100, -100,
 // 200, -100,
-// 300, -100,
 // -300, -200,
 // -200, -200,
 // -100, -200,
 // 0, -200,
 // 100, -200,
 // 200, -200,
-// 300, -200,
 // -300, -300,
 // -200, -300,
 // -100, -300,

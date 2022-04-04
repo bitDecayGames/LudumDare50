@@ -1,5 +1,6 @@
 package entities;
 
+import nape.phys.Body;
 import flixel.addons.nape.FlxNapeSprite;
 import openfl.ui.Mouse;
 import nape.geom.Vec2;
@@ -15,6 +16,7 @@ class PickingHand extends FlxSprite {
 	// the offset of the hand to the point at which the object is picked up
 	private static var HAND_OFFSET_X = 75.0;
 	private static var HAND_OFFSET_Y = 85.0;
+	private static var FUZZY_CLICK_RADIUS = 10.0;
 
 	private var joint:PivotJoint;
 	private var isGrabbing = false;
@@ -68,34 +70,19 @@ class PickingHand extends FlxSprite {
 	private function startGrab() {
 		animation.play('close');
 		isGrabbing = true;
-
-		// the flx-way of trying to click an object
-		// var pnt = FlxPoint.get(x, y);
-		// for (member in FlxG.state.members) {
-		// 	if (Std.isOfType(member, FlxNapeSprite)) {
-		// 		var spr = cast(member, FlxNapeSprite); // MW: safe cast will throw exceptions...
-		// 		spr.updateHitbox();
-		// 		if (spr != null && spr.body != null && spr.overlapsPoint(pnt)) {
-		// 			var body = spr.body;
-		// 			if (!body.isDynamic()) {
-		// 				continue;
-		// 			}
-		// 			joint.anchor1.set(pos);
-		// 			joint.anchor2.set(body.worldPointToLocal(pos, true));
-		// 			joint.body2 = body;
-		// 			joint.active = true;
-		// 			break;
-		// 		}
-		// 	}
-		// }
+		var found:Bool = false;
 
 		// the Nap way of trying to click an object
 		var pos = Vec2.get(x, y);
-		for (body in FlxNapeSpace.space.bodiesUnderPoint(pos)) {
+		_grabAtPoint(pos);
+		pos.dispose();
+	}
+
+	private function _grabAtPoint(pos:Vec2) {
+		for (body in FlxNapeSpace.space.bodiesInCircle(pos, FUZZY_CLICK_RADIUS)) {
 			if (!body.isDynamic() || body.isCompound()) {
 				continue;
 			}
-
 			joint.anchor1.set(pos);
 			joint.anchor2.set(body.worldPointToLocal(pos, true));
 			joint.body2 = body;
@@ -103,9 +90,8 @@ class PickingHand extends FlxSprite {
 			if (Std.isOfType(body.userData.data, PhysicsThing)) {
 				cast(body.userData.data, PhysicsThing).inTow = true;
 			}
-			break;
+			return;
 		}
-		pos.dispose();
 	}
 
 	private function endGrab() {
