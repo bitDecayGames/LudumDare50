@@ -51,7 +51,6 @@ function deleteData():Void {
 }
 
 function saveHeight(newHeight:Float):Void {
-	FlxG.watch.addQuick("new height", newHeight);
 	if (newHeight > HEIGHT) {
 		HEIGHT = newHeight;
 		_gameSave.data.height = HEIGHT;

@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUICheckBox;
@@ -25,12 +26,15 @@ class SettingsState extends FlxUIState {
 
 	override public function create():Void {
 		super.create();
-		bgColor = FlxColor.TRANSPARENT;
+
+		var bg = new FlxSprite(AssetPaths.title_image__png);
+		add(bg);
 
 		_txtTitle = new FlxText();
 		_txtTitle.setPosition(FlxG.width / 2, FlxG.height / 4);
 		_txtTitle.size = 40;
 		_txtTitle.alignment = FlxTextAlign.CENTER;
+		_txtTitle.color = FlxColor.BLACK;
 		_txtTitle.text = "Settings";
 		add(_txtTitle);
 
@@ -52,6 +56,13 @@ class SettingsState extends FlxUIState {
 		PRACTICE = _practiceBox.checked;
 		HARD_OBJECTS = _hardObjectsBox.checked;
 		EASY_TRAY = _easyTrayBox.checked;
+		// There's some mouseover affect I can't turn off so now we're just setting the color every update.
+		_practiceBox.color = FlxColor.BLACK;
+		_practiceBox.box.color = FlxColor.WHITE;
+		_hardObjectsBox.color = FlxColor.BLACK;
+		_hardObjectsBox.box.color = FlxColor.WHITE;
+		_easyTrayBox.color = FlxColor.BLACK;
+		_easyTrayBox.box.color = FlxColor.WHITE;
 	}
 
 	function clickMainMenu():Void {
