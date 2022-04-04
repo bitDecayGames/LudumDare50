@@ -122,9 +122,11 @@ class PlayState extends FlxTransitionableState {
 		// trace('COLLISION: item1 is ${item1.originalAsset} and item2 is ${item2.originalAsset}');
 
 		if (cb.event == CbEvent.BEGIN) {
-			// TODO: These are delayed for some stupid reason... why
+			#if !nosound
+			// TODO: These are delayed on Ubuntu for some stupid reason... why
 			// clinkSFX.play();
-			// FlxG.sound.play(AssetPaths.glass_clink1__wav);
+			FlxG.sound.play(AssetPaths.glass_clink1__wav);
+			#end
 
 			item1.inContactWith.set(item2, true);
 			item2.inContactWith.set(item1, true);
