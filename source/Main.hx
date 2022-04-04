@@ -1,5 +1,6 @@
 package;
 
+import helpers.Achievements;
 import helpers.Global;
 import flixel.util.FlxSave;
 import states.SplashScreenState;
@@ -38,6 +39,7 @@ class Main extends Sprite {
 		Configure.initAnalytics(false);
 
 		loadData();
+		Achievements.initAchievements();
 
 		var startingState:Class<FlxState> = SplashScreenState;
 		#if play

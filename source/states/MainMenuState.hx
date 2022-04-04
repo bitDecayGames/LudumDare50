@@ -1,5 +1,6 @@
 package states;
 
+import helpers.Global.deleteData;
 import states.transitions.Trans;
 import states.transitions.SwirlTransition;
 import com.bitdecay.analytics.Bitlytics;
@@ -108,6 +109,10 @@ class MainMenuState extends FlxUIState {
 			Bitlytics.Instance().EndSession(false);
 			FmodManager.PlaySoundOneShot(FmodSFX.MenuSelect);
 			trace("---------- Bitlytics Stopped ----------");
+		}
+
+		if (FlxG.keys.pressed.K) {
+			deleteData();
 		}
 	}
 
