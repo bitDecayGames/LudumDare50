@@ -33,6 +33,10 @@ class AchievementsState extends FlxUIState {
 		_txtTitle.setPosition((FlxG.width - _txtTitle.width) / 2, VERTICAL_OFFSET * .5);
 		add(_txtTitle);
 
+		if (!Achievements.ACHIEVEMENT_SCREEN.achieved) {
+			add(Achievements.ACHIEVEMENT_SCREEN.toToast(true));
+		}
+
 		addAchievementToasts();
 
 		_btnDone = UiHelpers.createMenuButton("Main Menu", clickMainMenu);

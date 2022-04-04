@@ -22,6 +22,7 @@ class Achievements {
 	public static var MAGICIAN:AchievementDef;
 	public static var SECOND_SNEEZE:AchievementDef;
 	public static var DIAMOND:AchievementDef;
+	public static var ACHIEVEMENT_SCREEN:AchievementDef;
 	public static var ALL:Array<AchievementDef>;
 	public static var ACHIEVEMENTS_DISPLAYED:Int = 0;
 
@@ -44,9 +45,11 @@ class Achievements {
 		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 13);
 		DIAMOND = new AchievementDef("achdiamond", "Diamond", "Create a glass diamond", 14);
 		MAGICIAN = new AchievementDef("achmagician", "Magician", "Fit a tray inside a glass", 15);
+		ACHIEVEMENT_SCREEN = new AchievementDef("achachievementscreen", "Curious", "Visit the achievement screen", 17);
 
 		// @formatter:off
 		ALL = [
+			ACHIEVEMENT_SCREEN,
 			HEIGHT,
 			FIRST_TABLE,
 			ITEM_COUNT,
