@@ -1,5 +1,7 @@
 package helpers;
 
+import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.FlxG;
 import entities.PhysicsThing;
 import nape.geom.Vec2;
@@ -10,12 +12,12 @@ class TableSpawner extends FlxObject {
 	private var tableJustSpawned:Bool = false;
 	private var table:Table;
 	private var spawnLocation:Vec2;
-	private var add:(Object:flixel.FlxBasic) -> {};
+	private var items:FlxTypedGroup<FlxSprite>;
 	private var addToAllThings:(PhysicsThing) -> Int;
 
-	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, _add:(Object:flixel.FlxBasic) -> {}, _addToAllThings:(PhysicsThing) -> Int) {
+	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int) {
 		super(x, y);
-		add = _add;
+		this.items = items;
 		addToAllThings = _addToAllThings;
 		spawnLocation = new Vec2(x + 1000, y);
 		spawnTable();
@@ -38,15 +40,15 @@ class TableSpawner extends FlxObject {
 	}
 
 	private function spawnTable() {
-		table = new Table(spawnLocation.x, spawnLocation.y);
-		add(table);
-		for (thing in table.items) {
-			add(thing);
+		table = new Table(spawnLocation.x, spawnLocation.y, items);
+		items.add(table);
+		for (thing in table.myItems) {
+			items.add(thing);
 			addToAllThings(thing);
 		}
 		for (softy in table.softies) {
 			trace("Add softy");
-			add(softy);
+			items.add(softy);
 		}
 		tableJustSpawned = true;
 	}
