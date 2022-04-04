@@ -1,5 +1,6 @@
 package states;
 
+import nape.geom.Geom;
 import helpers.UiHelpers;
 import flixel.ui.FlxButton;
 import helpers.Analytics;
@@ -137,6 +138,8 @@ class PlayState extends FlxTransitionableState {
 			itemCollideCallback));
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.SENSOR, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			sensorsTouchCallback));
+		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.ONGOING, InteractionType.SENSOR, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
+			martiniStackingCallback));
 
 		timerDisplay = new FlxText(FlxG.width - 75, 5);
 		timerDisplay.size = 20;
@@ -200,6 +203,26 @@ class PlayState extends FlxTransitionableState {
 			for (arbiter in cb.arbiters) {
 				if (arbiter != null && arbiter.shape1 != null && arbiter.shape2 != null && arbiter.shape1.userData.key != null && arbiter.shape2.userData.key) {
 					sensorAchievementTrigger([arbiter.shape1.userData.key, arbiter.shape2.userData.key]);
+				}
+			}
+		}
+	}
+
+	public function martiniStackingCallback(cb:nape.callbacks.InteractionCallback) {
+		if (!Achievements.DIAMOND.achieved) {
+			if (cb.arbiters != null) {
+				for (arbiter in cb.arbiters) {
+					if (arbiter != null && arbiter.shape1 != null && arbiter.shape2 != null && arbiter.shape1.userData.key != null
+						&& arbiter.shape2.userData.key) {
+						var shape1 = arbiter.shape1;
+						var shape2 = arbiter.shape2;
+						var keys = [shape1.userData.key, shape2.userData.key];
+						if (keys.contains("martini_small") && keys.contains("martini_large")) {
+							if (Geom.contains(shape1, shape2) || Geom.contains(shape2, shape1)) {
+								add(Achievements.DIAMOND.toToast(true));
+							}
+						}
+					}
 				}
 			}
 		}
