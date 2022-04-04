@@ -24,6 +24,7 @@ class VictoryState extends FlxUIState {
 
 	var _txtTitle:FlxText;
 
+	var frameFadeTime = 0.1;
 	var picFadeTime = 3;
 
 	override public function create():Void {
@@ -58,6 +59,7 @@ class VictoryState extends FlxUIState {
 			var rotation = FlxG.random.int(0, 60) - 30;
 
 			var photoBack = new FlxSprite(AssetPaths.polaroid__png);
+			photoBack.alpha = 0;
 			photoBack.x = pickedX;
 			photoBack.y = pickedY;
 
@@ -82,6 +84,8 @@ class VictoryState extends FlxUIState {
 			pic.angle = rotation;
 
 			Timer.delay(() -> {
+				FlxTween.tween(photoBack, {alpha: 1}, frameFadeTime);
+				FlxG.sound.play(AssetPaths.shutter__mp3);
 				add(photoBack);
 				add(pic);
 				FlxTween.tween(pic, {alpha: 1}, picFadeTime);
