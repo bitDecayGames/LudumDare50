@@ -1,10 +1,10 @@
 {
 	"analytics": {
-		"name": "ld50",
+		"name": "bussin",
 		"influx": {
 			"api": "https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/write",
 			"org": "13ecc65d2303c6d7",
-			"bucket": "8630cbee47274dd4",
+			"bucket": "7fb739195176683d",
 			"token": "token loaded from the '-D API_KEY=<key>' compile flag so it is not committed to source control"
 		}
 	},
