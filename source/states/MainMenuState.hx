@@ -1,5 +1,6 @@
 package states;
 
+import helpers.Achievements;
 import helpers.Global.deleteData;
 import states.transitions.Trans;
 import states.transitions.SwirlTransition;
@@ -27,6 +28,7 @@ class MainMenuState extends FlxUIState {
 	var _btnSettings:FlxButton;
 	var _btnCredits:FlxButton;
 	var _btnExit:FlxButton;
+	var _btnSecret:FlxButton;
 
 	var _txtTitle:FlxText;
 
@@ -35,6 +37,7 @@ class MainMenuState extends FlxUIState {
 		if (Configure.config.menus.keyboardNavigation || Configure.config.menus.controllerNavigation) {
 			_makeCursor = true;
 		}
+		Achievements.ACHIEVEMENTS_DISPLAYED = 0;
 
 		super.create();
 
@@ -71,6 +74,19 @@ class MainMenuState extends FlxUIState {
 
 		// restore mouse visibility
 		FlxG.mouse.visible = true;
+
+		// setup secret button for fan-boy achievement
+		if (!Achievements.FAN_BOY.achieved) {
+			_btnSecret = new FlxButton(60, 0, "", () -> {
+				if (!Achievements.FAN_BOY.achieved) {
+					add(Achievements.FAN_BOY.toToast(true));
+				}
+			});
+			_btnSecret.makeGraphic(210, 70, 0x01000000);
+			_btnSecret.width = 210;
+			_btnSecret.height = 70;
+			add(_btnSecret);
+		}
 	}
 
 	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
