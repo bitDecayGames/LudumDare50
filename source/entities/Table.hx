@@ -1,5 +1,6 @@
 package entities;
 
+import screenshot.Screenshotter;
 import flixel.FlxObject;
 import flixel.addons.effects.FlxClothSprite;
 import helpers.Global.HARD_OBJECTS;
@@ -106,6 +107,13 @@ class Table extends PhysicsThing {
 						kill();
 						destroy();
 						active = false;
+
+						tablecloth.kill();
+						tablecloth.destroy();
+						leftCloth.kill();
+						leftCloth.destroy();
+						rightCloth.kill();
+						rightCloth.destroy();
 					}
 				}
 			}
@@ -184,6 +192,9 @@ class Table extends PhysicsThing {
 	}
 
 	public function reactivateMeAndMyPets() {
+		// We want to capture each time they get a new table
+		Screenshotter.capture();
+
 		tablecloth.meshVelocity.x = 0;
 		leftCloth.meshVelocity.x = 0;
 		rightCloth.meshVelocity.x = 0;

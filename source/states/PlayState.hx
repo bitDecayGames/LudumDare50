@@ -1,11 +1,14 @@
 package states;
 
+import screenshot.Screenshotter;
 import helpers.StackInfo;
 import helpers.Global.HARD_OBJECTS;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
 import helpers.Global.saveItemCount;
 import helpers.Global.saveHeight;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.math.FlxMath;
 import constants.CbTypes;
 import entities.Heightometer;
@@ -88,6 +91,7 @@ class PlayState extends FlxTransitionableState {
 		super.create();
 
 		InitState();
+		Screenshotter.reset();
 
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
@@ -247,7 +251,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	public function isWin():Bool {
-		return FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
+		return #if debug FlxG.keys.justPressed.E || #end (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
 	}
 
 	public function goToVictoryScreen() {
