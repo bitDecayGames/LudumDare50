@@ -1,5 +1,6 @@
 package helpers;
 
+import helpers.Global.PRACTICE;
 import com.bitdecay.analytics.Bitlytics;
 import helpers.Global.saveAchievement;
 import helpers.Global.isAchievementSaved;
@@ -23,6 +24,7 @@ class Achievements {
 	public static var SECOND_SNEEZE:AchievementDef;
 	public static var DIAMOND:AchievementDef;
 	public static var ACHIEVEMENT_SCREEN:AchievementDef;
+	public static var FAN_BOY:AchievementDef;
 	public static var ALL:Array<AchievementDef>;
 	public static var ACHIEVEMENTS_DISPLAYED:Int = 0;
 
@@ -45,7 +47,8 @@ class Achievements {
 		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 13);
 		DIAMOND = new AchievementDef("achdiamond", "Diamond", "Create a glass diamond", 14);
 		MAGICIAN = new AchievementDef("achmagician", "Magician", "Fit a tray inside a glass", 15);
-		ACHIEVEMENT_SCREEN = new AchievementDef("achachievementscreen", "Curious", "Visit the achievement screen", 17);
+		ACHIEVEMENT_SCREEN = new AchievementDef("achachievementscreen", "Curious", "Visit the achievement screen", 16);
+		FAN_BOY = new AchievementDef("achfanboy", "Fan Boy", "Find Bit Decay Games", 17);
 
 		// @formatter:off
 		ALL = [
@@ -66,6 +69,7 @@ class Achievements {
 			SECOND_SNEEZE,
 			MAGICIAN,
 			DIAMOND,
+			FAN_BOY,
 		];
 		// @formatter:on
 	}
@@ -100,11 +104,12 @@ class AchievementDef {
 	public function toToast(show:Bool, force:Bool = false):AchievementToast {
 		var a = new AchievementToast(this);
 		if (show) {
-			if (!achieved || force) {
+			if ((!achieved && !PRACTICE) || force) {
 				Achievements.ACHIEVEMENTS_DISPLAYED++;
 				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
 				Analytics.reportAchievement(this.key);
 				saveAchievement(key);
+				// TODO: MW SFX here for getting achievement
 				achieved = true;
 			} else {
 				a.active = false;
