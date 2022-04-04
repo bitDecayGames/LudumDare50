@@ -1,11 +1,8 @@
 package states;
 
-<<<<<<< HEAD
 import flixel.tweens.FlxTween;
-=======
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
->>>>>>> 7a279bb40c5799e73abd5b2af74ed788357ce659
 import flixel.group.FlxGroup;
 import haxefmod.flixel.FmodFlxUtilities;
 import flixel.math.FlxPoint;
