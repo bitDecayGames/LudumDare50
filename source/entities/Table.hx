@@ -303,9 +303,7 @@ class Table extends PhysicsThing {
 			new ThingDef(-160, -221, AssetPaths.Martini__png),
 		], [
 			new SoftBodyDef(-158, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-158, -96, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
 		]),
 		new TableConfiguration([
 			new ThingDef(-148, 13, AssetPaths.SPlate__png),
@@ -314,7 +312,24 @@ class Table extends PhysicsThing {
 			new ThingDef(48, -6, AssetPaths.RoundMug__png),
 			new ThingDef(-105, -37, AssetPaths.fork__png),
 			new ThingDef(86, -60, AssetPaths.fork__png),
-		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),])
+		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),]),
+		new TableConfiguration([
+			new ThingDef(-61, -40, AssetPaths.Stein__png),
+			new ThingDef(86, -40, AssetPaths.Stein__png),
+			new ThingDef(-7, -152, AssetPaths.fork__png),
+			new ThingDef(-3, -124, AssetPaths.spoon__png),
+			new ThingDef(-7, -191, AssetPaths.knife__png),
+			new ThingDef(-2, -220, AssetPaths.spoon__png),
+			new ThingDef(-5, -292, AssetPaths.knife__png),
+			new ThingDef(-7, -255, AssetPaths.fork__png),
+		], [
+			new SoftBodyDef(45, -10, SoftBody.NewSteak),
+			new SoftBodyDef(45, -35, SoftBody.NewSteak),
+			new SoftBodyDef(45, -60, SoftBody.NewSteak),
+			new SoftBodyDef(45, -85, SoftBody.NewSteak),
+			new SoftBodyDef(45, -110, SoftBody.NewSteak),
+			new SoftBodyDef(45, -135, SoftBody.NewSteak),
+		])
 	];
 }
 
