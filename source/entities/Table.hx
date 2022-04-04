@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.FlxObject;
+import flixel.addons.effects.FlxClothSprite;
 import helpers.Global.HARD_OBJECTS;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -24,11 +26,23 @@ class Table extends PhysicsThing {
 	private var spawnLocation:Vec2;
 	private var deleteBuffer:Float = 10;
 
+	public var tablecloth:FlxClothSprite;
+
 	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
 		this.allItems = allItems;
 		spawnLocation = new Vec2(x, y);
 		spawnThings();
+
+		// This show how to set mesh scale, custom pinned points and set iterations
+		tablecloth = new FlxClothSprite(FlxG.width / 2 - 105, 10, AssetPaths.flag__png);
+
+		tablecloth.pinnedSide = FlxObject.UP;
+		tablecloth.meshScale.set(1, 1);
+		tablecloth.setMesh(10, 10);
+		tablecloth.iterations = 8;
+		tablecloth.maxVelocity.set(200, 200);
+		tablecloth.meshVelocity.y = 40;
 	}
 
 	override public function update(delta:Float) {
@@ -108,6 +122,13 @@ class Table extends PhysicsThing {
 	}
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		if (targetPosition.x > x) {
+			tablecloth.meshVelocity.x = -50;
+		}
+		if (targetPosition.x < x) {
+			tablecloth.meshVelocity.x = 50;
+		}
+
 		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
 		for (pet in myItems) {
 			if (pet.body != null) {
@@ -123,6 +144,8 @@ class Table extends PhysicsThing {
 	}
 
 	public function reactivateMeAndMyPets() {
+		tablecloth.meshVelocity.x = 0;
+
 		body.velocity.set(new Vec2());
 		for (pet in myItems) {
 			if (pet.body != null) {

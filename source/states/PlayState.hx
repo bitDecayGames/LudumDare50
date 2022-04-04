@@ -97,7 +97,7 @@ class PlayState extends FlxTransitionableState {
 		trayHand = new TrayHand(250, 700);
 		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push, misc);
 		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
