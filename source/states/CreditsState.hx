@@ -31,12 +31,7 @@ class CreditsState extends FlxUIState {
 	static inline var entryRightMargin = 50;
 	static inline var entryVerticalSpacing = 25;
 
-	var toolingImages = [
-		AssetPaths.FLStudioLogo__png,
-		AssetPaths.FmodLogoWhite__png,
-		AssetPaths.HaxeFlixelLogo__png,
-		AssetPaths.pyxel_edit__png
-	];
+	var toolingImages = [AssetPaths.HaxeFlixelLogo__png, AssetPaths.pyxel_edit__png];
 
 	override public function create():Void {
 		super.create();

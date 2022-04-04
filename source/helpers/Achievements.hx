@@ -1,5 +1,7 @@
 package helpers;
 
+import flixel.system.FlxSound;
+import flixel.FlxG;
 import helpers.Global.PRACTICE;
 import com.bitdecay.analytics.Bitlytics;
 import helpers.Global.saveAchievement;
@@ -90,6 +92,10 @@ class AchievementDef {
 	public var hidden:Bool;
 	public var achieved:Bool;
 
+	private var sfx:Array<FlxSound> = [];
+
+	private var soundPlaying = false;
+
 	public function new(key:String, title:String, description:String, iconIndex:Int, count:Int = 0, hidden:Bool = false) {
 		this.key = key;
 		this.title = title;
@@ -101,10 +107,34 @@ class AchievementDef {
 		this.achieved = isAchievementSaved(key);
 	}
 
+	private function soundDone() {
+		soundPlaying = false;
+	}
+
+	private function initSounds() {
+		sfx = [
+			FlxG.sound.load(AssetPaths.Achieve1__ogg, soundDone),
+			FlxG.sound.load(AssetPaths.Achieve2__ogg, soundDone),
+			FlxG.sound.load(AssetPaths.Achieve3__ogg, soundDone),
+			FlxG.sound.load(AssetPaths.Achieve4__ogg, soundDone),
+			FlxG.sound.load(AssetPaths.Achieve5__ogg, soundDone),
+		];
+	}
+
 	public function toToast(show:Bool, force:Bool = false):AchievementToast {
+		if (sfx.length == 0) {
+			initSounds();
+		}
+
 		var a = new AchievementToast(this);
 		if (show) {
 			if ((!achieved && !PRACTICE) || force) {
+				if (!soundPlaying) {
+					var sound = sfx[FlxG.random.int(0, sfx.length - 1)];
+					sound.play(true);
+					soundPlaying = true;
+				}
+
 				Achievements.ACHIEVEMENTS_DISPLAYED++;
 				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
 				Analytics.reportAchievement(this.key);
