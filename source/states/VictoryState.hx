@@ -1,5 +1,6 @@
 package states;
 
+import com.bitdecay.analytics.Bitlytics;
 import haxe.Timer;
 import flixel.math.FlxVector;
 import flixel.math.FlxMath;
@@ -27,6 +28,10 @@ class VictoryState extends FlxUIState {
 
 	override public function create():Void {
 		super.create();
+
+		// Just flush our metrics in case the user closes the page right after finishing the game
+		Bitlytics.Instance().ForceFlush();
+
 		bgColor = FlxColor.TRANSPARENT;
 
 		_txtTitle = new FlxText();

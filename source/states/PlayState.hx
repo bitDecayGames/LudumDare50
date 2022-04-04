@@ -1,8 +1,11 @@
 package states;
 
+import helpers.Analytics;
+import com.bitdecay.analytics.Bitlytics;
 import screenshot.Screenshotter;
 import helpers.StackInfo;
 import helpers.Global.HARD_OBJECTS;
+import flixel.addons.nape.FlxNapeSprite;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
 import helpers.Global.saveItemCount;
@@ -50,7 +53,8 @@ class PlayState extends FlxTransitionableState {
 	private var trayHand:TrayHand;
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
-	private var items:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	private var softies:FlxTypedGroup<SoftBody> = new FlxTypedGroup<SoftBody>();
+	private var items:FlxTypedGroup<FlxNapeSprite> = new FlxTypedGroup<FlxNapeSprite>();
 	private var clothGroup:FlxGroup = new FlxGroup();
 	private var misc:FlxGroup = new FlxGroup();
 
@@ -97,6 +101,7 @@ class PlayState extends FlxTransitionableState {
 		add(bg);
 
 		add(misc);
+		add(softies);
 		add(items);
 		add(clothGroup);
 		add(foregroundGroup);
@@ -104,7 +109,7 @@ class PlayState extends FlxTransitionableState {
 		trayHand = new TrayHand(250, 700);
 		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push, clothGroup);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push, clothGroup, softies);
 		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
@@ -205,10 +210,6 @@ class PlayState extends FlxTransitionableState {
 
 		timer += elapsed;
 
-		KillThingsOutsideBoundary();
-		// MW This doesn't seem to be used anymore
-		// heightometer.y = CalculateHeighestObject(allThings);
-
 		#if debug
 		debugLogic();
 		#end
@@ -217,6 +218,8 @@ class PlayState extends FlxTransitionableState {
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
 			maxY = stackInfo.heightItem.body.bounds.min.y;
 		}
+
+		KillThingsOutsideBoundary(stackInfo);
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
@@ -287,11 +290,15 @@ class PlayState extends FlxTransitionableState {
 		FmodFlxUtilities.TransitionToState(new VictoryState());
 	}
 
-	public function goToLoseScreen() {
+	public function goToLoseScreen(stackInfo:StackInfo) {
+		Analytics.reportLoss(stackInfo.itemCount, heightometer.lastRatio, timer);
 		FmodFlxUtilities.TransitionToState(new LoseState());
 	}
 
 	public function triggerWin(stackInfo:StackInfo) {
+		// report our win
+		Analytics.reportWin(stackInfo.itemCount, timer);
+
 		// TODO: Sneeze sfx
 		if (!Achievements.HEIGHT.achieved) {
 			add(Achievements.HEIGHT.toToast(true));
@@ -337,31 +344,31 @@ class PlayState extends FlxTransitionableState {
 		this.handleFocus();
 	}
 
-	public function KillThingsOutsideBoundary() {
-		for (thing in items) {
-			if (thing.active) {
-				if (Std.isOfType(thing, SoftBody)) {
-					var obj = cast(thing, SoftBody);
-					var pos = obj.avgPos;
-					if (pos.y > FlxG.height + 100 || pos.y < -500 || pos.x < -500 || pos.x > FlxG.width + 2000) {
-						obj.kill();
-						obj.active = false;
-						obj.destroy();
-					}
-				} else if (Std.isOfType(thing, FlxObject)) {
-					var obj = cast(thing, FlxObject);
-					if (obj.y > FlxG.height + 100 || obj.y < -500 || obj.x < -500 || obj.x > FlxG.width + 2000) {
-						obj.kill();
-						obj.active = false;
+	public function KillThingsOutsideBoundary(stackInfo:StackInfo) {
+		for (item in items) {
+			if (item.active) {
+				if (item.y > FlxG.height + 100 || item.y < -500 || item.x < -500 || item.x > FlxG.width + 2000) {
+					item.kill();
+					item.active = false;
 
-						if (!PRACTICE) {
-							if (endStarted) {
-								goToVictoryScreen();
-							} else {
-								goToLoseScreen();
-							}
+					if (!PRACTICE) {
+						if (endStarted) {
+							goToVictoryScreen();
+						} else {
+							goToLoseScreen(stackInfo);
 						}
 					}
+				}
+			}
+		}
+
+		for (softy in softies) {
+			if (softy.active) {
+				var pos = softy.avgPos;
+				if (pos.y > FlxG.height + 100 || pos.y < -500 || pos.x < -500 || pos.x > FlxG.width + 2000) {
+					softy.kill();
+					softy.active = false;
+					softy.destroy();
 				}
 			}
 		}

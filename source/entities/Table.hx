@@ -1,6 +1,7 @@
 package entities;
 
 import screenshot.Screenshotter;
+import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxObject;
 import flixel.addons.effects.FlxClothSprite;
 import helpers.Global.HARD_OBJECTS;
@@ -18,7 +19,7 @@ import nape.geom.Vec2;
 class Table extends PhysicsThing {
 	static private var lastConfigs:Array<Int> = [];
 
-	public var allItems:FlxTypedGroup<FlxSprite>;
+	public var allItems:FlxTypedGroup<FlxNapeSprite>;
 	public var myItems:Array<PhysicsThing> = [];
 	public var softies:Array<SoftBody> = [];
 
@@ -38,7 +39,7 @@ class Table extends PhysicsThing {
 	private var clothXSpeed = 50;
 	private var clothYSpeed = 10;
 
-	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
+	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxNapeSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
 		this.allItems = allItems;
 		spawnLocation = new Vec2(x, y);
@@ -74,12 +75,12 @@ class Table extends PhysicsThing {
 		rightCloth.setPosition(x + rightClothOffset.x, y + rightClothOffset.y);
 
 		// output item nums
-		for (i in 0...myItems.length) {
-			if (i >= 0) {
-				var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
-				FlxG.watch.addQuick('item#${i}', absolutePos);
-			}
-		}
+		// for (i in 0...myItems.length) {
+		// 	if (i >= 0) {
+		// 		var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
+		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
+		// 	}
+		// }
 		// for (i in 0...softies.length) {
 		// 	if (i >= 5) {
 		// 		var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
@@ -89,11 +90,11 @@ class Table extends PhysicsThing {
 
 		if (reactivated) {
 			var haveItemsAbove = false;
+			var lowerXBound = body.position.x - 50 - (body.bounds.width / 2);
+			var upperYBound = body.position.y - (body.bounds.height / 2);
+			var upperXBound = body.position.x + (body.bounds.width / 2);
 			allItems.forEach((item) -> {
-				if (item.x >= body.position.x - (body.bounds.width / 2)
-					&& item.x <= body.position.x + (body.bounds.width / 2)
-					&& item.y <= body.position.y - (body.bounds.height / 2)
-					&& item.exists) {
+				if (item.body.position.x >= lowerXBound && item.body.position.x <= upperXBound && item.body.position.y <= upperYBound && item.exists) {
 					haveItemsAbove = true;
 				}
 			});

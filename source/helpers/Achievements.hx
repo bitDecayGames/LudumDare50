@@ -1,5 +1,6 @@
 package helpers;
 
+import com.bitdecay.analytics.Bitlytics;
 import helpers.Global.saveAchievement;
 import helpers.Global.isAchievementSaved;
 import entities.AchievementToast;
@@ -96,7 +97,7 @@ class AchievementDef {
 			if (!achieved || force) {
 				Achievements.ACHIEVEMENTS_DISPLAYED++;
 				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
-				// TODO: analytics
+				Analytics.reportAchievement(this.key);
 				saveAchievement(key);
 				achieved = true;
 			} else {
