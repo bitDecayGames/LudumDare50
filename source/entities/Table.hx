@@ -34,6 +34,9 @@ class Table extends PhysicsThing {
 	private var leftClothOffset = Vec2.get(0, 1);
 	private var rightClothOffset = Vec2.get(404, 1);
 
+	private var clothXSpeed = 50;
+	private var clothYSpeed = 10;
+
 	public function new(x:Float, y:Float, allItems:FlxTypedGroup<FlxSprite>) {
 		super(x, y, AssetPaths.table__png, BodyType.KINEMATIC);
 		this.allItems = allItems;
@@ -48,10 +51,18 @@ class Table extends PhysicsThing {
 		tablecloth.setMesh(10, 10);
 		tablecloth.iterations = 8;
 		tablecloth.maxVelocity.set(200, 200);
-		tablecloth.meshVelocity.y = 40;
+		tablecloth.meshVelocity.y = clothYSpeed;
+		tablecloth.meshFriction.set(0.95, 0.95);
 
-		leftCloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png, 2, 10);
-		rightCloth = new FlxClothSprite(x, y, AssetPaths.tableClothTriangle__png, 2, 10);
+		leftCloth = new FlxClothSprite(x, y, AssetPaths.tableClothSide__png, 1, 10);
+		leftCloth.iterations = 8;
+		leftCloth.meshVelocity.y = clothYSpeed;
+		leftCloth.meshFriction.set(0.95, 0.95);
+
+		rightCloth = new FlxClothSprite(x, y, AssetPaths.tableClothSide__png, 1, 10);
+		rightCloth.iterations = 8;
+		rightCloth.meshVelocity.y = clothYSpeed;
+		rightCloth.meshFriction.set(0.95, 0.95);
 	}
 
 	override public function update(delta:Float) {
@@ -103,6 +114,17 @@ class Table extends PhysicsThing {
 
 	function removeTable() {
 		body.setVelocityFromTarget(spawnLocation, 0, 0.5);
+
+		if (body.velocity.x > x) {
+			tablecloth.meshVelocity.x = -clothXSpeed;
+			leftCloth.meshVelocity.x = -clothXSpeed;
+			rightCloth.meshVelocity.x = -clothXSpeed;
+		}
+		if (body.velocity.x < x) {
+			tablecloth.meshVelocity.x = clothXSpeed;
+			leftCloth.meshVelocity.x = clothXSpeed;
+			rightCloth.meshVelocity.x = clothXSpeed;
+		}
 	}
 
 	private function spawnThings() {
@@ -137,14 +159,14 @@ class Table extends PhysicsThing {
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
 		if (targetPosition.x > x) {
-			tablecloth.meshVelocity.x = 50;
-			leftCloth.meshVelocity.x = 50;
-			rightCloth.meshVelocity.x = 50;
+			tablecloth.meshVelocity.x = -clothXSpeed;
+			leftCloth.meshVelocity.x = -clothXSpeed;
+			rightCloth.meshVelocity.x = -clothXSpeed;
 		}
 		if (targetPosition.x < x) {
-			tablecloth.meshVelocity.x = -50;
-			leftCloth.meshVelocity.x = -50;
-			rightCloth.meshVelocity.x = -50;
+			tablecloth.meshVelocity.x = clothXSpeed;
+			leftCloth.meshVelocity.x = clothXSpeed;
+			rightCloth.meshVelocity.x = clothXSpeed;
 		}
 
 		body.setVelocityFromTarget(targetPosition, targetRotation, deltaTime);
@@ -163,6 +185,8 @@ class Table extends PhysicsThing {
 
 	public function reactivateMeAndMyPets() {
 		tablecloth.meshVelocity.x = 0;
+		leftCloth.meshVelocity.x = 0;
+		rightCloth.meshVelocity.x = 0;
 
 		body.velocity.set(new Vec2());
 		for (pet in myItems) {
