@@ -1,13 +1,12 @@
 package helpers;
 
-import helpers.Achievements.NewFirstTableAchievement;
+import entities.PhysicsThing;
+import entities.Table;
+import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.FlxG;
-import entities.PhysicsThing;
 import nape.geom.Vec2;
-import entities.Table;
-import flixel.FlxObject;
 
 class TableSpawner extends FlxObject {
 	private var tableJustSpawned:Bool = false;
@@ -15,8 +14,7 @@ class TableSpawner extends FlxObject {
 	private var spawnLocation:Vec2;
 	private var items:FlxTypedGroup<FlxSprite>;
 	private var addToAllThings:(PhysicsThing) -> Int;
-	private var initialTableSpawned:Bool = false;
-	private var secondTableSpawned:Bool = false;
+	private var totalClearedTableCount:Int = -1;
 
 	public function new(x:Float, y:Float, spawnX:Float, spawnY:Float, items:FlxTypedGroup<FlxSprite>, _addToAllThings:(PhysicsThing) -> Int) {
 		super(x, y);
@@ -43,11 +41,6 @@ class TableSpawner extends FlxObject {
 	}
 
 	private function spawnTable() {
-		if (initialTableSpawned && !secondTableSpawned) {
-			// this is not your second table
-			FlxG.state.add(Achievements.NewFirstTableAchievement());
-			secondTableSpawned = true;
-		}
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
 		items.add(table);
 		for (thing in table.myItems) {
@@ -58,8 +51,10 @@ class TableSpawner extends FlxObject {
 			trace("Add softy");
 			items.add(softy);
 		}
-		tableJustSpawned = true;
-		initialTableSpawned = true;
+		totalClearedTableCount++;
+		if (totalClearedTableCount == 1) {
+			FlxG.state.add(Achievements.FIRST_TABLE.toToast(true));
+		}
 	}
 
 	private function tableAtSpawner():Bool {

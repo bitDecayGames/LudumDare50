@@ -36,6 +36,7 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private var description:FlxText;
 	private var background:FlxSprite;
 	private var icon:FlxSprite;
+	private var tint:FlxSprite;
 	private var TOAST_X:Float;
 	private var TOAST_Y:Float;
 	private var TOAST_HEIGHT_FROM_BOTTOM:Float;
@@ -83,7 +84,18 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private function waitThenClose(_:FlxTween) {
 		var _wait = FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TIME_TO_VIEW);
 		_wait.onComplete = (_) -> {
-			FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_Y, TIME_TO_TRANSITION);
+			var _out = FlxTween.linearMotion(this, TOAST_X, TOAST_HEIGHT_FROM_BOTTOM, TOAST_X, TOAST_Y, TIME_TO_TRANSITION);
+			_out.onComplete = (_) -> {
+				this.kill();
+			}
 		};
+	}
+
+	public function dim():AchievementToast {
+		tint = new FlxSprite(x, y);
+		tint.makeGraphic(background.graphic.width, background.graphic.height, 0x99aeaeae);
+		add(tint);
+		tint.setPosition(x, y);
+		return this;
 	}
 }
