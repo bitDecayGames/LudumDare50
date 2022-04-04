@@ -1,5 +1,6 @@
 package states;
 
+import helpers.StackInfo;
 import helpers.Global.HARD_OBJECTS;
 import helpers.Global.HEIGHT;
 import helpers.Global.ITEM_COUNT;
@@ -174,22 +175,7 @@ class PlayState extends FlxTransitionableState {
 		// heightometer.y = CalculateHeighestObject(allThings);
 
 		#if debug
-		var mousePos = FlxG.mouse.getWorldPosition();
-		if (FlxG.keys.justPressed.ONE) {
-			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.TWO) {
-			add(SoftBody.NewDumpling(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.THREE) {
-			add(SoftBody.NewFrenchOmlette(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.FOUR) {
-			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
-		}
-		if (FlxG.keys.justPressed.P) {
-			add(Achievements.HEIGHT.toToast(true));
-		}
+		debugLogic();
 		#end
 
 		var stackInfo = trayHand.findCurrentHighest();
@@ -213,38 +199,65 @@ class PlayState extends FlxTransitionableState {
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
 		highScore.text = Heightometer.getHeightText(HEIGHT, ITEM_COUNT);
 
-		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
-			// TODO: Sneeze sfx
-			add(Achievements.HEIGHT.toToast(true));
-			endStarted = true;
-			trayHand.sneeze();
-			heightGoalSuccess.setVisible(true);
-			heightGoal.setVisible(false);
-			heightometer.setVisible(false);
-
-			if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
-				add(Achievements.SPEEDY.toToast(true));
-			}
-			if (!Achievements.SLOW.achieved && timer >= Achievements.SLOW.count) {
-				add(Achievements.SLOW.toToast(true));
-			}
-			if (!Achievements.MINIMALIST.achieved && stackInfo.itemCount <= Achievements.MINIMALIST.count) {
-				add(Achievements.MINIMALIST.toToast(true));
-			}
-			if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
-				add(Achievements.HOARDER.toToast(true));
-			}
-			if (!Achievements.HARD_MODE.achieved && HARD_OBJECTS) {
-				add(Achievements.HARD_MODE.toToast(true));
-			}
-		}
-
 		items.sort(sortItems, FlxSort.DESCENDING);
 
 		if (!Achievements.ONE_MINUTE.achieved && timer > Achievements.ONE_MINUTE.count) {
 			add(Achievements.ONE_MINUTE.toToast(true));
 		} else if (!Achievements.FIVE_MINUTES.achieved && timer > Achievements.FIVE_MINUTES.count) {
 			add(Achievements.FIVE_MINUTES.toToast(true));
+		}
+
+		if (isWin()) {
+			triggerWin(stackInfo);
+		}
+	}
+
+	public function debugLogic() {
+		var mousePos = FlxG.mouse.getWorldPosition();
+		if (FlxG.keys.justPressed.ONE) {
+			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.TWO) {
+			add(SoftBody.NewDumpling(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.THREE) {
+			add(SoftBody.NewFrenchOmlette(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.FOUR) {
+			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
+		}
+		if (FlxG.keys.justPressed.P) {
+			add(Achievements.HEIGHT.toToast(true, true));
+		}
+	}
+
+	public function isWin():Bool {
+		return FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE);
+	}
+
+	public function triggerWin(stackInfo:StackInfo) {
+		// TODO: Sneeze sfx
+		add(Achievements.HEIGHT.toToast(true));
+		endStarted = true;
+		trayHand.sneeze();
+		heightGoalSuccess.setVisible(true);
+		heightGoal.setVisible(false);
+		heightometer.setVisible(false);
+
+		if (!Achievements.SPEEDY.achieved && timer <= Achievements.SPEEDY.count) {
+			add(Achievements.SPEEDY.toToast(true));
+		}
+		if (!Achievements.SLOW.achieved && timer >= Achievements.SLOW.count) {
+			add(Achievements.SLOW.toToast(true));
+		}
+		if (!Achievements.MINIMALIST.achieved && stackInfo.itemCount <= Achievements.MINIMALIST.count) {
+			add(Achievements.MINIMALIST.toToast(true));
+		}
+		if (!Achievements.HOARDER.achieved && stackInfo.itemCount >= Achievements.HOARDER.count) {
+			add(Achievements.HOARDER.toToast(true));
+		}
+		if (!Achievements.HARD_MODE.achieved && HARD_OBJECTS) {
+			add(Achievements.HARD_MODE.toToast(true));
 		}
 	}
 

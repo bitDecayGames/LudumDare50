@@ -56,10 +56,10 @@ class AchievementDef {
 		// TODO: MW here is where we should check the key in localStorage to check if they have already achieved this thing
 	}
 
-	public function toToast(show:Bool):AchievementToast {
+	public function toToast(show:Bool, force:Bool = false):AchievementToast {
 		var a = new AchievementToast(title, description, iconIndex);
 		if (show) {
-			if (!achieved) {
+			if (!achieved || force) {
 				a.show();
 				// TODO: analytics
 				// TODO: MW here is where we should track this achievement by the key in localStorage
