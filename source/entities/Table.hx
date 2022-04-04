@@ -12,6 +12,8 @@ import flixel.FlxG;
 import nape.geom.Vec2;
 
 class Table extends PhysicsThing {
+	static private var lastConfigs:Array<Int> = [];
+
 	public var allItems:FlxTypedGroup<FlxSprite>;
 	public var myItems:Array<PhysicsThing> = [];
 	public var softies:Array<SoftBody> = [];
@@ -93,7 +95,12 @@ class Table extends PhysicsThing {
 	}
 
 	private function getRandomConfiguration():TableConfiguration {
-		return tableConfigurations[FlxG.random.int(0, tableConfigurations.length - 1)];
+		var nextRandomConfNum = FlxG.random.int(0, tableConfigurations.length - 1, lastConfigs);
+		lastConfigs.push(nextRandomConfNum);
+		if (lastConfigs.length >= 3) {
+			lastConfigs.remove(lastConfigs[0]);
+		}
+		return tableConfigurations[nextRandomConfNum];
 	}
 
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {

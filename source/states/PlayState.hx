@@ -1,6 +1,7 @@
 package states;
 
 import entities.AchievementToast;
+import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxText;
@@ -49,6 +50,9 @@ class PlayState extends FlxTransitionableState {
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
+
+	static var CLINK_THRESHOLD = 100;
+	static var MAX_VOLUME_CLINK = 400;
 
 	public static function InitState() {
 		FlxG.mouse.visible = false;
@@ -126,7 +130,16 @@ class PlayState extends FlxTransitionableState {
 			#if !nosound
 			// TODO: These are delayed on Ubuntu for some stupid reason... why
 			// clinkSFX.play();
-			FlxG.sound.play(AssetPaths.glass_clink1__wav);
+			// if (cb.arbiters.at(0).collisionArbiter.totalImpulse)
+			var impulse = cb.arbiters.at(0).collisionArbiter.totalImpulse(true).length;
+			// trace('total impulse: ${impulse}');
+			if (impulse > CLINK_THRESHOLD) {
+				// The idea is softer hits make softer sounds
+				var volume = FlxMath.lerp(0, 1, Math.min(impulse / MAX_VOLUME_CLINK, 1));
+				// trace('      volume: ${volume}');
+
+				FlxG.sound.play(AssetPaths.glass_clink1__wav, volume);
+			}
 			#end
 
 			item1.inContactWith.set(item2, true);
@@ -138,6 +151,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	var maxY = 10000.0;
+
 	var endStarted = false;
 
 	override public function update(elapsed:Float) {
