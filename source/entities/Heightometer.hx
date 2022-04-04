@@ -60,7 +60,9 @@ class Heightometer extends FlxObject {
 	override public function update(delta:Float) {
 		super.update(delta);
 		snapToPosition();
-		text.text = getHeightText();
+
+		var trayHeight = tray.y - y;
+		text.text = getHeightText(tray.y - y, showItemCount ? itemCount : null);
 	}
 
 	public function setVisible(visible:Bool) {
@@ -93,8 +95,8 @@ class Heightometer extends FlxObject {
 	 * Get the height text for scoring purposes (just a string, because we are just going to print it to the screen anyways)
 	 * @return String
 	 */
-	public function getHeightText():String {
-		var diff = tray.y - y;
+	static public function getHeightText(diff:Float, ?itemCount:Int):String {
+		// var diff = tray.y - y;
 		var totalInches = diff / PIXELS_PER_INCH;
 		var feet = Math.floor(totalInches / 12.0);
 		var inches = Math.floor(totalInches % 12.0);
@@ -109,7 +111,7 @@ class Heightometer extends FlxObject {
 			str += inches + "in";
 		}
 
-		if (showItemCount) {
+		if (itemCount != null) {
 			str += ' (${itemCount} items)';
 		}
 		return str;

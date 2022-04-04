@@ -1,5 +1,7 @@
 package;
 
+import helpers.Global;
+import flixel.util.FlxSave;
 import states.SplashScreenState;
 import misc.Macros;
 import states.MainMenuState;
@@ -34,6 +36,8 @@ class Main extends Sprite {
 	public function new() {
 		super();
 		Configure.initAnalytics(false);
+
+		loadData();
 
 		var startingState:Class<FlxState> = SplashScreenState;
 		#if play

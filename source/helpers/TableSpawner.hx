@@ -48,6 +48,7 @@ class TableSpawner extends FlxObject {
 	private function spawnTable() {
 		tableJustSpawned = true;
 		table = new Table(spawnLocation.x, spawnLocation.y, items);
+		tableJustSpawned = true;
 		items.add(table);
 		clothGroup.add(table.leftCloth);
 		clothGroup.add(table.tablecloth);

@@ -1,5 +1,9 @@
 package states;
 
+import helpers.Global.HEIGHT;
+import helpers.Global.ITEM_COUNT;
+import helpers.Global.saveItemCount;
+import helpers.Global.saveHeight;
 import flixel.math.FlxMath;
 import constants.CbTypes;
 import entities.Heightometer;
@@ -44,6 +48,8 @@ class PlayState extends FlxTransitionableState {
 	private var items:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 	private var clothGroup:FlxGroup = new FlxGroup();
 	private var misc:FlxGroup = new FlxGroup();
+
+	private var highScore:FlxText;
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
@@ -115,9 +121,11 @@ class PlayState extends FlxTransitionableState {
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			itemCollideCallback));
 
-		timerDisplay = new FlxText(FlxG.width - 150, 5);
+		timerDisplay = new FlxText(FlxG.width - 75, 5);
 		timerDisplay.size = 20;
 		foregroundGroup.add(timerDisplay);
+
+		makeHighScoreArea(FlxG.width - 450, timerDisplay.y + timerDisplay.height);
 	}
 
 	var clinkSFX = FlxG.sound.cache(AssetPaths.glass_clink1__wav);
@@ -190,12 +198,19 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
+
+		if (!PRACTICE) {
+			saveHeight(trayHand.y - maxY);
+			saveItemCount(stackInfo.itemCount);
+		}
+
 		if (!Achievements.ITEM_COUNT.achieved && stackInfo.itemCount >= Achievements.ITEM_COUNT.count) {
 			add(Achievements.ITEM_COUNT.toToast(true));
 		}
 
 		var withMS = heightometer.lastRatio >= 0.8;
 		timerDisplay.text = FlxStringUtil.formatTime(timer, withMS);
+		highScore.text = Heightometer.getHeightText(HEIGHT, ITEM_COUNT);
 
 		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted && !PRACTICE)) {
 			// TODO: Sneeze sfx
@@ -278,5 +293,13 @@ class PlayState extends FlxTransitionableState {
 			}
 		}
 		return heighest;
+	}
+
+	function makeHighScoreArea(x:Float, y:Float) {
+		var highScoreText = new FlxText(x, y, 200, "HIGH SCORES:", 24);
+		foregroundGroup.add(highScoreText);
+
+		highScore = new FlxText(x + highScoreText.width, highScoreText.y, 300, Heightometer.getHeightText(HEIGHT, ITEM_COUNT), 24);
+		foregroundGroup.add(highScore);
 	}
 }
