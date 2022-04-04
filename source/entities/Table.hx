@@ -242,7 +242,7 @@ class Table extends PhysicsThing {
 			new SoftBodyDef(-158, -96, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
-		])
+		]),
 		new TableConfiguration([
 			new ThingDef(-148, 13, AssetPaths.SPlate__png),
 			new ThingDef(136, 13, AssetPaths.SPlate__png),
