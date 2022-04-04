@@ -144,6 +144,7 @@ class PlayState extends FlxTransitionableState {
 			foregroundGroup.add(timerDisplay);
 		} else {
 			var exitButton = UiHelpers.createMenuButton("Main Menu", () -> {
+				Analytics.reportPracticeSession(timer);
 				FmodFlxUtilities.TransitionToState(new MainMenuState());
 			});
 			exitButton.y = 0;
