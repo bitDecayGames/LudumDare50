@@ -1,5 +1,6 @@
 package entities;
 
+import nape.phys.Body;
 import flixel.addons.nape.FlxNapeSprite;
 import openfl.ui.Mouse;
 import nape.geom.Vec2;
@@ -68,34 +69,27 @@ class PickingHand extends FlxSprite {
 	private function startGrab() {
 		animation.play('close');
 		isGrabbing = true;
-
-		// the flx-way of trying to click an object
-		// var pnt = FlxPoint.get(x, y);
-		// for (member in FlxG.state.members) {
-		// 	if (Std.isOfType(member, FlxNapeSprite)) {
-		// 		var spr = cast(member, FlxNapeSprite); // MW: safe cast will throw exceptions...
-		// 		spr.updateHitbox();
-		// 		if (spr != null && spr.body != null && spr.overlapsPoint(pnt)) {
-		// 			var body = spr.body;
-		// 			if (!body.isDynamic()) {
-		// 				continue;
-		// 			}
-		// 			joint.anchor1.set(pos);
-		// 			joint.anchor2.set(body.worldPointToLocal(pos, true));
-		// 			joint.body2 = body;
-		// 			joint.active = true;
-		// 			break;
-		// 		}
-		// 	}
-		// }
+		var found:Bool = false;
 
 		// the Nap way of trying to click an object
 		var pos = Vec2.get(x, y);
+		if (!_grabAtPoint(pos)) {
+			if (!_grabAtPoint(pos.add(Vec2.get(-5, 0)))) {
+				if (!_grabAtPoint(pos.add(Vec2.get(5, 0)))) {
+					if (!_grabAtPoint(pos.add(Vec2.get(0, -5)))) {
+						if (!_grabAtPoint(pos.add(Vec2.get(0, 5)))) {}
+					}
+				}
+			}
+		}
+		pos.dispose();
+	}
+
+	private function _grabAtPoint(pos:Vec2):Bool {
 		for (body in FlxNapeSpace.space.bodiesUnderPoint(pos)) {
 			if (!body.isDynamic() || body.isCompound()) {
 				continue;
 			}
-
 			joint.anchor1.set(pos);
 			joint.anchor2.set(body.worldPointToLocal(pos, true));
 			joint.body2 = body;
@@ -103,9 +97,9 @@ class PickingHand extends FlxSprite {
 			if (Std.isOfType(body.userData.data, PhysicsThing)) {
 				cast(body.userData.data, PhysicsThing).inTow = true;
 			}
-			break;
+			return true;
 		}
-		pos.dispose();
+		return false;
 	}
 
 	private function endGrab() {
