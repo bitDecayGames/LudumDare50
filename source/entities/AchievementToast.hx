@@ -30,6 +30,7 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 	private static var DESCRIPTION_TEXT_SIZE:Int = 15;
 	private static var PADDING:Float = 10;
 	private static var TEXT_COLOR:FlxColor = 0x5b4f37;
+	private static var ICON_SIZE:Int = 70;
 
 	private var title:FlxText;
 	private var description:FlxText;
@@ -52,7 +53,7 @@ class AchievementToast extends FlxTypedSpriteGroup<FlxSprite> {
 		TOAST_HEIGHT_FROM_BOTTOM = FlxG.height - background.height;
 
 		this.icon = new FlxSprite(0, 0);
-		this.icon.loadGraphic(AssetPaths.icons__png, true);
+		this.icon.loadGraphic(AssetPaths.icons__png, true, ICON_SIZE, ICON_SIZE);
 		this.icon.animation.add("default", [icon]);
 		this.icon.animation.play("default");
 		add(this.icon);
