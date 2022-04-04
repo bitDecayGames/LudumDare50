@@ -1,5 +1,6 @@
 package states;
 
+import flixel.math.FlxMath;
 import constants.CbTypes;
 import entities.Heightometer;
 import entities.PhysicsThing;
