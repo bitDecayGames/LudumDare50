@@ -135,6 +135,8 @@ class PlayState extends FlxTransitionableState {
 			itemCollideCallback));
 		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
 			itemCollideCallback));
+		FlxNapeSpace.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.SENSOR, CbTypes.CB_ITEM, CbTypes.CB_ITEM,
+			sensorsTouchCallback));
 
 		timerDisplay = new FlxText(FlxG.width - 75, 5);
 		timerDisplay.size = 20;
@@ -190,6 +192,28 @@ class PlayState extends FlxTransitionableState {
 		} else if (cb.event == CbEvent.END) {
 			item1.inContactWith.remove(item2);
 			item2.inContactWith.remove(item1);
+		}
+	}
+
+	public function sensorsTouchCallback(cb:nape.callbacks.InteractionCallback) {
+		if (cb.arbiters != null) {
+			for (arbiter in cb.arbiters) {
+				if (arbiter != null && arbiter.shape1 != null && arbiter.shape2 != null && arbiter.shape1.userData.key != null && arbiter.shape2.userData.key) {
+					sensorAchievementTrigger([arbiter.shape1.userData.key, arbiter.shape2.userData.key]);
+				}
+			}
+		}
+	}
+
+	private function sensorAchievementTrigger(keys:Array<String>) {
+		if (keys.contains("wine_bottle") && keys.contains("shot_glass")) {
+			if (!Achievements.SHOT_GLASS_ON_WINE_BOTTLE.achieved) {
+				add(Achievements.SHOT_GLASS_ON_WINE_BOTTLE.toToast(true));
+			}
+		} else if (keys.contains("glass_bottom") && keys.contains("tray_corner")) {
+			if (!Achievements.MAGICIAN.achieved) {
+				add(Achievements.MAGICIAN.toToast(true));
+			}
 		}
 	}
 

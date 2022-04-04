@@ -19,7 +19,9 @@ class Achievements {
 	public static var HARD_MODE:AchievementDef;
 	public static var TOUCH_FOOD:AchievementDef;
 	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef;
+	public static var MAGICIAN:AchievementDef;
 	public static var SECOND_SNEEZE:AchievementDef;
+	public static var DIAMOND:AchievementDef;
 	public static var ALL:Array<AchievementDef>;
 	public static var ACHIEVEMENTS_DISPLAYED:Int = 0;
 
@@ -36,10 +38,12 @@ class Achievements {
 		SLOW = new AchievementDef("achslow", "The Tortoise", "Finished in over 10 min", 7, 600);
 		MINIMALIST = new AchievementDef("achminimalist", "Minimalist", "Finished with less than 5 items", 8, 5);
 		HOARDER = new AchievementDef("achhoarder", "Hoarder", "Finished with more than 50 items", 9, 50);
-		HARD_MODE = new AchievementDef("achhardmode", "Masochist", "Win with hard objects", 9);
-		TOUCH_FOOD = new AchievementDef("achstickyfingers", "Sticky Fingers", "Pick up food", 0);
-		SHOT_GLASS_ON_WINE_BOTTLE = new AchievementDef("achshotglasscork", "Shot Glass Cork", "In case you lost the cork", 0);
-		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 0);
+		HARD_MODE = new AchievementDef("achhardmode", "Masochist", "Win with hard objects", 10);
+		SHOT_GLASS_ON_WINE_BOTTLE = new AchievementDef("achshotglasscork", "Improvisor", "Use a glass cork", 11);
+		TOUCH_FOOD = new AchievementDef("achstickyfingers", "Sticky Fingers", "Pick up food", 12);
+		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 13);
+		DIAMOND = new AchievementDef("achdiamond", "Diamond", "Create a glass diamond", 14);
+		MAGICIAN = new AchievementDef("achmagician", "Magician", "Fit a tray inside a glass", 15);
 
 		// @formatter:off
 		ALL = [
@@ -57,6 +61,8 @@ class Achievements {
 			TOUCH_FOOD,
 			SHOT_GLASS_ON_WINE_BOTTLE,
 			SECOND_SNEEZE,
+			MAGICIAN,
+			DIAMOND,
 		];
 		// @formatter:on
 	}

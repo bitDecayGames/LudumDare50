@@ -48,7 +48,7 @@ class PhysicsThing extends FlxNapeSprite {
             S.get(0, -100, "wine_bottle", 5),
         ],
         AssetPaths.Shot__png => [
-            S.get(0, 0, "shot_glass"),
+            S.get(0, 0, "shot_glass", 5),
         ],
         AssetPaths.Martini__png => [
             S.get(-35, -55, "martini_left", 7),
