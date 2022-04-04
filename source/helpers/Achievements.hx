@@ -6,18 +6,20 @@ import entities.AchievementToast;
 
 class Achievements {
 	public static var HEIGHT:AchievementDef;
-	public static var ITEM_COUNT:AchievementDef;
 	public static var FIRST_TABLE:AchievementDef;
+	public static var ITEM_COUNT:AchievementDef;
 	public static var FIVE_TABLES:AchievementDef;
 	public static var ONE_MINUTE:AchievementDef;
-	public static var TEN_MINUTE:AchievementDef;
+	public static var FIVE_MINUTES:AchievementDef;
 	public static var SPEEDY:AchievementDef;
 	public static var SLOW:AchievementDef;
 	public static var MINIMALIST:AchievementDef;
 	public static var HOARDER:AchievementDef;
+	public static var HARD_MODE:AchievementDef;
+	public static var TOUCH_FOOD:AchievementDef;
 	public static var SHOT_GLASS_ON_WINE_BOTTLE:AchievementDef;
 	public static var ALL:Array<AchievementDef>;
-	public static var ACHIEVEMENTS_DISPLAYED:Array<AchievementDef> = [];
+	public static var ACHIEVEMENTS_DISPLAYED:Int = 0;
 
 	public static function initAchievements() {
 		trace("initted the acheeeevements");
@@ -83,10 +85,11 @@ class AchievementDef {
 	}
 
 	public function toToast(show:Bool, force:Bool = false):AchievementToast {
-		var a = new AchievementToast(title, description, iconIndex);
+		var a = new AchievementToast(this);
 		if (show) {
 			if (!achieved || force) {
-				a.show();
+				Achievements.ACHIEVEMENTS_DISPLAYED++;
+				a.show(Achievements.ACHIEVEMENTS_DISPLAYED);
 				// TODO: analytics
 				saveAchievement(key);
 				achieved = true;
