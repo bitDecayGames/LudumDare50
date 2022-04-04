@@ -1,5 +1,6 @@
 package states;
 
+import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIState;
@@ -58,20 +59,28 @@ class SettingsState extends FlxUIState {
 	}
 
 	function addSettingsButtons() {
+		var xOffset = -80.0;
 		var yOffset = 0.0;
-		_practiceBox = new FlxUICheckBox(FlxG.width / 2, FlxG.height / 2, null, null, "Practice");
-		_practiceBox.checked = PRACTICE;
+		_practiceBox = makeNewCheckbox(xOffset, yOffset, "Practice", PRACTICE);
+
 		add(_practiceBox);
-		yOffset += _practiceBox.height;
+		yOffset += (_practiceBox.box.height * 2) + 10;
 
-		_hardObjectsBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + yOffset, null, null, "Hard Objects");
-		_hardObjectsBox.checked = HARD_OBJECTS;
+		_hardObjectsBox = makeNewCheckbox(xOffset, yOffset, "Hard Objects", HARD_OBJECTS);
 		add(_hardObjectsBox);
-		yOffset += _hardObjectsBox.height;
+		yOffset += (_hardObjectsBox.box.height * 2) + 10;
 
-		_easyTrayBox = new FlxUICheckBox(FlxG.width / 2, (FlxG.height / 2) + yOffset, null, null, "Easy Tray");
-		_easyTrayBox.checked = EASY_TRAY;
+		_easyTrayBox = makeNewCheckbox(xOffset, yOffset, "Easy Tray", EASY_TRAY);
 		add(_easyTrayBox);
+	}
+
+	function makeNewCheckbox(xOffset:Float, yOffset:Float, label:String, checked:Bool):FlxUICheckBox {
+		var checkbox = new FlxUICheckBox((FlxG.width / 2) + xOffset, (FlxG.height / 2) + yOffset, null, null, "", 200);
+		checkbox.scale.set(2, 2);
+		checkbox.setLabel(new FlxUIText(0, 0, 200, label, 20));
+		checkbox.button.setAllLabelOffsets(checkbox.box.width * 2, -(checkbox.box.height / 2));
+		checkbox.checked = checked;
+		return checkbox;
 	}
 
 	override public function onFocusLost() {
