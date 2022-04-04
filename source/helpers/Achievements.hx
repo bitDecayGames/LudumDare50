@@ -46,8 +46,8 @@ class Achievements {
 		SECOND_SNEEZE = new AchievementDef("achsecondsneeze", "Circus Act", "Get two sneezes", 13);
 		DIAMOND = new AchievementDef("achdiamond", "Diamond", "Create a glass diamond", 14);
 		MAGICIAN = new AchievementDef("achmagician", "Magician", "Fit a tray inside a glass", 15);
-		ACHIEVEMENT_SCREEN = new AchievementDef("achachievementscreen", "Curious", "Visit the achievement screen", 17);
-		FAN_BOY = new AchievementDef("achfanboy", "Fan Boy", "Find Bit Decay Games", 18);
+		ACHIEVEMENT_SCREEN = new AchievementDef("achachievementscreen", "Curious", "Visit the achievement screen", 16);
+		FAN_BOY = new AchievementDef("achfanboy", "Fan Boy", "Find Bit Decay Games", 17);
 
 		// @formatter:off
 		ALL = [
