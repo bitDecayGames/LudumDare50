@@ -35,18 +35,18 @@ class Table extends PhysicsThing {
 		super.update(delta);
 
 		// output item nums
-		// for (i in 0...myItems.length) {
-		// 	if (i >= 5) {
-		// 		var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
-		// 		FlxG.watch.addQuick('item#${i}', absolutePos);
-		// 	}
-		// }
-		for (i in 0...softies.length) {
-			if (i >= 5) {
-				var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
-				FlxG.watch.addQuick('softy#${i}', absolutePos);
+		for (i in 0...myItems.length) {
+			if (i >= 0) {
+				var absolutePos = new Vec2(myItems[i].body.position.x - body.position.x, myItems[i].body.position.y - (body.position.y - 85));
+				FlxG.watch.addQuick('item#${i}', absolutePos);
 			}
 		}
+		// for (i in 0...softies.length) {
+		// 	if (i >= 5) {
+		// 		var absolutePos = new Vec2(softies[i].avgPos.x - body.position.x, softies[i].avgPos.y - (body.position.y - 85));
+		// 		FlxG.watch.addQuick('softy#${i}', absolutePos);
+		// 	}
+		// }
 
 		if (reactivated) {
 			var haveItemsAbove = false;
@@ -243,6 +243,14 @@ class Table extends PhysicsThing {
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
 		])
+		new TableConfiguration([
+			new ThingDef(-148, 13, AssetPaths.SPlate__png),
+			new ThingDef(136, 13, AssetPaths.SPlate__png),
+			new ThingDef(-48, -1, AssetPaths.SquareMug__png),
+			new ThingDef(48, -6, AssetPaths.RoundMug__png),
+			new ThingDef(-105, -37, AssetPaths.fork__png),
+			new ThingDef(86, -60, AssetPaths.fork__png),
+		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),])
 	];
 }
 
