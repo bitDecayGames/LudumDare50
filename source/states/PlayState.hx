@@ -1,5 +1,6 @@
 package states;
 
+import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup;
 import haxefmod.flixel.FmodFlxUtilities;
 import flixel.math.FlxPoint;
@@ -31,8 +32,12 @@ import signals.Lifecycle;
 using extensions.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
+	public static var VICTORY_Y = 170;
+
 	private var tableSpawner:TableSpawner;
 	private var heightometer:Heightometer;
+	private var heightGoal:Heightometer;
+	private var heightGoalSuccess:Heightometer;
 	private var trayHand:TrayHand;
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
@@ -80,6 +85,15 @@ class PlayState extends FlxTransitionableState {
 
 		heightometer = new Heightometer(trayHand);
 		foregroundGroup.add(heightometer);
+		heightGoal = new Heightometer(trayHand, FlxColor.RED, false, false);
+		foregroundGroup.add(heightGoal);
+		heightGoal.x = 0;
+		FlxTween.linearMotion(heightGoal, 0, -400, 0, VICTORY_Y, 6);
+		heightGoalSuccess = new Heightometer(trayHand, FlxColor.LIME, false, false);
+		heightGoalSuccess.setVisible(false);
+		foregroundGroup.add(heightGoalSuccess);
+		heightGoalSuccess.x = 0;
+		FlxTween.linearMotion(heightGoalSuccess, 0, -400, 0, VICTORY_Y, 6);
 
 		foregroundGroup.add(new PickingHand());
 
@@ -110,15 +124,16 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	var maxY = 10000.0;
-	var victoryY = 50;
 	var endStarted = false;
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
 		KillThingsOutsideBoundary();
-		heightometer.y = CalculateHeighestObject(allThings);
+		// MW This doesn't seem to be used anymore
+		// heightometer.y = CalculateHeighestObject(allThings);
 
+		#if debug
 		var mousePos = FlxG.mouse.getWorldPosition();
 		if (FlxG.keys.justPressed.ONE) {
 			add(SoftBody.NewDollupOfMashedPotatoes(mousePos.x, mousePos.y));
@@ -132,6 +147,7 @@ class PlayState extends FlxTransitionableState {
 		if (FlxG.keys.justPressed.FOUR) {
 			add(SoftBody.NewSteak(mousePos.x, mousePos.y));
 		}
+		#end
 
 		var stackInfo = trayHand.findCurrentHighest();
 		if (stackInfo.heightItem != null && stackInfo.heightItem.y < maxY) {
@@ -141,10 +157,13 @@ class PlayState extends FlxTransitionableState {
 		heightometer.y = maxY;
 		heightometer.itemCount = stackInfo.itemCount;
 
-		if (FlxG.keys.justPressed.E || (maxY <= victoryY && !endStarted)) {
+		if (FlxG.keys.justPressed.E || (maxY <= VICTORY_Y && !endStarted)) {
 			// TODO: Sneeze sfx
 			endStarted = true;
 			trayHand.sneeze();
+			heightGoalSuccess.setVisible(true);
+			heightGoal.setVisible(false);
+			heightometer.setVisible(false);
 		}
 	}
 

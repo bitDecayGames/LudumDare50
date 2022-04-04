@@ -25,25 +25,30 @@ class Heightometer extends FlxObject {
 	private static var TEXT_OFFSET_X:Float = 50.0;
 	private static var MAX_TEXT_OFFSET_X:Float = 800;
 	private static var PIXELS_PER_INCH:Float = 10.0;
-	private static var COLOR:FlxColor = FlxColor.GRAY;
 
 	private static var MAX_HEIGHT = 10;
 
 	private var text:FlxText;
 	private var line:FlxTiledSprite;
 	private var tray:FlxObject;
+	private var showItemCount:Bool;
+	private var shouldModifyTextPosition:Bool;
 
 	public var itemCount = 0;
 
-	public function new(tray:FlxObject) {
+	public function new(tray:FlxObject, color:FlxColor = FlxColor.GRAY, showItemCount:Bool = true, shouldModifyTextPosition:Bool = true) {
 		super(0, tray.y);
 		this.tray = tray;
+		this.showItemCount = showItemCount;
+		this.shouldModifyTextPosition = shouldModifyTextPosition;
 		text = new FlxText(x + TEXT_OFFSET_X, y);
-		text.color = COLOR;
+		text.color = color;
 		text.size = 20;
 		FlxG.state.add(text);
-		line = new FlxTiledSprite(AssetPaths.dashedLine__png, 14, 5);
-		line.replaceColor(FlxColor.WHITE, COLOR);
+		var tmpSpr = new FlxSprite(0, 0);
+		tmpSpr.loadGraphic(AssetPaths.dashedLine__png, false, 14, 5, true);
+		line = new FlxTiledSprite(tmpSpr.graphic, 14, 5);
+		line.replaceColor(FlxColor.WHITE, color);
 		line.x = x;
 		line.y = y;
 		line.width = FlxG.width;
@@ -57,17 +62,28 @@ class Heightometer extends FlxObject {
 		text.text = getHeightText();
 	}
 
+	public function setVisible(visible:Bool) {
+		this.visible = visible;
+		text.visible = visible;
+		line.visible = visible;
+	}
+
 	private function snapToPosition() {
 		var diffFromMax = y - MAX_HEIGHT;
 		var totalDist = tray.y - MAX_HEIGHT;
 		var ratio = 1 - (diffFromMax / totalDist);
 
-		text.x = x + FlxMath.lerp(TEXT_OFFSET_X, MAX_TEXT_OFFSET_X, ratio);
-		text.y = y;
-		if (y < FlxG.height / 4) {
-			text.y -= TEXT_OFFSET_Y;
+		if (shouldModifyTextPosition) {
+			text.x = x + FlxMath.lerp(TEXT_OFFSET_X, MAX_TEXT_OFFSET_X, ratio);
+			text.y = y;
+			if (y < FlxG.height / 4) {
+				text.y -= TEXT_OFFSET_Y;
+			} else {
+				text.y += TEXT_OFFSET_Y;
+			}
 		} else {
-			text.y += TEXT_OFFSET_Y;
+			text.x = x + TEXT_OFFSET_X;
+			text.y = y + TEXT_OFFSET_Y;
 		}
 		line.y = y;
 	}
@@ -92,7 +108,9 @@ class Heightometer extends FlxObject {
 			str += inches + "in";
 		}
 
-		str += ' (${itemCount} items)';
+		if (showItemCount) {
+			str += ' (${itemCount} items)';
+		}
 		return str;
 	}
 }
