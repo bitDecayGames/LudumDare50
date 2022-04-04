@@ -303,9 +303,7 @@ class Table extends PhysicsThing {
 			new ThingDef(-160, -221, AssetPaths.Martini__png),
 		], [
 			new SoftBodyDef(-158, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-158, -96, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
-			new SoftBodyDef(-96, -96, SoftBody.NewDollupOfMashedPotatoes),
 		]),
 		new TableConfiguration([
 			new ThingDef(-148, 13, AssetPaths.SPlate__png),
@@ -321,12 +319,9 @@ class Table extends PhysicsThing {
 			new ThingDef(-7, -152, AssetPaths.fork__png),
 			new ThingDef(-3, -124, AssetPaths.spoon__png),
 			new ThingDef(-7, -191, AssetPaths.knife__png),
-			new ThingDef(-8, -348, AssetPaths.fork__png),
 			new ThingDef(-2, -220, AssetPaths.spoon__png),
 			new ThingDef(-5, -292, AssetPaths.knife__png),
 			new ThingDef(-7, -255, AssetPaths.fork__png),
-			new ThingDef(-7, -322, AssetPaths.spoon__png),
-			new ThingDef(-7, -384, AssetPaths.knife__png),
 		], [
 			new SoftBodyDef(45, -10, SoftBody.NewSteak),
 			new SoftBodyDef(45, -35, SoftBody.NewSteak),
