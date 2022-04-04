@@ -46,7 +46,8 @@ class PlayState extends FlxTransitionableState {
 	private var trayHand:TrayHand;
 
 	private var foregroundGroup:FlxGroup = new FlxGroup();
-	private var other:FlxGroup = new FlxGroup();
+	private var items:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	private var misc:FlxGroup = new FlxGroup();
 
 	public var timer:Float = 0;
 	public var timerDisplay:FlxText;
@@ -82,14 +83,15 @@ class PlayState extends FlxTransitionableState {
 		var bg = new FlxSprite(AssetPaths.background__png);
 		add(bg);
 
-		add(other);
 		add(foregroundGroup);
+		add(items);
+		add(misc);
 
 		trayHand = new TrayHand(250, 700);
-		other.add(trayHand);
+		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, other.add, allThings.push);
-		other.add(tableSpawner);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push);
+		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
 		foregroundGroup.add(heightometer);
@@ -195,7 +197,7 @@ class PlayState extends FlxTransitionableState {
 	}
 
 	public function KillThingsOutsideBoundary() {
-		for (thing in other) {
+		for (thing in items) {
 			if (thing.active) {
 				if (Std.isOfType(thing, SoftBody)) {
 					var obj = cast(thing, SoftBody);
