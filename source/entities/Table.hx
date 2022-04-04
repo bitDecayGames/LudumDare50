@@ -122,6 +122,8 @@ class Table extends PhysicsThing {
 	}
 
 	function removeTable() {
+		FlxG.sound.play(AssetPaths.whoosh1__ogg);
+
 		body.setVelocityFromTarget(spawnLocation, 0, 0.5);
 
 		if (body.velocity.x > x) {
@@ -166,7 +168,14 @@ class Table extends PhysicsThing {
 		return tableConfigurations[nextRandomConfNum];
 	}
 
+	private var movingIn = false;
+
 	public function moveMeAndMyPets(targetPosition:Vec2, targetRotation:Float, deltaTime:Float) {
+		if (!movingIn) {
+			FlxG.sound.play(AssetPaths.whoosh2__ogg);
+			movingIn = true;
+		}
+
 		if (targetPosition.x > x) {
 			tablecloth.meshVelocity.x = -clothXSpeed;
 			leftCloth.meshVelocity.x = -clothXSpeed;

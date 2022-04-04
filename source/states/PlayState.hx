@@ -391,6 +391,8 @@ class PlayState extends FlxTransitionableState {
 					item.kill();
 					item.active = false;
 
+					FlxG.sound.play(AssetPaths.glass_break__ogg);
+
 					if (!PRACTICE) {
 						if (endStarted) {
 							goToVictoryScreen();
