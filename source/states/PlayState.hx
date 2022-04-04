@@ -148,14 +148,19 @@ class PlayState extends FlxTransitionableState {
 			// TODO: These are delayed on Ubuntu for some stupid reason... why
 			// clinkSFX.play();
 			// if (cb.arbiters.at(0).collisionArbiter.totalImpulse)
-			var impulse = cb.arbiters.at(0).collisionArbiter.totalImpulse(true).length;
-			// trace('total impulse: ${impulse}');
-			if (impulse > CLINK_THRESHOLD) {
-				// The idea is softer hits make softer sounds
-				var volume = FlxMath.lerp(0, 1, Math.min(impulse / MAX_VOLUME_CLINK, 1));
-				// trace('      volume: ${volume}');
+			if (cb.arbiters != null) {
+				var arbiter = cb.arbiters.at(0).collisionArbiter;
+				if (arbiter != null) {
+					var impulse = arbiter.totalImpulse(true).length;
+					// trace('total impulse: ${impulse}');
+					if (impulse > CLINK_THRESHOLD) {
+						// The idea is softer hits make softer sounds
+						var volume = FlxMath.lerp(0, 1, Math.min(impulse / MAX_VOLUME_CLINK, 1));
+						// trace('      volume: ${volume}');
 
-				FlxG.sound.play(AssetPaths.glass_clink1__wav, volume);
+						FlxG.sound.play(AssetPaths.glass_clink1__wav, volume);
+					}
+				}
 			}
 			#end
 
