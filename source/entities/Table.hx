@@ -232,34 +232,32 @@ class Table extends PhysicsThing {
 			new ThingDef(155, 0, AssetPaths.LBowl__png),
 			new ThingDef(-85, -33, AssetPaths.Martini__png),
 			new ThingDef(62, -33, AssetPaths.Martini__png),
-			new ThingDef(-53, -105, AssetPaths.fork__png),
-			new ThingDef(176, -33, AssetPaths.knife__png),
-			new ThingDef(107, -105, AssetPaths.spoon__png),
+			new ThingDef(-53, -105, AssetPaths.knife__png),
 		], [new SoftBodyDef(-140, -15, SoftBody.NewDumpling),]),
 		new TableConfiguration([
-			new ThingDef(148, 16, AssetPaths.MPlate__png),
-			new ThingDef(-2, 16, AssetPaths.MPlate__png),
-			new ThingDef(-137, 16, AssetPaths.MPlate__png),
-			new ThingDef(-134, -26, AssetPaths.RoundMug__png),
-			new ThingDef(10, -25, AssetPaths.RoundMug__png),
-			new ThingDef(165, -57, AssetPaths.Stein__png),
-			new ThingDef(-65, -69, AssetPaths.LPlate__png),
-			new ThingDef(-120, -97, AssetPaths.Shot__png),
-			new ThingDef(-66, -97, AssetPaths.Shot__png),
-			new ThingDef(-7, -96, AssetPaths.Shot__png),
-			new ThingDef(-65, -129, AssetPaths.fork__png),
-			new ThingDef(133, -137, AssetPaths.fork__png)
+			new ThingDef(148, 23, AssetPaths.MPlate__png),
+			new ThingDef(-2, 23, AssetPaths.MPlate__png),
+			new ThingDef(-137, 23, AssetPaths.MPlate__png),
+			new ThingDef(-104, -12, AssetPaths.RoundMug__png),
+			new ThingDef(-10, -12, AssetPaths.RoundMug__png),
+			new ThingDef(165, -45, AssetPaths.Stein__png),
+			new ThingDef(-65, -45, AssetPaths.LPlate__png),
+			new ThingDef(-120, -67, AssetPaths.Shot__png),
+			new ThingDef(-66, -67, AssetPaths.Shot__png),
+			new ThingDef(-7, -67, AssetPaths.Shot__png),
+			new ThingDef(-65, -99, AssetPaths.fork__png),
+			new ThingDef(133, -120, AssetPaths.fork__png)
 		]),
 		new TableConfiguration([
-			new ThingDef(142, 16, AssetPaths.SPlate__png),
-			new ThingDef(-140, 17, AssetPaths.SPlate__png),
+			new ThingDef(142, 25, AssetPaths.SPlate__png),
+			new ThingDef(-140, 25, AssetPaths.SPlate__png),
 			new ThingDef(-50, -3, AssetPaths.SquareMug__png),
 			new ThingDef(46, -4, AssetPaths.SquareMug__png),
-			new ThingDef(-100, -38, AssetPaths.fork__png),
-			new ThingDef(103, -49, AssetPaths.spoon__png),
+			new ThingDef(-100, -28, AssetPaths.fork__png),
+			new ThingDef(103, -39, AssetPaths.spoon__png),
 		], [
-			new SoftBodyDef(-140, -15, SoftBody.NewFrenchOmlette),
-			new SoftBodyDef(122, -15, SoftBody.NewSteak),
+			new SoftBodyDef(-140, -0, SoftBody.NewFrenchOmlette),
+			new SoftBodyDef(122, -0, SoftBody.NewSteak),
 		]),
 		new TableConfiguration([
 			new ThingDef(-20, -81, AssetPaths.Wine__png),
@@ -275,14 +273,14 @@ class Table extends PhysicsThing {
 		]),
 		new TableConfiguration([
 			new ThingDef(-1, -38, AssetPaths.Tall__png),
-			new ThingDef(-120, -46, AssetPaths.Pint__png),
-			new ThingDef(121, 18, AssetPaths.LPlate__png),
-			new ThingDef(-116, 16, AssetPaths.LPlate__png),
+			new ThingDef(-120, -26, AssetPaths.Pint__png),
+			new ThingDef(121, 25, AssetPaths.LPlate__png),
+			new ThingDef(-116, 25, AssetPaths.LPlate__png),
 			new ThingDef(116, -19, AssetPaths.fork__png),
 			new ThingDef(47, -115, AssetPaths.spoon__png),
 		], [
-			new SoftBodyDef(121, -5, SoftBody.NewFrenchOmlette),
-			new SoftBodyDef(-120, -60, SoftBody.NewDollupOfMashedPotatoes),
+			new SoftBodyDef(121, 5, SoftBody.NewFrenchOmlette),
+			new SoftBodyDef(-120, -20, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-80, -10, SoftBody.NewDollupOfMashedPotatoes),
 		]),
 		new TableConfiguration([
@@ -298,12 +296,13 @@ class Table extends PhysicsThing {
 			new ThingDef(10, -172, AssetPaths.Stein__png)
 		]),
 		new TableConfiguration([
-			new ThingDef(98, -57, AssetPaths.Shot__png),
-			new ThingDef(-95, -57, AssetPaths.Shot__png),
-			new ThingDef(95, -7, AssetPaths.RoundMug__png),
-			new ThingDef(-78, -7, AssetPaths.RoundMug__png),
-			new ThingDef(-49, -141, AssetPaths.Wine__png),
-			new ThingDef(51, -141, AssetPaths.Wine__png),
+			new ThingDef(40, -57, AssetPaths.Shot__png),
+			new ThingDef(40, -7, AssetPaths.RoundMug__png),
+			new ThingDef(-78, 25, AssetPaths.LPlate__png),
+			new ThingDef(-40, 10, AssetPaths.Chicken__png, null, true),
+			new ThingDef(-70, -10, AssetPaths.Bone__png, null, true),
+			new ThingDef(-120, 5, AssetPaths.Steak__png, null, true),
+			new ThingDef(130, -75, AssetPaths.Wine__png),
 		]),
 		new TableConfiguration([
 			new ThingDef(-158, -25, AssetPaths.Pint__png),
@@ -312,14 +311,14 @@ class Table extends PhysicsThing {
 			new ThingDef(-96, -96, AssetPaths.Pint__png),
 			new ThingDef(-129, -155, AssetPaths.LPlate__png),
 			new ThingDef(33, -34, AssetPaths.LPlate__png),
-			new ThingDef(51, -102, AssetPaths.LPlate__png),
-			new ThingDef(7, -134, AssetPaths.SquareMug__png),
-			new ThingDef(81, -135, AssetPaths.SquareMug__png),
+			new ThingDef(51, -70, AssetPaths.LPlate__png),
+			new ThingDef(7, -104, AssetPaths.SquareMug__png),
+			new ThingDef(81, -105, AssetPaths.SquareMug__png),
 			new ThingDef(77, -1, AssetPaths.SquareMug__png),
 			new ThingDef(16, -1, AssetPaths.SquareMug__png),
-			new ThingDef(43, -76, AssetPaths.fork__png),
-			new ThingDef(-51, -202, AssetPaths.spoon__png),
-			new ThingDef(-160, -219, AssetPaths.RoundMug__png),
+			new ThingDef(43, -56, AssetPaths.fork__png),
+			new ThingDef(-51, -170, AssetPaths.spoon__png),
+			new ThingDef(-160, -190, AssetPaths.RoundMug__png),
 		], [
 			new SoftBodyDef(-158, -25, SoftBody.NewDollupOfMashedPotatoes),
 			new SoftBodyDef(-96, -25, SoftBody.NewDollupOfMashedPotatoes),
@@ -331,6 +330,7 @@ class Table extends PhysicsThing {
 			new ThingDef(48, -6, AssetPaths.RoundMug__png),
 			new ThingDef(-105, -37, AssetPaths.fork__png),
 			new ThingDef(86, -60, AssetPaths.fork__png),
+			new ThingDef(135, 5, AssetPaths.Bread__png, null, true),
 		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),]),
 	];
 }
@@ -394,16 +394,18 @@ class ThingDef {
 	public var y:Float;
 	public var img:FlxGraphicAsset;
 	public var material:Null<Material>;
+	public var isFood:Bool;
 
-	public function new(x:Float, y:Float, img:FlxGraphicAsset, ?material:Material) {
+	public function new(x:Float, y:Float, img:FlxGraphicAsset, ?material:Material, isFood:Bool = false) {
 		this.x = x;
 		this.y = y;
 		this.img = img;
 		this.material = material;
+		this.isFood = isFood;
 	}
 
 	public function toPhysicsThing(offsetX:Float, offsetY:Float, ?bodyType:BodyType):PhysicsThing {
-		return new PhysicsThing(x + offsetX, y + offsetY, img, bodyType, material);
+		return new PhysicsThing(x + offsetX, y + offsetY, img, bodyType, material, isFood);
 	}
 
 	public function isHardObject():Bool {

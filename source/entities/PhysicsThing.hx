@@ -624,10 +624,10 @@ class PhysicsThing extends FlxNapeSprite {
             [
                 Vec2.get(0,0),
                 Vec2.get(2,0),
-                Vec2.get(2,113),
-                Vec2.get(6,118),
-                Vec2.get(83,118),
-                Vec2.get(87,113),
+                Vec2.get(2,90),
+                Vec2.get(6,115),
+                Vec2.get(83,115),
+                Vec2.get(87,90),
                 Vec2.get(87, 0),
                 Vec2.get(89, 0),
                 Vec2.get(89, 13),
@@ -784,13 +784,15 @@ class PhysicsThing extends FlxNapeSprite {
         AssetPaths.Steak__png => FOOD_MATERIAL_NAME,
     ];
 
-	public function new(x:Float, y:Float, asset:FlxGraphicAsset, ?type:BodyType, ?material:Material) {
+    public var isFood:Bool;
+	public function new(x:Float, y:Float, asset:FlxGraphicAsset, ?type:BodyType, ?material:Material, isFood:Bool = false) {
 		originalAsset = asset;
 		super(x, y, asset);
 		if (type == null) {
 			type = BodyType.DYNAMIC;
 		}
 
+        this.isFood = isFood;
 		this.type = type;
 		setup(material);
 	}

@@ -58,6 +58,7 @@ class PlayState extends FlxTransitionableState {
 	private var foregroundGroup:FlxGroup = new FlxGroup();
 	private var softies:FlxTypedGroup<SoftBody> = new FlxTypedGroup<SoftBody>();
 	private var items:FlxTypedGroup<FlxNapeSprite> = new FlxTypedGroup<FlxNapeSprite>();
+	private var solidFood:FlxTypedGroup<FlxNapeSprite> = new FlxTypedGroup<FlxNapeSprite>();
 	private var clothGroup:FlxGroup = new FlxGroup();
 	private var misc:FlxGroup = new FlxGroup();
 
@@ -107,13 +108,14 @@ class PlayState extends FlxTransitionableState {
 		add(misc);
 		add(softies);
 		add(items);
+		add(solidFood);
 		add(clothGroup);
 		add(foregroundGroup);
 
 		trayHand = new TrayHand(250, 700);
 		misc.add(trayHand);
 
-		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, allThings.push, clothGroup, softies);
+		tableSpawner = new TableSpawner(800, 700, 1600, 700, items, solidFood, allThings.push, clothGroup, softies);
 		misc.add(tableSpawner);
 
 		heightometer = new Heightometer(trayHand);
@@ -411,6 +413,15 @@ class PlayState extends FlxTransitionableState {
 					softy.kill();
 					softy.active = false;
 					softy.destroy();
+				}
+			}
+		}
+
+		for (food in solidFood) {
+			if (food.active) {
+				if (food.y > FlxG.height + 100 || food.y < -500 || food.x < -500 || food.x > FlxG.width + 2000) {
+					food.kill();
+					food.active = false;
 				}
 			}
 		}
