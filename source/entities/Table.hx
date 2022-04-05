@@ -330,6 +330,7 @@ class Table extends PhysicsThing {
 			new ThingDef(48, -6, AssetPaths.RoundMug__png),
 			new ThingDef(-105, -37, AssetPaths.fork__png),
 			new ThingDef(86, -60, AssetPaths.fork__png),
+			new ThingDef(135, 5, AssetPaths.Bread__png, null, true),
 		], [new SoftBodyDef(-148, -5, SoftBody.NewFrenchOmlette),]),
 	];
 }
