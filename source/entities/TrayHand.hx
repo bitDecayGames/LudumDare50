@@ -36,29 +36,6 @@ class TrayHand extends PhysicsThing {
 		if (!sneezing) {
 			ocellate();
 		}
-		// var moveDistance = 0.0;
-
-		// if (FlxG.keys.anyPressed([LEFT, A])) {
-		// 	moveDistance = -MOVE_DISTANCE;
-		// } else if (FlxG.keys.anyPressed([RIGHT, D])) {
-		// 	moveDistance = MOVE_DISTANCE;
-		// }
-
-		// if (moveDistance != 0.0) {
-		// 	var targetPosition = new Vec2();
-		// 	targetPosition.y = body.position.y;
-		// 	targetPosition.x = moveDistance + body.position.x;
-
-		// 	if (targetPosition.x - initPosition > MAX_POSITION) {
-		// 		targetPosition.x = initPosition + MAX_POSITION;
-		// 	} else if (targetPosition.x - initPosition < -MAX_POSITION) {
-		// 		targetPosition.x = initPosition - MAX_POSITION;
-		// 	}
-
-		// 	body.setVelocityFromTarget(targetPosition, 0, MOVE_TIME);
-		// } else {
-		// 	body.velocity.set(new Vec2(0, 0));
-		// }
 	}
 
 	public function findCurrentHighest():StackInfo {
@@ -69,7 +46,7 @@ class TrayHand extends PhysicsThing {
 
 		while (fringe.length > 0) {
 			var current = fringe.pop();
-			if (alreadyVisited.exists(current)) {
+			if (alreadyVisited.exists(current) || current == null || current.isFood) {
 				// don't expand this thing's contacts if we've already done it
 				continue;
 			} else {
